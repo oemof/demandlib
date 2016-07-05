@@ -5,14 +5,17 @@
 import pandas as pd
 from demandlib.demandlib import power_bdew as bdew
 from oemof.tools import helpers
+from matplotlib import pyplot as plt
 
 year = 2013
 
 ann_el_demand_per_sector = {
     'g0': 3000,
     'h0': 3000,
-    'i0': 3000}
+    'i0': 3000,
+    'g6': 5000}
 
+# create basic dataframe for a given year and include holidays optionally
 dataframe = helpers.create_basic_dataframe(year)
 
 # read standard load profiles
@@ -27,4 +30,8 @@ elec_demand = e_slp.multiply(pd.Series(
     ann_el_demand_per_sector), axis=1).dropna(how='all',
                                               axis=1)
 
-print(elec_demand)
+# Plot demand
+ax = elec_demand.plot()
+ax.set_xlabel("Date")
+ax.set_ylabel("Power demand")
+plt.show()
