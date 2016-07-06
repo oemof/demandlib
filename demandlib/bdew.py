@@ -8,7 +8,7 @@ from math import ceil
 import numpy as np
 import pandas as pd
 import os
-from oemof.tools.helpers import create_basic_dataframe as basic_df
+from .tools import add_weekdays2df
 
 
 class HeatBuilding:
@@ -38,11 +38,13 @@ class HeatBuilding:
     ww_incl : boolean
         decider whether warm water load is included in the heat load profile
     """
-    def __init__(self, year, **kwargs):
+    def __init__(self, df_index, **kwargs):
         self.datapath = kwargs.get(
             'datapath', os.path.join(os.path.dirname(__file__), 'bdew_data'))
-        self.df = basic_df(year, holidays=kwargs.get('holidays'))
-        self.df['weekday'].mask(self.df['weekday'] == 0, 7, True)
+        self.df = pd.DataFrame(index=df_index)
+        self.df = add_weekdays2df(self.df, holiday_is_sunday=True,
+                                  holidays=kwargs.get('holidays'))
+        self.df['hour'] = self.df.index.hour + 1
         self.temperature = kwargs.get('temperature')
         self.annual_heat_demand = kwargs.get('annual_heat_demand')
         self.shlp_type = kwargs.get('shlp_type')
