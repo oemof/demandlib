@@ -12,38 +12,6 @@ import os
 from oemof.tools import helpers
 
 
-class Building():
-    """
-    """
-
-    def __init__(self, **kwargs):
-        """
-        """
-        self.annual_heat_demand = kwargs.get('annual_heat_demand')
-
-    def hourly_heat_demand(self, fun=None, **kwargs):
-        """
-        Calculate hourly heat demand
-
-        Parameters
-        ----------
-
-        self : building object
-        fun : python function
-           function to use for heat demand calculation
-        kwargs : additional arguments
-           arguments to use in fun
-        """
-        if not kwargs.get("annual_heat_demand"):
-            try:
-                kwargs["annual_heat_demand"] = self.annual_heat_demand
-            except:
-                raise ValueError("Missing annual heat demand!")
-
-        hourly_heat_demand = fun(**kwargs)
-
-        return hourly_heat_demand
-
 
 class bdew_elec_slp():
     'Generate electrical standardized load profiles based on the BDEW method.'
