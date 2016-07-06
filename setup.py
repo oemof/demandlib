@@ -8,16 +8,16 @@
 
 """
 
-from setuptools import find_packages, setup
-
-import oemof
+from setuptools import setup
 
 setup(name='demandlib',
       version='0.0.1',
       author='oemof developing group',
+      url='http://github.com/oemof/demandlib',
+      license='GPL3',
       author_email='oemof@rl-institut.de',
       description='Demandlib of the open energy modelling framework',
-      packages=find_packages(),
+      packages=['demandlib'],
       package_dir={'demandlib': 'demandlib'},
       install_requires=[]
-     )
+      )
