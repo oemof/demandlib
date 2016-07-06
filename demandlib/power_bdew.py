@@ -8,15 +8,12 @@ import logging
 import pandas as pd
 from datetime import time as settime
 import os
-
-from oemof.tools import helpers
-
-
+from .tools import add_weekdays2df
 
 class bdew_elec_slp():
     'Generate electrical standardized load profiles based on the BDEW method.'
 
-    def __init__(self, time_df, periods=None):
+    def __init__(self, date_time_index, periods=None):
         if periods is None:
             self.periods = {
                 'summer1': [5, 15, 9, 14],  # summer: 15.05. to 14.09
@@ -27,25 +24,20 @@ class bdew_elec_slp():
                 }
         else:
             self.periods = periods
-        self._year = time_df.index.year[1000]
-        self.slp_frame = self.all_load_profiles(time_df)
+        self._year = date_time_index.year[1000]
+        self.slp_frame = self.all_load_profiles(date_time_index)
 
     def all_load_profiles(self, time_df):
         slp_types = ['h0', 'g0', 'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'l0',
                      'l1', 'l2']
         new_df = self.create_bdew_load_profiles(time_df, slp_types)
 
-        # Add the slp for the industrial group
-        ilp = IndustrialLoadProfile(
-            method='simple_industrial_profile', dataframe=time_df)
-        new_df['i0'] = ilp.simple_industrial_profile()
-
         new_df.drop(['hour', 'weekday'], 1, inplace=True)
         # TODO: Gleichmäßig normalisieren der i0-Lastgang hat höhere
         # Jahressumme als die anderen.
         return new_df
 
-    def create_bdew_load_profiles(self, time_df, slp_types):
+    def create_bdew_load_profiles(self, dt_index, slp_types):
         '''
         Calculates the hourly electricity load profile in MWh/h of a region.
         '''
@@ -60,13 +52,15 @@ class bdew_elec_slp():
 
         index = pd.date_range(
                 pd.datetime(2007, 1, 1, 0), periods=2016, freq='15Min')
-                # columns=['period', 'weekday'] + slp_types)
 
         tmp_df.set_index(index, inplace=True)
 
         # All holidays(0) are set to sunday(7)
-        time_df.weekday = time_df.weekday.replace(0, 7)
-        new_df = time_df.copy()
+        new_df = pd.DataFrame(index=dt_index)
+
+        new_df = add_weekdays2df(new_df)
+        new_df['hour'] = dt_index.hour + 1
+        time_df = new_df.copy()
 
         # Create an empty column for all slp types and calculate the hourly
         # mean.
@@ -92,7 +86,8 @@ class bdew_elec_slp():
             new_df.update(pd.DataFrame.merge(
                 tmp_df[tmp_df['period'] == p[:-1]], time_df[a:b],
                 left_on=left_cols, right_on=right_cols,
-                how='inner', left_index=True).sort_index().drop(['hour_of_day'], 1))
+                how='inner', left_index=True).sort_index().drop(
+                ['hour_of_day'], 1))
 
         return new_df
 
@@ -107,28 +102,16 @@ class bdew_elec_slp():
 
 class IndustrialLoadProfile():
     'Generate an industrial heat or electric load profile.'
-    def __init__(self, method, **kwargs):
+    def __init__(self, dt_index, **kwargs):
         """
         """
-        self.annual_demand = kwargs.get('annual_demand')
+        self.dataframe = pd.DataFrame(index=dt_index)
+        self.dataframe = add_weekdays2df(self.dataframe, holiday_is_sunday=True,
+                                         holidays=kwargs.get('holidays'))
+        self.dataframe['hour'] = dt_index.hour + 1
 
-        self.dataframe = kwargs.get('dataframe', None)
-        if self.dataframe is None:
-            self.dataframe = helpers.create_basic_dataframe(kwargs.get('year'))
 
-        self.decider(method, **kwargs)
-
-    def decider(self, method, **kwargs):
-        '''
-        '''
-        if method == 'simple_industrial_profile':
-            self.dataframe['i0'] = self.simple_industrial_profile(**kwargs)
-            if self.annual_demand:
-                self.profile = (
-                    self.dataframe['i0'] / self.dataframe['i0'].sum()
-                    * self.annual_demand)
-
-    def simple_industrial_profile(self, **kwargs):
+    def simple_profile(self, annual_demand, **kwargs):
         """
         Create industrial load profile
 
@@ -177,8 +160,6 @@ class IndustrialLoadProfile():
 
         if self.dataframe['ind'].isnull().any(axis=0):
             logging.error('NAN value found in industrial load profile')
-        return self.dataframe.pop('ind')
 
-    @property
-    def slp(self):
-        return self.profile
+        return (self.dataframe['ind'] / self.dataframe['ind'].sum()
+                * annual_demand)
