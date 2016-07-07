@@ -52,8 +52,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'feedinlib'
-copyright = u'2015, oemof developing group'
+project = u'demandlib'
+copyright = u'2016, oemof developing group'
 author = u'Uwe Krien, oemof developing group'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -61,7 +61,7 @@ author = u'Uwe Krien, oemof developing group'
 # built documents.
 #
 # The short X.Y version.
-version = '0.0.9'
+version = '0.0.1'
 # The full version, including alpha/beta/rc tags.
 release = 'beta'
 
@@ -190,7 +190,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'feedinlib_doc'
+htmlhelp_basename = 'demandlib_doc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -210,7 +210,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'feedinlib.tex', u'feedinlib Documentation',
+  ('index', 'demandlib.tex', u'demandlib Documentation',
    u'Uwe Krien, oemof developing group', 'manual'),
 ]
 
@@ -240,7 +240,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'feedinlib', u'feedinlibf Documentation',
+    ('index', 'demandlib', u'demandlibf Documentation',
      [u'Uwe Krien, oemof developing group'], 1)
 ]
 
@@ -254,8 +254,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'feedinlib', u'feedinlib Documentation',
-   u'Uwe Krien', 'feedinlib', 'Calculate time series of wind and pv power plants from weather data.',
+  ('index', 'demandlib', u'demandlib Documentation',
+   u'Uwe Krien', 'demandlib', 'Calculate time series of wind and pv power plants from weather data.',
    'Miscellaneous'),
 ]
 
@@ -275,10 +275,10 @@ texinfo_documents = [
 # -- Options for Epub output ----------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'feedinlib'
+epub_title = u'demandlib'
 epub_author = u'Uwe Krien, oemof developing group'
 epub_publisher = u'oemof developing group'
-epub_copyright = u'2015, oemof developing group'
+epub_copyright = u'2016, oemof developing group'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'pahesmf'
