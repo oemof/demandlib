@@ -16,15 +16,16 @@ temperature = pd.read_csv("example_data.csv")["temperature"]
 # >>> cal = Germany()
 # >>> holidays = dict(cal.holidays(2010))
 
-holidays = {datetime.date(2010, 5, 24): 'Whit Monday',
- datetime.date(2010, 4, 5): 'Easter Monday',
- datetime.date(2010, 5, 13): 'Ascension Thursday',
- datetime.date(2010, 1, 1): 'New year',
- datetime.date(2010, 10, 3): 'Day of German Unity',
- datetime.date(2010, 12, 25): 'Christmas Day',
- datetime.date(2010, 5, 1): 'Labour Day',
- datetime.date(2010, 4, 2): 'Good Friday',
- datetime.date(2010, 12, 26): 'Second Christmas Day'}
+holidays = {
+    datetime.date(2010, 5, 24): 'Whit Monday',
+    datetime.date(2010, 4, 5): 'Easter Monday',
+    datetime.date(2010, 5, 13): 'Ascension Thursday',
+    datetime.date(2010, 1, 1): 'New year',
+    datetime.date(2010, 10, 3): 'Day of German Unity',
+    datetime.date(2010, 12, 25): 'Christmas Day',
+    datetime.date(2010, 5, 1): 'Labour Day',
+    datetime.date(2010, 4, 2): 'Good Friday',
+    datetime.date(2010, 12, 26): 'Second Christmas Day'}
 
 # Create DataFrame for 2010
 demand = pd.DataFrame(

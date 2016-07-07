@@ -11,8 +11,21 @@ import os
 from .tools import add_weekdays2df
 
 
-class ElecSlp():
-    'Generate electrical standardized load profiles based on the BDEW method.'
+class ElecSlp:
+    """Generate electrical standardized load profiles based on the BDEW method.
+
+    Attributes
+    ----------
+    datapath : string
+        Path to the csv files containing the load profile data.
+
+    Parameters
+    ----------
+    date_time_index : pandas.DateTimeIndex
+        Time range for and frequency for the profile.
+    periods : dictionary
+        Describing the time ranges for summer, winter and transition periods.
+    """
 
     def __init__(self, date_time_index, periods=None):
         if periods is None:
@@ -22,11 +35,12 @@ class ElecSlp():
                 'transition2': [9, 15, 10, 31],  # transition2 :15.09. to 31.10
                 'winter1': [1, 1, 3, 20],  # winter1:  01.01. to 20.03
                 'winter2': [11, 1, 12, 31],  # winter2: 01.11. to 31.12
-                }
+            }
         else:
             self.periods = periods
         self._year = date_time_index.year[1000]
         self.slp_frame = self.all_load_profiles(date_time_index)
+        self.datapath = os.path.join(os.path.dirname(__file__), 'bdew_data')
 
     def all_load_profiles(self, time_df):
         slp_types = ['h0', 'g0', 'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'l0',
@@ -34,17 +48,15 @@ class ElecSlp():
         new_df = self.create_bdew_load_profiles(time_df, slp_types)
 
         new_df.drop(['hour', 'weekday'], 1, inplace=True)
-        # TODO: Gleichmäßig normalisieren der i0-Lastgang hat höhere
-        # Jahressumme als die anderen.
+        # TODO: Gleichmäßig normalisieren:
+        # Der i0-Lastgang hat höhere Jahressumme als die anderen.
         return new_df
 
     def create_bdew_load_profiles(self, dt_index, slp_types):
-        '''
-        Calculates the hourly electricity load profile in MWh/h of a region.
-        '''
+        """Calculates the hourly electricity load profile in MWh/h of a region.
+        """
 
         # define file path of slp csv data
-        self.datapath = os.path.join(os.path.dirname(__file__), 'bdew_data')
         file_path = os.path.join(self.datapath, 'selp_series.csv')
 
         # Read standard load profile series from csv file
@@ -52,7 +64,7 @@ class ElecSlp():
         tmp_df = selp_series
 
         index = pd.date_range(
-                pd.datetime(2007, 1, 1, 0), periods=2016, freq='15Min')
+            pd.datetime(2007, 1, 1, 0), periods=2016, freq='15Min')
 
         tmp_df.set_index(index, inplace=True)
 
@@ -145,6 +157,7 @@ class HeatBuilding:
     ww_incl : boolean
         decider whether warm water load is included in the heat load profile
     """
+
     def __init__(self, df_index, **kwargs):
         self.datapath = kwargs.get(
             'datapath', os.path.join(os.path.dirname(__file__), 'bdew_data'))
@@ -162,41 +175,40 @@ class HeatBuilding:
 
     def weighted_temperature(self, how="geometric_series"):
         r"""
-            A new temperature vector is generated containing a multi-day
-            average temperature as needed in the load profile function.
+        A new temperature vector is generated containing a multi-day
+        average temperature as needed in the load profile function.
 
-            Parameters
-            ----------
-            how : string
-                string which type to return ("geometric_series" or "mean")
+        Parameters
+        ----------
+        how : string
+            string which type to return ("geometric_series" or "mean")
 
-            Notes
-            -----
-            Equation for the mathematical series of the average
-            tempaerature [1]_:
+        Notes
+        -----
+        Equation for the mathematical series of the average
+        tempaerature [1]_:
 
-            .. math::
-                T=\frac{T_{D}+0.5\cdot T_{D-1}+0.25\cdot T_{D-2}+
-                        0.125\cdot T_{D-3}}{1+0.5+0.25+0.125}
+        .. math::
+            T=\frac{T_{D}+0.5\cdot T_{D-1}+0.25\cdot T_{D-2}+
+                    0.125\cdot T_{D-3}}{1+0.5+0.25+0.125}
 
-            with :math:`T_D` = Average temperature on the present day
-                 :math:`T_{D-i}` = Average temperature on the day - i
+        with :math:`T_D` = Average temperature on the present day
+             :math:`T_{D-i}` = Average temperature on the day - i
 
-            References
-            ----------
-            .. [1] `BDEW <https://www.avacon.de/cps/rde/xbcr/avacon/15-06-30_Leitfaden_Abwicklung_SLP_Gas.pdf>`_,
-                BDEW Documentation for heat profiles.
-            """
+        References
+        ----------
+        .. [1] `BDEW <https://www.avacon.de/cps/rde/xbcr/avacon/15-06-30_Leitfaden_Abwicklung_SLP_Gas.pdf>`_,
+            BDEW Documentation for heat profiles.
+        """
 
         # calculate daily mean temperature
         temperature = self.df["temperature"].resample('D').mean().reindex(
             self.df.index).fillna(method="ffill")
 
         if how == "geometric_series":
-            temperature_mean = (
-                temperature + 0.5 * np.roll(temperature, 24) +
-                0.25 * np.roll(temperature, 48) +
-                0.125 * np.roll(temperature, 72)) / 1.875
+            temperature_mean = (temperature + 0.5 * np.roll(temperature, 24) +
+                                0.25 * np.roll(temperature, 48) +
+                                0.125 * np.roll(temperature, 72)) / 1.875
         elif how == "mean":
             temperature_mean = temperature
         else:
@@ -234,8 +246,8 @@ class HeatBuilding:
         file = os.path.join(self.datapath, filename)
         hour_factors = pd.read_csv(file, index_col=0)
         hour_factors = hour_factors.query(
-            'building_class=={0} and shlp_type=="{1}"'
-            .format(self.building_class, self.shlp_type))
+            'building_class=={0} and shlp_type=="{1}"'.format(
+                self.building_class, self.shlp_type))
 
         # Join the two DataFrames on the columns 'hour' and 'hour_of_the_day'
         # or ['hour' 'weekday'] and ['hour_of_the_day', 'weekday'] if it is
@@ -257,7 +269,7 @@ class HeatBuilding:
 
         # Determine the h values
         sf = (np.array(sf_mat)[np.array(list(range(0, 8760)))[:],
-              (self.get_temperature_interval() - 1)[:]])
+                               (self.get_temperature_interval() - 1)[:]])
         return np.array(list(map(float, sf[:])))
 
     def get_sigmoid_parameters(self, filename="shlp_sigmoid_factors.csv"):

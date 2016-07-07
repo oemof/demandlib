@@ -19,5 +19,6 @@ setup(name='demandlib',
       description='Demandlib of the open energy modelling framework',
       packages=['demandlib'],
       package_dir={'demandlib': 'demandlib'},
-      install_requires=[]
+      install_requires=['numpy >= 1.7.0',
+                        'pandas >= 0.17.0']
       )

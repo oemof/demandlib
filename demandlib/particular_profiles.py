@@ -5,20 +5,18 @@ Implementation of the bdew standard load profiles for electric power.
 
 """
 import pandas as pd
+import logging
 from datetime import time as settime
 from .tools import add_weekdays2df
 
 
-class IndustrialLoadProfile():
-    'Generate an industrial heat or electric load profile.'
+class IndustrialLoadProfile:
+    """Generate an industrial heat or electric load profile."""
     def __init__(self, dt_index, **kwargs):
-        """
-        """
         self.dataframe = pd.DataFrame(index=dt_index)
         self.dataframe = add_weekdays2df(self.dataframe, holiday_is_sunday=True,
                                          holidays=kwargs.get('holidays'))
         self.dataframe['hour'] = dt_index.hour + 1
-
 
     def simple_profile(self, annual_demand, **kwargs):
         """
@@ -26,7 +24,11 @@ class IndustrialLoadProfile():
 
         Parameters
         ----------
+        annual_demand : float
+            Total demand.
 
+        Other Parameters
+        ----------------
         am : datetime.time
             beginning of workday
         pm : datetime.time
@@ -48,9 +50,10 @@ class IndustrialLoadProfile():
         week = kwargs.get('week', [1, 2, 3, 4, 5])
         weekend = kwargs.get('weekend', [0, 6, 7])
 
-        profile_factors = kwargs.get('profile_factors',
-            {'week': {'day': 0.8, 'night': 0.6},
-             'weekend': {'day': 0.9, 'night': 0.7}})
+        default_factors = {'week': {'day': 0.8, 'night': 0.6},
+                           'weekend': {'day': 0.9, 'night': 0.7}}
+
+        profile_factors = kwargs.get('profile_factors', default_factors)
 
         self.dataframe['ind'] = 0
 
@@ -70,5 +73,5 @@ class IndustrialLoadProfile():
         if self.dataframe['ind'].isnull().any(axis=0):
             logging.error('NAN value found in industrial load profile')
 
-        return (self.dataframe['ind'] / self.dataframe['ind'].sum()
-                * annual_demand)
+        return (self.dataframe['ind'] / self.dataframe['ind'].sum() *
+                annual_demand)
