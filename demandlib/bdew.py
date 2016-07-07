@@ -28,6 +28,7 @@ class ElecSlp:
     """
 
     def __init__(self, date_time_index, periods=None):
+        self.datapath = os.path.join(os.path.dirname(__file__), 'bdew_data')
         if periods is None:
             self.periods = {
                 'summer1': [5, 15, 9, 14],  # summer: 15.05. to 14.09
@@ -40,7 +41,6 @@ class ElecSlp:
             self.periods = periods
         self._year = date_time_index.year[1000]
         self.slp_frame = self.all_load_profiles(date_time_index)
-        self.datapath = os.path.join(os.path.dirname(__file__), 'bdew_data')
 
     def all_load_profiles(self, time_df):
         slp_types = ['h0', 'g0', 'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'l0',

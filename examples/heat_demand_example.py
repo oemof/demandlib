@@ -33,13 +33,13 @@ demand = pd.DataFrame(
 
 demand['efh'] = bdew.HeatBuilding(
     demand.index, holidays=holidays, temperature=temperature, shlp_type='EFH',
-    building_class=1, wind_class=1, annual_heat_demand=25000, name='EFH'
-    ).get_bdew_profile()
+    building_class=1, wind_class=1, annual_heat_demand=25000,
+    name='EFH').get_bdew_profile()
 
 demand['mfh'] = bdew.HeatBuilding(
     demand.index, holidays=holidays, temperature=temperature, shlp_type='MFH',
-    building_class=2, wind_class=0, annual_heat_demand=80000, name='MFH'
-    ).get_bdew_profile()
+    building_class=2, wind_class=0, annual_heat_demand=80000,
+    name='MFH').get_bdew_profile()
 
 # Plot demand of building
 ax = demand.plot()
