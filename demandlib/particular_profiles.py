@@ -54,6 +54,9 @@ class IndustrialLoadProfile:
 
         profile_factors = kwargs.get('profile_factors', default_factors)
 
+        print('H', 1 / (self.dataframe.index.freq.nanos / 3.6e12))
+
+
         self.dataframe['ind'] = 0
 
         self.dataframe['ind'].mask(
@@ -72,5 +75,7 @@ class IndustrialLoadProfile:
         if self.dataframe['ind'].isnull().any(axis=0):
             logging.error('NAN value found in industrial load profile')
 
+        time_intervall = self.dataframe.index.freq.nanos / 3.6e12
+
         return (self.dataframe['ind'] / self.dataframe['ind'].sum() *
-                annual_demand)
+                annual_demand / time_intervall)

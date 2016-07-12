@@ -57,6 +57,20 @@ elec_demand['i2'] = ilp.simple_profile(
     profile_factors={'week': {'day': 1.0, 'night': 0.8},
                      'weekend': {'day': 0.8, 'night': 0.6}})
 
+print("Be aware that the values in the DataFrame are 15minute values with a")
+print("power unit. If you sum up a table with 15min values the result will")
+print("be of the unit 'kW15minutes'.")
+print(elec_demand.sum())
+
+print("You will have to divide the result by 4 to get kWh.")
+print(elec_demand.sum() / 4)
+
+print("Or resample the DataFrame to hourly values using the mean() method.")
+
+# Resample 15-minute values to hourly values.
+elec_demand = elec_demand.resample('H').mean()
+print(elec_demand.sum())
+
 # Plot demand
 ax = elec_demand.plot()
 ax.set_xlabel("Date")

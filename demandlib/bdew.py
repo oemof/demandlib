@@ -129,7 +129,7 @@ class ElecSlp:
 
         """
         return self.slp_frame.multiply(pd.Series(
-            ann_el_demand_per_sector), axis=1).dropna(how='all', axis=1)
+            ann_el_demand_per_sector), axis=1).dropna(how='all', axis=1) * 4
 
 
 class HeatBuilding:
