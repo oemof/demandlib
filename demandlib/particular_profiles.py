@@ -12,11 +12,10 @@ from .tools import add_weekdays2df
 
 class IndustrialLoadProfile:
     """Generate an industrial heat or electric load profile."""
-    def __init__(self, dt_index, **kwargs):
+    def __init__(self, dt_index, holidays=None):
         self.dataframe = pd.DataFrame(index=dt_index)
         self.dataframe = add_weekdays2df(self.dataframe, holiday_is_sunday=True,
-                                         holidays=kwargs.get('holidays'))
-        self.dataframe['hour'] = dt_index.hour + 1
+                                         holidays=holidays)
 
     def simple_profile(self, annual_demand, **kwargs):
         """
@@ -44,7 +43,7 @@ class IndustrialLoadProfile:
 
         # Day(am to pm), night (pm to am), week day (week),
         # weekend day (weekend)
-        am = kwargs.get('am', settime(7, 0, 0))
+        am = kwargs.get('am', settime(7, 00, 0))
         pm = kwargs.get('pm', settime(23, 30, 0))
 
         week = kwargs.get('week', [1, 2, 3, 4, 5])
