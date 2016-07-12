@@ -1,7 +1,4 @@
-Demandlib
-=========
-
-The demandlib is part of the oemof group but works as a standalone application.
+**The demandlib is part of the oemof group but works as a standalone application.**
 
 .. contents:: `Table of contents`
     :depth: 1
@@ -51,6 +48,7 @@ Developing the demandlib
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As the demandlib is part of the oemof developer group we use the same developer rules:
+
 http://oemof.readthedocs.io/en/stable/developer_notes.html
 
 If you have push rights clone this repository to your local system.
