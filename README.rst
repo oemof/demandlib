@@ -1,3 +1,6 @@
+Demandlib
+=========
+
 The demandlib is part of the oemof group but works as a standalone application.
 
 .. contents:: `Table of contents`
@@ -18,6 +21,14 @@ There is no stable release so far but you can use the master of the developing v
 
 Developing Version
 ==================
+
+Documentation
+~~~~~~~~~~~~~
+
+Read the latest documentation at Readthedocs.org
+
+http://demandlib.readthedocs.org
+
 
 Installation
 ~~~~~~~~~~~~
