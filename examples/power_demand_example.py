@@ -5,10 +5,10 @@
 import datetime
 import demandlib.bdew as bdew
 import demandlib.particular_profiles as profiles
+from datetime import time as settime
 from matplotlib import pyplot as plt
-import time
-start = time.time()
-year = 2010
+
+year 2010
 
 # The following dictionary is create by "workalendar"
 # pip3 install workalendar
@@ -30,6 +30,8 @@ ann_el_demand_per_sector = {
     'g0': 3000,
     'h0': 3000,
     'i0': 3000,
+    'i1': 5000,
+    'i2': 6000,
     'g6': 5000}
 
 # read standard load profiles
@@ -39,13 +41,27 @@ e_slp = bdew.ElecSlp(year, holidays=holidays)
 elec_demand = e_slp.get_profile(ann_el_demand_per_sector)
 
 # Add the slp for the industrial group
+
 ilp = profiles.IndustrialLoadProfile(e_slp.date_time_index, holidays=holidays)
 elec_demand['i0'] = ilp.simple_profile(ann_el_demand_per_sector['i0'])
 
 # Resample 15-minute values to hourly values.
 elec_demand = elec_demand.resample('H').mean() * 4
 
-print(elec_demand.sum())
+ilp = profiles.IndustrialLoadProfile(dataframe_index)
+
+# Beginning and end of workday, weekdays and weekend days, and scaling factors
+# by default
+elec_demand['i0'] = ilp.simple_profile(ann_el_demand_per_sector['i0'])
+
+# Set beginning of workday to 9 am
+elec_demand['i1'] = ilp.simple_profile(ann_el_demand_per_sector['i1'],
+                                       am=settime(9, 0, 0))
+
+# Change scaling factors
+elec_demand['i2'] = ilp.simple_profile(ann_el_demand_per_sector['i2'],
+                                       profile_factors={'week':
+                                                        {'day': 1.0,
 
 # Plot demand
 ax = elec_demand.plot()
