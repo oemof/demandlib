@@ -24,6 +24,8 @@ class ElecSlp:
     date_time_index : pandas.DateTimeIndex
         Time range for and frequency for the profile.
     periods : dictionary
+    year : integer
+        Year of the demand series.
         Describing the time ranges for summer, winter and transition periods.
     """
 
@@ -41,6 +43,7 @@ class ElecSlp:
             self.periods = periods
         self._year = date_time_index.year[1000]
         self.slp_frame = self.all_load_profiles(date_time_index)
+        self.year = year
 
     def all_load_profiles(self, time_df):
         slp_types = ['h0', 'g0', 'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'l0',
@@ -120,14 +123,6 @@ class ElecSlp:
         """
         return self.slp_frame.multiply(pd.Series(
             ann_el_demand_per_sector), axis=1).dropna(how='all', axis=1)
-
-    @property
-    def slp(self):
-        return self.slp_frame
-
-    @property
-    def year(self):
-        return self._year
 
 
 class HeatBuilding:
