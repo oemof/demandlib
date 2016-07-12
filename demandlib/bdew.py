@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import os
 from .tools import add_weekdays2df
+import calendar
 
 
 class ElecSlp:
@@ -18,21 +19,33 @@ class ElecSlp:
     ----------
     datapath : string
         Path to the csv files containing the load profile data.
+    date_time_index : pandas.DateTimeIndex
+        Time range for and frequency for the profile.
 
     Parameters
     ----------
-    date_time_index : pandas.DateTimeIndex
-        Time range for and frequency for the profile.
-    periods : dictionary
     year : integer
         Year of the demand series.
+
+    Optional Parameters
+    -------------------
+    seasons : dictionary
         Describing the time ranges for summer, winter and transition periods.
+    holidays : dictionary or list
+        The keys of the dictionary or the items of the list should be datetime
+        objects of the days that are holidays.
     """
 
-    def __init__(self, date_time_index, periods=None):
+    def __init__(self, year, seasons=None, holidays=None):
+        if calendar.isleap(year):
+            hoy = 8784
+        else:
+            hoy = 8760
         self.datapath = os.path.join(os.path.dirname(__file__), 'bdew_data')
-        if periods is None:
-            self.periods = {
+        self.date_time_index = pd.date_range(
+            pd.datetime(year, 1, 1, 0), periods=hoy * 4, freq='15Min')
+        if seasons is None:
+            self.seasons = {
                 'summer1': [5, 15, 9, 14],  # summer: 15.05. to 14.09
                 'transition1': [3, 21, 5, 14],  # transition1 :21.03. to 14.05
                 'transition2': [9, 15, 10, 31],  # transition2 :15.09. to 31.10
@@ -40,22 +53,21 @@ class ElecSlp:
                 'winter2': [11, 1, 12, 31],  # winter2: 01.11. to 31.12
             }
         else:
-            self.periods = periods
-        self._year = date_time_index.year[1000]
-        self.slp_frame = self.all_load_profiles(date_time_index)
+            self.seasons = seasons
         self.year = year
+        self.slp_frame = self.all_load_profiles(self.date_time_index,
+                                                holidays=holidays)
 
-    def all_load_profiles(self, time_df):
+    def all_load_profiles(self, time_df, holidays=None):
         slp_types = ['h0', 'g0', 'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'l0',
                      'l1', 'l2']
-        new_df = self.create_bdew_load_profiles(time_df, slp_types)
+        new_df = self.create_bdew_load_profiles(time_df, slp_types,
+                                                holidays=holidays)
 
         new_df.drop(['hour', 'weekday'], 1, inplace=True)
-        # TODO: Gleichmäßig normalisieren:
-        # Der i0-Lastgang hat höhere Jahressumme als die anderen.
         return new_df
 
-    def create_bdew_load_profiles(self, dt_index, slp_types):
+    def create_bdew_load_profiles(self, dt_index, slp_types, holidays=None):
         """Calculates the hourly electricity load profile in MWh/h of a region.
         """
 
@@ -65,40 +77,35 @@ class ElecSlp:
         # Read standard load profile series from csv file
         selp_series = pd.read_csv(file_path)
         tmp_df = selp_series
-
+        # Create an index to merge. The year and month will be ignored only the
+        # time index is necessary.
         index = pd.date_range(
             pd.datetime(2007, 1, 1, 0), periods=2016, freq='15Min')
-
         tmp_df.set_index(index, inplace=True)
 
-        # All holidays(0) are set to sunday(7)
-        new_df = pd.DataFrame(index=dt_index)
+        # Create empty DataFrame to take the results.
+        new_df = pd.DataFrame(index=dt_index, columns=slp_types).fillna(0)
+        new_df = add_weekdays2df(new_df, holidays=holidays,
+                                 holiday_is_sunday=True)
 
-        new_df = add_weekdays2df(new_df)
         new_df['hour'] = dt_index.hour + 1
-        time_df = new_df.copy()
-
-        # Create an empty column for all slp types and calculate the hourly
-        # mean.
-        how = {'period': 'last', 'weekday': 'last'}
-        for slp_type in slp_types:
-            tmp_df[slp_type] = tmp_df[slp_type].astype(float)
-            new_df[slp_type] = 0
-            how[slp_type] = 'mean'
-        tmp_df = tmp_df.groupby(pd.TimeGrouper(freq='H')).agg(how)
+        new_df['minute'] = dt_index.minute
+        time_df = new_df[['date', 'hour', 'minute', 'weekday']].copy()
+        tmp_df[slp_types] = tmp_df[slp_types].astype(float)
 
         # Inner join the slps on the time_df to the slp's for a whole year
         tmp_df['hour_of_day'] = tmp_df.index.hour + 1
-        left_cols = ['hour_of_day', 'weekday']
-        right_cols = ['hour', 'weekday']
+        tmp_df['minute_of_hour'] = tmp_df.index.minute
+        left_cols = ['hour_of_day', 'minute_of_hour', 'weekday']
+        right_cols = ['hour', 'minute', 'weekday']
         tmp_df = tmp_df.reset_index()
         tmp_df.pop('index')
 
-        for p in self.periods.keys():
-            a = pd.datetime(self._year, self.periods[p][0],
-                            self.periods[p][1], 0, 0)
-            b = pd.datetime(self._year, self.periods[p][2],
-                            self.periods[p][3], 23, 59)
+        for p in self.seasons.keys():
+            a = pd.datetime(self.year, self.seasons[p][0],
+                            self.seasons[p][1], 0, 0)
+            b = pd.datetime(self.year, self.seasons[p][2],
+                            self.seasons[p][3], 23, 59)
             new_df.update(pd.DataFrame.merge(
                 tmp_df[tmp_df['period'] == p[:-1]], time_df[a:b],
                 left_on=left_cols, right_on=right_cols,
