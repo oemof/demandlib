@@ -1,4 +1,4 @@
-**The demandlib is part of the oemof group but works as a standalone application.**
+The **demandlib** is part of the oemof group but works as a standalone application.
 
 .. contents:: `Table of contents`
     :depth: 1
