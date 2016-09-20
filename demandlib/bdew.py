@@ -169,7 +169,7 @@ class HeatBuilding:
         self.df['hour'] = self.df.index.hour + 1
         self.temperature = kwargs.get('temperature')
         self.annual_heat_demand = kwargs.get('annual_heat_demand')
-        self.shlp_type = kwargs.get('shlp_type')
+        self.shlp_type = kwargs.get('shlp_type').upper()
         self.wind_class = kwargs.get('wind_class')
         self.building_class = kwargs.get('building_class', 0)
         self.ww_incl = kwargs.get('ww_incl', True)
