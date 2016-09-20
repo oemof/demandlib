@@ -270,7 +270,8 @@ class HeatBuilding:
         sf_mat = sf_mat.drop(drop_cols, 1)
 
         # Determine the h values
-        sf = (np.array(sf_mat)[np.array(list(range(0, 8760)))[:],
+        length = len(self.temperature)
+        sf = (np.array(sf_mat)[np.array(list(range(0, length)))[:],
                                (self.get_temperature_interval() - 1)[:]])
         return np.array(list(map(float, sf[:])))
 
