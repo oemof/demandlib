@@ -54,9 +54,6 @@ class IndustrialLoadProfile:
 
         profile_factors = kwargs.get('profile_factors', default_factors)
 
-        print('H', 1 / (self.dataframe.index.freq.nanos / 3.6e12))
-
-
         self.dataframe['ind'] = 0
 
         self.dataframe['ind'].mask(
