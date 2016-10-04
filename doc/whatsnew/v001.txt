@@ -1,9 +1,11 @@
-v0.0.1 (October 20, 2016)
+v0.1 (October 04, 2016)
 +++++++++++++++++++++++++
 
 New features
 ############
-
+* Implementation of BDEW synthetic load profiles
+* Synthetic load profiles for heating sector
+* Self-made industry demand profile similar to BDEW profiles
 
 
 Documentation
