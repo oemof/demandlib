@@ -11,10 +11,15 @@ Introduction
 With the demandlib you can create power and heat profiles for various sectors by scaling them to your desired demand. Additionally you can specify a year so that holidays are considered respectively.
 
 
-Actual Release
+Current Release
 ==============
 
-There is no stable release so far but you can use the master of the developing version, which is ready to use.
+Current release of demandlib is v0.1. Install it via pip
+
+::
+
+    sudo pip3 install demandlib
+
 
 Developing Version
 ==================
@@ -72,24 +77,6 @@ http://matplotlib.org/users/installing.html
 Example
 =======
 
-Execute the example files for power and heat:
+Take a look on the examples to get usage of demandlib
 https://github.com/oemof/demandlib/tree/master/examples
 
-Basic Usage
-===========
-
-*Power profiles*
-
-You need to specify the year and the annual demand per sector like the following:
-
-year = 2013
-
-ann_el_demand_per_sector = {
-    'g0': 3000,
-    'h0': 3000,
-    'i0': 3000,
-    'g6': 5000}
-
-Note: i0 is not a BDEW profile.
-   
-*Heat profiles*
