@@ -72,7 +72,7 @@ class IndustrialLoadProfile:
         if self.dataframe['ind'].isnull().any(axis=0):
             logging.error('NAN value found in industrial load profile')
 
-        time_intervall = self.dataframe.index.freq.nanos / 3.6e12
+        time_interval = self.dataframe.index.freq.nanos / 3.6e12
 
         return (self.dataframe['ind'] / self.dataframe['ind'].sum() *
-                annual_demand / time_intervall)
+                annual_demand / time_interval)
