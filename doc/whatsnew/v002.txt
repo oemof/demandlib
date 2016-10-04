@@ -1,0 +1,29 @@
+v0.2 (November 30, 2016)
++++++++++++++++++++++++++
+
+New features
+############
+
+
+Documentation
+#############
+
+ 
+Testing
+####### 
+
+
+
+Bug fixes
+#########
+
+
+
+Other changes
+#############
+
+
+
+Contributors
+############
+
