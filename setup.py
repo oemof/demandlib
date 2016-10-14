@@ -9,6 +9,7 @@
 """
 
 from setuptools import setup
+import os
 
 setup(name='demandlib',
       version='0.1',
@@ -19,6 +20,12 @@ setup(name='demandlib',
       description='Demandlib of the open energy modelling framework',
       packages=['demandlib'],
       package_dir={'demandlib': 'demandlib'},
+      package_data = {
+          'demandlib': [
+              os.path.join('bdew_data', 'selp_series.csv'),
+              os.path.join('bdew_data', 'shlp_hour_factors.csv'),
+              os.path.join('bdew_data', 'shlp_sigmoid_factors.csv'),
+              os.path.join('bdew_data', 'shlp_weekday_factors.csv')]},
       install_requires=['numpy >= 1.7.0',
                         'pandas >= 0.18.0']
       )
