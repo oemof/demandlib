@@ -6,9 +6,11 @@ import pandas as pd
 import demandlib.bdew as bdew
 from matplotlib import pyplot as plt
 import datetime
+import os
 
 # read example temperature series
-temperature = pd.read_csv("example_data.csv")["temperature"]
+datapath = os.path.join(os.path.dirname(__file__), 'example_data.csv')
+temperature = pd.read_csv(datapath)["temperature"]
 
 # The following dictionary is create by "workalendar"
 # pip3 install workalendar
