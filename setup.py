@@ -18,8 +18,7 @@ setup(name='demandlib',
       license='GPL3',
       author_email='oemof@rl-institut.de',
       description='Demandlib of the open energy modelling framework',
-      packages=['demandlib'],
-      package_dir={'demandlib': 'demandlib'},
+      packages=['demandlib', 'examples'],
       package_data = {
           'demandlib': [
               os.path.join('bdew_data', 'selp_series.csv'),
