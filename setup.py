@@ -23,7 +23,8 @@ setup(name='demandlib',
           'demandlib': [os.path.join('bdew_data', '*.csv')],
           'examples': ['*.csv']},
       install_requires=['numpy >= 1.7.0',
-                        'pandas >= 0.18.0'],
+                        'pandas >= 0.18.0',
+			'matplotlib'],
       entry_points={
           'console_scripts': [
               'demandlib_heat_example = examples.heat_demand_example:heat_example',
