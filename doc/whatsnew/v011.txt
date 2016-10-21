@@ -1,0 +1,35 @@
+v0.1.1 (November 30, 2016)
++++++++++++++++++++++++++
+
+New features
+############
+* Examples callable by command-line script
+
+
+
+Documentation
+#############
+
+
+ 
+Testing
+####### 
+
+
+
+Bug fixes
+#########
+* Path specs when installed via pip
+
+
+
+Other changes
+#############
+* Fix versioning
+
+
+
+Contributors
+############
+Guido Pleßmann
+Uwe Krien
