@@ -18,14 +18,15 @@ setup(name='demandlib',
       license='GPL3',
       author_email='oemof@rl-institut.de',
       description='Demandlib of the open energy modelling framework',
-      packages=['demandlib'],
-      package_dir={'demandlib': 'demandlib'},
+      packages=['demandlib', 'examples'],
       package_data = {
-          'demandlib': [
-              os.path.join('bdew_data', 'selp_series.csv'),
-              os.path.join('bdew_data', 'shlp_hour_factors.csv'),
-              os.path.join('bdew_data', 'shlp_sigmoid_factors.csv'),
-              os.path.join('bdew_data', 'shlp_weekday_factors.csv')]},
+          'demandlib': [os.path.join('bdew_data', '*.csv')],
+          'examples': ['*.csv']},
       install_requires=['numpy >= 1.7.0',
-                        'pandas >= 0.18.0']
+                        'pandas >= 0.18.0',
+			'matplotlib'],
+      entry_points={
+          'console_scripts': [
+              'demandlib_heat_example = examples.heat_demand_example:heat_example',
+              'demandlib_power_example = examples.power_demand_example:power_example',]}
       )
