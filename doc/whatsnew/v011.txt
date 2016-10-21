@@ -7,16 +7,6 @@ New features
 
 
 
-Documentation
-#############
-
-
- 
-Testing
-####### 
-
-
-
 Bug fixes
 #########
 * Path specs when installed via pip
