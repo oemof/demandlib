@@ -12,7 +12,7 @@ from setuptools import setup
 import os
 
 setup(name='demandlib',
-      version='0.1.11',
+      version='0.1.1',
       author='oemof developing group',
       url='http://github.com/oemof/demandlib',
       license='GPL3',
