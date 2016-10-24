@@ -14,7 +14,7 @@ With the demandlib you can create power and heat profiles for various sectors by
 Current Release
 ==============
 
-Current release of demandlib is v0.1. Install it via pip
+Current release of demandlib is v0.1.1 Install it via pip
 
 ::
 
@@ -65,18 +65,7 @@ If you have push rights clone this repository to your local system.
 If you want to contribute, fork the project at github, clone your personal fork to your system and send a pull request.
     
   
-Install Optional Packages
-=========================
-
-To see the plots of the example file one should install the matplotlib package.
-
-Matplotlib can be installed using pip but some Linux users reported that it is easier and more stable to use the pre-built packages of your Linux distribution.
-
-http://matplotlib.org/users/installing.html
-
 Example
 =======
 
-Take a look on the examples to get usage of demandlib
-https://github.com/oemof/demandlib/tree/master/examples
-
+Take a look on the examples to get usage of demandlib. We provide two examples. One for the heat sector, executable by calling ``demandlib_heat_example``. The second example show how to create demand time-series for the power. Execute this example by calling ``demandlib_power_example``. Both exemaples are callable from anywhere in the command-line.
