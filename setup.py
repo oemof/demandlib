@@ -24,9 +24,5 @@ setup(name='demandlib',
           'demandlib.examples': ['*.csv']},
       install_requires=['numpy >= 1.7.0',
                         'pandas >= 0.18.0',
-			'matplotlib'],
-      entry_points={
-          'console_scripts': [
-              'demandlib_heat_example = demandlib.examples.heat_demand_example:heat_example',
-              'demandlib_power_example = demandlib.examples.power_demand_example:power_example',]}
-      )
+			'matplotlib']
+     )
