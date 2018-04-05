@@ -175,7 +175,7 @@ class HeatBuilding:
         self.ww_incl = kwargs.get('ww_incl', True)
         self.name = kwargs.get('name', self.shlp_type)
 
-    def weighted_temperature(self, how="geometric_series"):
+    def weighted_temperature(self, how='geometric_series'):
         r"""
         A new temperature vector is generated containing a multi-day
         average temperature as needed in the load profile function.
@@ -204,14 +204,14 @@ class HeatBuilding:
         """
 
         # calculate daily mean temperature
-        temperature = self.df["temperature"].resample('D').mean().reindex(
-            self.df.index).fillna(method="ffill")
+        temperature = self.df['temperature'].resample('D').mean().reindex(
+            self.df.index).fillna(method='ffill').fillna(method='bfill')
 
-        if how == "geometric_series":
+        if how == 'geometric_series':
             temperature_mean = (temperature + 0.5 * np.roll(temperature, 24) +
                                 0.25 * np.roll(temperature, 48) +
                                 0.125 * np.roll(temperature, 72)) / 1.875
-        elif how == "mean":
+        elif how == 'mean':
             temperature_mean = temperature
         else:
             temperature_mean = None
@@ -237,7 +237,7 @@ class HeatBuilding:
 
         return np.transpose(np.array(temperature_interval))
 
-    def get_sf_values(self, filename="shlp_hour_factors.csv"):
+    def get_sf_values(self, filename='shlp_hour_factors.csv'):
         """ Determine the h-values
 
         Parameters
@@ -275,7 +275,7 @@ class HeatBuilding:
                                (self.get_temperature_interval() - 1)[:]])
         return np.array(list(map(float, sf[:])))
 
-    def get_sigmoid_parameters(self, filename="shlp_sigmoid_factors.csv"):
+    def get_sigmoid_parameters(self, filename='shlp_sigmoid_factors.csv'):
         """ Retrieve the sigmoid parameters from csv-files
 
         Parameters
@@ -300,7 +300,7 @@ class HeatBuilding:
             d = 0
         return a, b, c, d
 
-    def get_weekday_parameters(self, filename="shlp_weekday_factors.csv"):
+    def get_weekday_parameters(self, filename='shlp_weekday_factors.csv'):
         """ Retrieve the weekday parameter from csv-file
 
         Parameters
@@ -323,16 +323,16 @@ class HeatBuilding:
     def get_bdew_profile(self):
         """ Calculation of the hourly heat demand using the bdew-equations
         """
-        self.df["temperature"] = self.temperature.values
-        self.df["temperature_geo"] = self.weighted_temperature(
-            how="geometric_series")
+        self.df['temperature'] = self.temperature.values
+        self.df['temperature_geo'] = self.weighted_temperature(
+            how='geometric_series')
 
         sf = self.get_sf_values()
 
         [a, b, c, d] = self.get_sigmoid_parameters()
 
         f = self.get_weekday_parameters()
-        h = (a / (1 + (b / (self.df["temperature_geo"] - 40)) ** c) + d)
+        h = (a / (1 + (b / (self.df['temperature_geo'] - 40)) ** c) + d)
         kw = self.annual_heat_demand / (sum(h * f) / 24)
         heat_profile = (kw * h * f * sf)
 

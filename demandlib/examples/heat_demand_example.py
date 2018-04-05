@@ -9,6 +9,7 @@ import datetime
 import os
 
 # read example temperature series
+
 datapath = os.path.join(os.path.dirname(__file__), 'example_data.csv')
 temperature = pd.read_csv(datapath)["temperature"]
 
@@ -34,7 +35,8 @@ def heat_example():
 
     # Create DataFrame for 2010
     demand = pd.DataFrame(
-        index=pd.date_range(pd.datetime(2010, 1, 1, 0), periods=8760, freq='H'))
+        index=pd.date_range(pd.datetime(2010, 1, 1, 0),
+                            periods=8760, freq='H'))
 
     demand['efh'] = bdew.HeatBuilding(
         demand.index, holidays=holidays, temperature=temperature,
