@@ -137,7 +137,7 @@ class HeatBuilding:
     Parameters
     ----------
     year : int
-        year or which the profile is created
+        year for which the profile is created
 
     Attributes
     ----------
