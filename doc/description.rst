@@ -28,8 +28,7 @@ The approach for generating heat demand profiles is described in section 4.1 (Sy
 | **T**: Daily mean temperature 2 meters above the ground (simple mean or "geometric series", which means a weighted sum over the previous days). 
 | **SF**: Stundenfaktor (hour factor)  
 
-The geometric series approach is motivated for the situation of forecasting. I am not sure if this is still usefull when the
-actual temperature at that day is known.
+The geometric series approach is meant to account for thermal inertia.
 
 :math:`T = \frac{T_t + 0.5 \cdot T_{t-1} + 0.25 \cdot T_{t-2} + 0.125 \cdot T_{t-3}}{1 + 0.5 + 0.25 + 0.125})` 
 
