@@ -44,18 +44,18 @@ Types of houses:
 
 | EFH: Einfamilienhaus (single family house)
 | MFH: Mehrfamilienhaus (multi family house)
-| GMK: Metall und Kfz (Metal)
-| GHA: Einzel- und Großhandel
-| GKO: Gebietskörperschaften, Kreditinstitute und Versicherungen
-| GBD: sonstige betriebliche Dienstleistung
-| GGA: Gaststätten
-| GBH: Beherbergung
-| GWA: Wäschereien, chemische Reinigungen
-| GGB: Gartenbau
-| GBA: Backstube
-| GPD: Papier und Druck
-| GMF: haushaltsähnliche Gewerbebetriebe
-| GHD: Summenlastprofil G/H/D
+| GMK: Metall und Kfz (metal and automotive)
+| GHA: Einzel- und Großhandel (retail and wholesale)
+| GKO: Gebietskörperschaften, Kreditinstitute und Versicherungen (Local authorities, credit institutions and insurance companies)
+| GBD: sonstige betriebliche Dienstleistung (other operational services)
+| GGA: Gaststätten (restaurants)
+| GBH: Beherbergung (accommodation)
+| GWA: Wäschereien, chemische Reinigungen (laundries, dry cleaning)
+| GGB: Gartenbau (horticulture)
+| GBA: Backstube (bakery)
+| GPD: Papier und Druck (paper and printing)
+| GMF: haushaltsähnliche Gewerbebetriebe (household-like business enterprises)
+| GHD: Summenlastprofil Gewerbe/Handel/Dienstleistungen (Total load profile Business/Commerce/Services)
 
 Electrical Profiles
 ++++++++++++++++++++
