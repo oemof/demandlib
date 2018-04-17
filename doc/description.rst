@@ -64,7 +64,7 @@ The electrical profiles are the standard load profiles from BDEW. You can choose
 
 
 Further Profiles
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 We implemented further profiles (one until now) to represent further demand sectors which are not covered by the BDEW load profiles.
 
