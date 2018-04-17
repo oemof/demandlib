@@ -22,7 +22,7 @@ The approach for generating heat demand profiles is described in section 4.1 (Sy
 
     Q_{day}(\theta) = KW \cdot h(\theta) \cdot F \cdot SF
 
-| **KW**: Kundenwert (customer value). Daily consumption of customer at :math:`\approx 8 \circ C`, depending on SLP type and Temperature timeseries.  
+| **KW**: Kundenwert (customer value). Daily consumption of customer at :math:`\approx 8 ^\circ C`, depending on SLP type and Temperature timeseries.  
 | **h**: h-Wert (h-value) , depending on SLP type and daily mean temperature.  
 | **F**: Wochentagsfaktor (week day factor), depending on SLP type and day of the week.  
 | **T**: Daily mean temperature 2 meters above the ground (simple mean or "geometric series", which means a weighted sum over the previous days). 
