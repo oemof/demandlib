@@ -42,20 +42,20 @@ Depending on the profile type, different coefficients A, B, C, D for the sigmoid
 
 Types of houses:
 
-| EFH: Einfamilienhaus (single family house)
-| MFH: Mehrfamilienhaus (multi family house)
-| GMK: Metall und Kfz (metal and automotive)
-| GHA: Einzel- und Großhandel (retail and wholesale)
-| GKO: Gebietskörperschaften, Kreditinstitute und Versicherungen (Local authorities, credit institutions and insurance companies)
-| GBD: sonstige betriebliche Dienstleistung (other operational services)
-| GGA: Gaststätten (restaurants)
-| GBH: Beherbergung (accommodation)
-| GWA: Wäschereien, chemische Reinigungen (laundries, dry cleaning)
-| GGB: Gartenbau (horticulture)
-| GBA: Backstube (bakery)
-| GPD: Papier und Druck (paper and printing)
-| GMF: haushaltsähnliche Gewerbebetriebe (household-like business enterprises)
-| GHD: Summenlastprofil Gewerbe/Handel/Dienstleistungen (Total load profile Business/Commerce/Services)
+| **EFH**: Einfamilienhaus (single family house)
+| **MFH**: Mehrfamilienhaus (multi family house)
+| **GMK**: Metall und Kfz (metal and automotive)
+| **GHA**: Einzel- und Großhandel (retail and wholesale)
+| GKO**: Gebietskörperschaften, Kreditinstitute und Versicherungen (Local authorities, credit institutions and insurance companies)
+| **GBD**: sonstige betriebliche Dienstleistung (other operational services)
+| **GGA**: Gaststätten (restaurants)
+| **GBH**: Beherbergung (accommodation)
+| **GWA**: Wäschereien, chemische Reinigungen (laundries, dry cleaning)
+| **GGB**: Gartenbau (horticulture)
+| **GBA**: Backstube (bakery)
+| **GPD**: Papier und Druck (paper and printing)
+| **GMF**: haushaltsähnliche Gewerbebetriebe (household-like business enterprises)
+| **GHD**: Summenlastprofil Gewerbe/Handel/Dienstleistungen (Total load profile Business/Commerce/Services)
 
 Electrical Profiles
 ++++++++++++++++++++
