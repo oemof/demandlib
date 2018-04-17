@@ -8,25 +8,23 @@
 
 """
 
-from setuptools import setup
+from setuptools import setup, find_packages
 import os
+
+
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
 
 setup(name='demandlib',
       version='0.1.2dev',
-      author='oemof developing group',
-      url='http://github.com/oemof/demandlib',
+      author='oemof developer group',
+      url='https://oemof.org/',
       license='GPL3',
       author_email='oemof@rl-institut.de',
       description='Demandlib of the open energy modelling framework',
-      packages=['demandlib', 'demandlib.examples'],
-      package_data = {
-          'demandlib': [os.path.join('bdew_data', '*.csv')],
-          'demandlib.examples': ['*.csv']},
-      install_requires=['numpy >= 1.7.0',
-                        'pandas >= 0.18.0',
-			'matplotlib'],
-      entry_points={
-          'console_scripts': [
-              'demandlib_heat_example = demandlib.examples.heat_demand_example:heat_example',
-              'demandlib_power_example = demandlib.examples.power_demand_example:power_example',]}
+      long_description=read('README.rst'),
+      packages=find_packages(),
+      install_requires=['numpy >= 1.7.0, <= 1.14.2',
+                        'pandas >= 0.18.0, <= 0.22'],
       )
