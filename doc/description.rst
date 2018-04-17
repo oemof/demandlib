@@ -46,7 +46,7 @@ Types of houses:
 | **MFH**: Mehrfamilienhaus (multi family house)
 | **GMK**: Metall und Kfz (metal and automotive)
 | **GHA**: Einzel- und Großhandel (retail and wholesale)
-| GKO**: Gebietskörperschaften, Kreditinstitute und Versicherungen (Local authorities, credit institutions and insurance companies)
+| **GKO**: Gebietskörperschaften, Kreditinstitute und Versicherungen (Local authorities, credit institutions and insurance companies)
 | **GBD**: sonstige betriebliche Dienstleistung (other operational services)
 | **GGA**: Gaststätten (restaurants)
 | **GBH**: Beherbergung (accommodation)
