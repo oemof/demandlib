@@ -30,13 +30,13 @@ The approach for generating heat demand profiles is described in section 4.1 (Sy
 
 The geometric series approach is meant to account for thermal inertia.
 
-:math:`T = \frac{T_t + 0.5 \cdot T_{t-1} + 0.25 \cdot T_{t-2} + 0.125 \cdot T_{t-3}}{1 + 0.5 + 0.25 + 0.125})` 
+:math:`T = \frac{T_t + 0.5 \cdot T_{t-1} + 0.25 \cdot T_{t-2} + 0.125 \cdot T_{t-3}}{1 + 0.5 + 0.25 + 0.125}` 
 
 Depending on the profile type, different coefficients A, B, C, D for the sigmoid function are used.
 
 .. math::
 
-   h(\theta) = \frac{A}{1+(\frac{B}{\theta-\theta_0})^C} + D
+   h(\theta) = \frac{A}{1+(\frac{B}{\theta-\theta_0})^C} + D \\
 
    \theta_0 = 40^\circ C
 
