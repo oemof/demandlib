@@ -14,11 +14,11 @@ With the demandlib you can create power and heat profiles for various sectors by
 Current Release
 ==============
 
-Current release of demandlib is v0.1.1 Install it via pip
+Current release of demandlib is v0.1.2. Install it via pip
 
 ::
 
-    sudo pip3 install demandlib
+    sudo pip install demandlib
 
 
 Developing Version
@@ -42,11 +42,11 @@ Clone the demandlib from github.
     git clone git@github.com:oemof/demandlib.git
     
 
-If the project is cloned you can install it using pip3 with the -e flag. 
+If the project is cloned you can install it using pip with the -e flag. 
 
 ::
 
-    sudo pip3 install -e <path/to/the/demandlib/root/dir>
+    sudo pip install -e <path/to/the/demandlib/root/dir>
 
 
 Developing the demandlib
@@ -54,7 +54,7 @@ Developing the demandlib
 
 As the demandlib is part of the oemof developer group we use the same developer rules:
 
-http://oemof.readthedocs.io/en/stable/developer_notes.html
+http://oemof.readthedocs.io/en/stable/developing_oemof.html
 
 If you have push rights clone this repository to your local system.
 
