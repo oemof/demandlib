@@ -4,8 +4,8 @@ import pandas as pd
 
 
 def add_weekdays2df(time_df, holidays=None, holiday_is_sunday=False):
-    r"""Giving back a DataFrame containing weekdays and optionally holidays for the
-    given year.
+    r"""Giving back a DataFrame containing weekdays and optionally holidays for
+     the given year.
 
     Parameters
     ----------
