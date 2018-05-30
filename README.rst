@@ -12,7 +12,7 @@ With the demandlib you can create power and heat profiles for various sectors by
 
 
 Current Release
-==============
+===============
 
 Current release of demandlib is v0.1.2. Install it via pip
 
@@ -50,7 +50,7 @@ If the project is cloned you can install it using pip with the -e flag.
 
 
 Developing the demandlib
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As the demandlib is part of the oemof developer group we use the same developer rules:
 
