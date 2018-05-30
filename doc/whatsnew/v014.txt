@@ -1,22 +1,23 @@
-v0.1.3 ()
+v0.1.2 (May 30, 2018)
 +++++++++++++++++++++++++
 
-New features
-############
+Code
+####
 
-
-Bug fixes
-#########
-
-
-Other changes
-#############
+ * fix temperature bug
+ * fix Code style
 
 
 Documentation
 #############
 
+ * Documentation improvements.
+ 
 
 Contributors
 ############
+
+ * Uwe Krien
+ * Jann Launer
+ * Stephen Bosch
 
