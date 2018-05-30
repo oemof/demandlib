@@ -14,7 +14,7 @@ With the demandlib you can create power and heat profiles for various sectors by
 Current Release
 ===============
 
-Current release of demandlib is v0.1.2. Install it via pip
+Current release of demandlib is v0.1.3. Install it via pip
 
 ::
 
