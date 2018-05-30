@@ -1,11 +1,6 @@
 #! /usr/bin/env python
 
-"""TODO: Maybe add a docstring containing a long description
-
-  This would double as something we could put int the `long_description`
-  parameter for `setup` and it would squelch some complaints pylint has on
-  `setup.py`.
-
+"""Setup information of demandlib.
 """
 
 from setuptools import setup, find_packages
