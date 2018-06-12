@@ -32,7 +32,7 @@ The geometric series approach is meant to account for thermal inertia.
 
 .. math::
    
-   `\theta = \frac{T_t + 0.5 \cdot T_{t-1} + 0.25 \cdot T_{t-2} + 0.125 \cdot T_{t-3}}{1 + 0.5 + 0.25 + 0.125}` 
+   \theta = \frac{T_t + 0.5 \cdot T_{t-1} + 0.25 \cdot T_{t-2} + 0.125 \cdot T_{t-3}}{1 + 0.5 + 0.25 + 0.125} 
 
 Depending on the profile type, different coefficients A, B, C, D for the sigmoid function are used.
 
