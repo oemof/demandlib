@@ -38,9 +38,9 @@ Depending on the profile type, different coefficients A, B, C, D for the sigmoid
 
 .. math::
 
-   h(\theta) = \frac{A}{1+(\frac{B}{\theta-\theta_0})^C} + D \\
+   h(\theta) &= \frac{A}{1+(\frac{B}{\theta-\theta_0})^C} + D \\
 
-   \theta_0 = 40^\circ C
+   \theta_0 &= 40^\circ C
 
 Types of houses:
 
