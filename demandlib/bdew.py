@@ -323,6 +323,11 @@ class HeatBuilding:
     def get_bdew_profile(self):
         """ Calculation of the hourly heat demand using the bdew-equations
         """
+        return self.get_normalized_bdew_profile() * self.annual_heat_demand
+
+    def get_normalized_bdew_profile(self):
+        """ Calculation of the normalized hourly heat demand
+        """
         self.df['temperature'] = self.temperature.values
         self.df['temperature_geo'] = self.weighted_temperature(
             how='geometric_series')
@@ -333,7 +338,7 @@ class HeatBuilding:
 
         f = self.get_weekday_parameters()
         h = (a / (1 + (b / (self.df['temperature_geo'] - 40)) ** c) + d)
-        kw = self.annual_heat_demand / (sum(h * f) / 24)
-        heat_profile = (kw * h * f * sf)
+        kw = 1.0 / (sum(h * f) / 24)
+        heat_profile_normalized = (kw * h * f * sf)
 
-        return heat_profile
+        return heat_profile_normalized
