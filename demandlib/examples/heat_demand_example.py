@@ -61,7 +61,7 @@ def heat_example():
     # Plot demand of building
     ax = demand.plot()
     ax.set_xlabel("Date")
-    ax.set_ylabel("Heat demand in MW")
+    ax.set_ylabel("Heat demand in kW")
     plt.show()
 
 
