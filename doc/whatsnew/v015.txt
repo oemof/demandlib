@@ -15,14 +15,12 @@ Bug fixes
 Other changes
 #############
 
-
-Documentation
-#############
-
+* Make matplotlib optional in examples.
 
 Contributors
 ############
 
 * Hendrik Huyskens
 * Uwe Krien
+* Birgit Schachler
 
