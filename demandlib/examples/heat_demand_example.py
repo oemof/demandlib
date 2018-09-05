@@ -1,12 +1,25 @@
 # -*- coding: utf-8 -*-
-"""Creating heat demand profiles using the bdew method.
+"""
+Creating heat demand profiles using the bdew method.
+
+Installation requirements
+-------------------------
+This example requires at least version v0.1.4 of the oemof demandlib. Install
+by:
+    pip install 'demandlib>=0.1.4,<0.2'
+Optional:
+    pip install matplotlib
+
 """
 
 import pandas as pd
 import demandlib.bdew as bdew
-from matplotlib import pyplot as plt
 import datetime
 import os
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    plt = None
 
 # read example temperature series
 
@@ -58,11 +71,14 @@ def heat_example():
         shlp_type='ghd', wind_class=0, annual_heat_demand=140000,
         name='ghd').get_bdew_profile()
 
-    # Plot demand of building
-    ax = demand.plot()
-    ax.set_xlabel("Date")
-    ax.set_ylabel("Heat demand in kW")
-    plt.show()
+    if plt is not None:
+        # Plot demand of building
+        ax = demand.plot()
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Heat demand in kW")
+        plt.show()
+    else:
+        print('Annual consumption: \n{}'.format(demand.sum()))
 
 
 if __name__ == '__main__':

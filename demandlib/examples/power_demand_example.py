@@ -1,12 +1,25 @@
 # -*- coding: utf-8 -*-
-"""Creating power demand profiles using bdew profiles.
+"""
+Creating power demand profiles using bdew profiles.
+
+Installation requirements
+-------------------------
+This example requires at least version v0.1.4 of the oemof demandlib. Install
+by:
+    pip install 'demandlib>=0.1.4,<0.2'
+Optional:
+    pip install matplotlib
+
 """
 
 import datetime
 import demandlib.bdew as bdew
 import demandlib.particular_profiles as profiles
 from datetime import time as settime
-from matplotlib import pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    plt = None
 
 # The following dictionary is create by "workalendar"
 # pip3 install workalendar
@@ -76,11 +89,12 @@ def power_example():
     elec_demand = elec_demand.resample('H').mean()
     print(elec_demand.sum())
 
-    # Plot demand
-    ax = elec_demand.plot()
-    ax.set_xlabel("Date")
-    ax.set_ylabel("Power demand")
-    plt.show()
+    if plt is not None:
+        # Plot demand
+        ax = elec_demand.plot()
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Power demand")
+        plt.show()
 
 
 if __name__ == '__main__':
