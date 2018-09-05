@@ -74,4 +74,4 @@ If you want to contribute, fork the project at github, clone your personal fork 
 Example
 =======
 
-Take a look on the examples to get usage of demandlib. We provide two examples. One for the heat sector, executable by calling ``demandlib_heat_example``. The second example show how to create demand time-series for the power. Execute this example by calling ``demandlib_power_example``. Both exemaples are callable from anywhere in the command-line.
+We provide two examples on how to use the demandlib. One for the heat sector, executable by calling ``demandlib_heat_example``, and one showing how to create electricity demand time series, executable by calling ``demandlib_power_example``. Both examples are callable from anywhere in the command-line.
