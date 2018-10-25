@@ -342,3 +342,41 @@ class HeatBuilding:
         heat_profile_normalized = (kw * h * f * sf)
 
         return heat_profile_normalized
+
+def cop(self, heatpump_type = "Air", water_temp = 60):
+    """ Calculation of the coefficient of performance depending
+    on the outside temperature
+    
+    Parameters
+    ----------
+    heatpump_type: string
+        defines the technology used. Ground is more efficient than Air.
+    water_temp: int
+        temperature needed for the heating system
+        
+    References
+    ----------
+    ..  [1]: 'https://www.researchgate.net/publication/255759857_A_review_of_domestic_heat_pumps'
+        Research paper about domestic heatpumps, containing the formulas used
+    """
+    mean_temp_hours = self.temperature
+    cop_lst = []
+    
+    if heatpump_type == "Air":
+        for i, tmp in mean_temp_hours.iterrows():
+            cop = (6.81 - 0.121 * (water_temp - tmp)
+                   + 0.00063 * (water_temp - tmp)**2)
+            cop_lst.append(cop)
+    
+    elif heatpump_type == "Ground":
+        for i, tmp in mean_temp_hours.iterrows():
+            cop = (8.77 - 0.15 * (water_temp - tmp)
+                   + 0.000734 * (water_temp - tmp)**2)
+            cop_lst.append(cop)
+    
+    else:
+        print("Heatpump type is not defined")
+        return -9999
+
+    df_cop = pd.DataFrame(cop_lst)
+    return df_cop
