@@ -343,7 +343,7 @@ class HeatBuilding:
 
         return heat_profile_normalized
 
-    def cop(self, heatpump_type = "Air", water_temp = 60):
+    def get_cop(self, heatpump_type = "Air", water_temp = 60):
         """ Calculation of the coefficient of performance depending
         on the outside temperature
         
@@ -379,7 +379,8 @@ class HeatBuilding:
             return -9999
     
 #        df_cop = pd.DataFrame({'cop': cop_lst}) #change column name of list to 'cop'
-        df_cop = pd.DataFrame(cop_lst)
-        return df_cop
+        self.cop = pd.DataFrame({ "cop" : cop_lst})
+        
+        return self.cop
     
     
