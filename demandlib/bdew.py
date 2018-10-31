@@ -378,7 +378,6 @@ class HeatBuilding:
             print("Heatpump type is not defined")
             return -9999
     
-#        df_cop = pd.DataFrame({'cop': cop_lst}) #change column name of list to 'cop'
         self.cop = pd.DataFrame({ "cop" : cop_lst})
         
         return self.cop
