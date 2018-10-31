@@ -359,17 +359,17 @@ class HeatBuilding:
         ..  [1]: 'https://www.researchgate.net/publication/255759857_A_review_of_domestic_heat_pumps'
             Research paper about domestic heatpumps, containing the formulas used
         """
-        mean_temp_hours = pd.DataFrame(self.temperature)
+
         cop_lst = []
         
         if heatpump_type == "Air":
-            for i, tmp in mean_temp_hours.iterrows():
+            for tmp in self.temperature:
                 cop = (6.81 - 0.121 * (water_temp - tmp)
                        + 0.00063 * (water_temp - tmp)**2)
                 cop_lst.append(cop)
         
         elif heatpump_type == "Ground":
-            for i, tmp in mean_temp_hours.iterrows():
+            for tmp in self.temperature:
                 cop = (8.77 - 0.15 * (water_temp - tmp)
                        + 0.000734 * (water_temp - tmp)**2)
                 cop_lst.append(cop)
