@@ -375,10 +375,11 @@ class HeatBuilding:
                 cop_lst.append(cop)
         
         else:
+            # TODO Raise Error
             print("Heatpump type is not defined")
             return -9999
 
-        self.cop = pd.DataFrame({"cop" : cop_lst})        
+        self.cop = pd.DataFrame({"cop" : cop_lst})
         self.cop.set_index(self.df.index, inplace = True)
 
                 
