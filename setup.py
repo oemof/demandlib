@@ -12,7 +12,7 @@ def read(fname):
 
 
 setup(name='demandlib',
-      version='0.1.6dev',
+      version='0.1.6',
       author='oemof developer group',
       url='https://oemof.org/',
       license='GPL3',
