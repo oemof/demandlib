@@ -1,19 +1,14 @@
-v0.1.6 ()
+v0.1.6 (January 30, 2019)
 +++++++++++++++++++++++++
 
-New features
-############
+General
+#######
 
-
-Bug fixes
-#########
-
-
-
-Other changes
-#############
-
+* Update requirements
+* Fix typos
 
 Contributors
 ############
 
+* Uwe Krien
+* Pyosch
