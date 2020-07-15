@@ -115,21 +115,40 @@ class ElecSlp:
         new_df.drop('date', axis=1, inplace=True)
         return new_df.div(new_df.sum(axis=0), axis=1)
 
-    def get_profile(self, ann_el_demand_per_sector):
+    def get_profile(self, ann_el_demand_per_sector,
+                    dyn_function_h0: bool = True):
         """ Get the profiles for the given annual demand
 
         Parameters
         ----------
         ann_el_demand_per_sector : dictionary
             Key: sector, value: annual value
+        dyn_function_h0: bool, default True
+            Uses the dynamisation function of the BDEW to smoothen the
+            seasonal edges. Functions resolution is daily.
+            f(x) = -3.916649251 * 10^-10 * x^4 + 3,2 * 10^-7 * x³ - 7,02
+            * 10^-5 * x²+0,0021 * x +1,24
+            Adjustment of accuracy: from -3,92 to -3.916649251
 
         Returns
         -------
         pandas.DataFrame : Table with all profiles
 
         """
-        return self.slp_frame.multiply(pd.Series(
-            ann_el_demand_per_sector), axis=1).dropna(how='all', axis=1) * 4
+        if dyn_function_h0 == True:
+            quartersinyear = len(self.slp_frame)
+            for quarter in range(quartersinyear):
+                quarterhour_to_day = (quarter + 1) / (24 * 4)
+                smoothing_factor = -3.916649251 * 10 ** -10 \
+                                   * quarterhour_to_day ** 4 + 3.2 * 10 ** -7 \
+                                   * quarterhour_to_day ** 3 - 7.02 * 10 ** -5 \
+                                   * quarterhour_to_day ** 2 + 0.0021 \
+                                   * quarterhour_to_day + 1.24
+
+                self.slp_frame['h0'][quarter] = self.slp_frame['h0'][
+                                                    quarter] * smoothing_factor
+        return self.slp_frame.multiply(pd.Series(ann_el_demand_per_sector),
+                                       axis=1).dropna(how='all', axis=1) * 4
 
 
 class HeatBuilding:
@@ -188,7 +207,7 @@ class HeatBuilding:
         Notes
         -----
         Equation for the mathematical series of the average
-        tempaerature [1]_:
+        temperature [1]_:
 
         .. math::
             T=\frac{T_{D}+0.5\cdot T_{D-1}+0.25\cdot T_{D-2}+
@@ -263,10 +282,12 @@ class HeatBuilding:
 
         # drop unnecessary columns
         drop_cols = (
-            ['hour_of_day', 'hour', 'building_class', 'shlp_type',
-             'date', 'temperature'] + (['weekday_x'] if residential else []) +
-            (['weekday_y'] if residential else []) +
-            (['weekday'] if not residential else []))
+                ['hour_of_day', 'hour', 'building_class', 'shlp_type',
+                 'date', 'temperature']
+                + (['weekday_x'] if residential else [])
+                + (['weekday_y'] if residential else [])
+                + (['weekday'] if not residential else []))
+
         sf_mat = sf_mat.drop(drop_cols, 1)
 
         # Determine the h values
