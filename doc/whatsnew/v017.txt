@@ -3,6 +3,7 @@ v0.1.7 ()
 
 New features
 ############
+* Add dynamic h0 profile calculation
 
 
 Bug fixes
@@ -11,8 +12,10 @@ Bug fixes
 
 Other changes
 #############
+* Update deprecated pd.datetime to datetime.datetime 
 
 
 Contributors
 ############
-
+* Steffen Wehkamp
+* Patrik Schönfeldt
