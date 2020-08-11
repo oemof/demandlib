@@ -4,6 +4,7 @@ Implementation of the bdew heat load profiles
 
 
 """
+import datetime
 from math import ceil
 import numpy as np
 import pandas as pd
@@ -43,7 +44,7 @@ class ElecSlp:
             hoy = 8760
         self.datapath = os.path.join(os.path.dirname(__file__), 'bdew_data')
         self.date_time_index = pd.date_range(
-            pd.datetime(year, 1, 1, 0), periods=hoy * 4, freq='15Min')
+            datetime.datetime(year, 1, 1, 0), periods=hoy * 4, freq='15Min')
         if seasons is None:
             self.seasons = {
                 'summer1': [5, 15, 9, 14],  # summer: 15.05. to 14.09
@@ -80,7 +81,7 @@ class ElecSlp:
         # Create an index to merge. The year and month will be ignored only the
         # time index is necessary.
         index = pd.date_range(
-            pd.datetime(2007, 1, 1, 0), periods=2016, freq='15Min')
+            datetime.datetime(2007, 1, 1, 0), periods=2016, freq='15Min')
         tmp_df.set_index(index, inplace=True)
 
         # Create empty DataFrame to take the results.
@@ -102,10 +103,10 @@ class ElecSlp:
         tmp_df.pop('index')
 
         for p in self.seasons.keys():
-            a = pd.datetime(self.year, self.seasons[p][0],
-                            self.seasons[p][1], 0, 0)
-            b = pd.datetime(self.year, self.seasons[p][2],
-                            self.seasons[p][3], 23, 59)
+            a = datetime.datetime(self.year, self.seasons[p][0],
+                                  self.seasons[p][1], 0, 0)
+            b = datetime.datetime(self.year, self.seasons[p][2],
+                                  self.seasons[p][3], 23, 59)
             new_df.update(pd.DataFrame.merge(
                 tmp_df[tmp_df['period'] == p[:-1]], time_df[a:b],
                 left_on=left_cols, right_on=right_cols,
