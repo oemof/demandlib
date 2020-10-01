@@ -8,7 +8,7 @@ matrix:
 
 install:
   - pip install .
-  - pip install coveralls pytest-cov
+  - pip install coveralls sphinx sphinx_rtd_theme pytest-cov
 
 # command to run tests
 script:
