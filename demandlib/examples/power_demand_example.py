@@ -10,6 +10,12 @@ by:
 Optional:
     pip install matplotlib
 
+SPDX-FileCopyrightText: Birgit Schachler
+SPDX-FileCopyrightText: Uwe Krien <krien@uni-bremen.de>
+SPDX-FileCopyrightText: Stephen Bosch
+
+SPDX-License-Identifier: MIT
+
 """
 
 import datetime
@@ -19,6 +25,7 @@ from datetime import time as settime
 try:
     import matplotlib.pyplot as plt
 except ImportError:
+    print("Install the matplotlib to see the plots.")
     plt = None
 
 # The following dictionary is create by "workalendar"
@@ -39,7 +46,7 @@ holidays = {
     datetime.date(2010, 12, 26): 'Second Christmas Day'}
 
 
-def power_example():
+def power_example(testmode=False):
     year = 2010
 
     ann_el_demand_per_sector = {
@@ -90,13 +97,15 @@ def power_example():
     elec_demand = elec_demand.resample('H').mean()
     print(elec_demand.sum())
 
-    if plt is not None:
+    if plt is not None and not testmode:
         # Plot demand
         ax = elec_demand.plot()
         ax.set_xlabel("Date")
         ax.set_ylabel("Power demand")
         plt.show()
 
+    return elec_demand
+
 
 if __name__ == '__main__':
-    power_example()
+    print(power_example())

@@ -10,8 +10,14 @@ by:
 Optional:
     pip install matplotlib
 
-"""
+SPDX-FileCopyrightText: Birgit Schachler
+SPDX-FileCopyrightText: Uwe Krien <krien@uni-bremen.de>
+SPDX-FileCopyrightText: jnnr
+SPDX-FileCopyrightText: Stephen Bosch
 
+SPDX-License-Identifier: MIT
+
+"""
 import pandas as pd
 import demandlib.bdew as bdew
 import datetime
@@ -19,10 +25,10 @@ import os
 try:
     import matplotlib.pyplot as plt
 except ImportError:
+    print("Install the matplotlib to see the plots.")
     plt = None
 
 # read example temperature series
-
 datapath = os.path.join(os.path.dirname(__file__), 'example_data.csv')
 temperature = pd.read_csv(datapath)["temperature"]
 
@@ -34,7 +40,7 @@ temperature = pd.read_csv(datapath)["temperature"]
 # >>> holidays = dict(cal.holidays(2010))
 
 
-def heat_example():
+def heat_example(testmode=False):
     holidays = {
         datetime.date(2010, 5, 24): 'Whit Monday',
         datetime.date(2010, 4, 5): 'Easter Monday',
@@ -48,7 +54,7 @@ def heat_example():
 
     # Create DataFrame for 2010
     demand = pd.DataFrame(
-        index=pd.date_range(pd.datetime(2010, 1, 1, 0),
+        index=pd.date_range(datetime.datetime(2010, 1, 1, 0),
                             periods=8760, freq='H'))
     
     # Single family house (efh: Einfamilienhaus)
@@ -71,7 +77,7 @@ def heat_example():
         shlp_type='ghd', wind_class=0, annual_heat_demand=140000,
         name='ghd').get_bdew_profile()
 
-    if plt is not None:
+    if plt is not None and not testmode:
         # Plot demand of building
         ax = demand.plot()
         ax.set_xlabel("Date")
@@ -80,6 +86,8 @@ def heat_example():
     else:
         print('Annual consumption: \n{}'.format(demand.sum()))
 
+    return demand
+
 
 if __name__ == '__main__':
-    heat_example()
+    print(heat_example())
