@@ -117,15 +117,16 @@ class ElecSlp:
         return new_df.div(new_df.sum(axis=0), axis=1)
 
     def get_profile(self, ann_el_demand_per_sector,
-                    dyn_function_h0: bool = True):
+                    dyn_function_h0: bool = None):
         """ Get the profiles for the given annual demand
 
         Parameters
         ----------
         ann_el_demand_per_sector : dictionary
             Key: sector, value: annual value
-        dyn_function_h0: bool, default True
-            Uses the dynamisation function of the BDEW to smoothen the
+        dyn_function_h0: bool, default None
+            (None is interpreted as False but also raises a FutureWarning.)
+            Use the dynamisation function of the BDEW to smoothen the
             seasonal edges. Functions resolution is daily.
             f(x) = -3.916649251 * 10^-10 * x^4 + 3,2 * 10^-7 * x³ - 7,02
             * 10^-5 * x²+0,0021 * x +1,24
@@ -136,7 +137,13 @@ class ElecSlp:
         pandas.DataFrame : Table with all profiles
 
         """
-        if dyn_function_h0 == True:
+        if dyn_function_h0 is None:
+            warning_message = ("Current default for 'dyn_function_h0' is"
+                               + "'False'. This is about to change to 'True'."
+                               + "Set 'False' explicitly to retain the current"
+                               + "behaviour.")
+            raise FutureWarning(warning_message)
+        elif dyn_function_h0:
             quartersinyear = len(self.slp_frame)
             for quarter in range(quartersinyear):
                 quarterhour_to_day = (quarter + 1) / (24 * 4)
