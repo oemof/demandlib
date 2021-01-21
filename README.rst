@@ -1,5 +1,11 @@
 The **demandlib** is part of the oemof group but works as a standalone application.
 
+.. image:: https://travis-ci.org/oemof/demandlib.svg?branch=master
+    :target: https://travis-ci.org/oemof/demandlib
+
+.. image:: https://coveralls.io/repos/github/oemof/demandlib/badge.svg?branch=master
+    :target: https://coveralls.io/github/oemof/demandlib?branch=master
+
 .. contents:: `Table of contents`
     :depth: 1
     :local:

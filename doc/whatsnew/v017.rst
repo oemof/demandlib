@@ -15,9 +15,11 @@ Bug fixes
 Other changes
 #############
 *   Update deprecated pd.datetime to datetime.datetime
+*   Add tests and coverage as CI
 
 
 Contributors
 ############
 *   Steffen Wehkamp
 *   Patrik Schönfeldt
+*   Uwe Krien
