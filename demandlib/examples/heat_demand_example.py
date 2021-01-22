@@ -40,7 +40,12 @@ temperature = pd.read_csv(datapath)["temperature"]
 # >>> holidays = dict(cal.holidays(2010))
 
 
-def heat_example(testmode=False):
+def heat_example(testmode=False,
+                 ann_demands_per_type=None):
+    if ann_demands_per_type is None:
+        ann_demands_per_type = {'efh': 25000,
+                                'mfh': 80000,
+                                'ghd': 140000}
     holidays = {
         datetime.date(2010, 5, 24): 'Whit Monday',
         datetime.date(2010, 4, 5): 'Easter Monday',
@@ -61,30 +66,34 @@ def heat_example(testmode=False):
     demand['efh'] = bdew.HeatBuilding(
         demand.index, holidays=holidays, temperature=temperature,
         shlp_type='EFH',
-        building_class=1, wind_class=1, annual_heat_demand=25000,
+        building_class=1, wind_class=1,
+        annual_heat_demand=ann_demands_per_type['efh'],
         name='EFH').get_bdew_profile()
 
     # Multi family house (mfh: Mehrfamilienhaus)
     demand['mfh'] = bdew.HeatBuilding(
         demand.index, holidays=holidays, temperature=temperature,
         shlp_type='MFH',
-        building_class=2, wind_class=0, annual_heat_demand=80000,
+        building_class=2, wind_class=0,
+        annual_heat_demand=ann_demands_per_type['mfh'],
         name='MFH').get_bdew_profile()
 
     # Industry, trade, service (ghd: Gewerbe, Handel, Dienstleistung)
     demand['ghd'] = bdew.HeatBuilding(
         demand.index, holidays=holidays, temperature=temperature,
-        shlp_type='ghd', wind_class=0, annual_heat_demand=140000,
+        shlp_type='ghd', wind_class=0,
+        annual_heat_demand=ann_demands_per_type['ghd'],
         name='ghd').get_bdew_profile()
 
-    if plt is not None and not testmode:
-        # Plot demand of building
-        ax = demand.plot()
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Heat demand in kW")
-        plt.show()
-    else:
-        print('Annual consumption: \n{}'.format(demand.sum()))
+    if not testmode:
+        if plt is not None:
+            # Plot demand of building
+            ax = demand.plot()
+            ax.set_xlabel("Date")
+            ax.set_ylabel("Heat demand in kW")
+            plt.show()
+        else:
+            print('Annual consumption: \n{}'.format(demand.sum()))
 
     return demand
 
