@@ -24,4 +24,4 @@ def test_heat_example():
         testmode=True).sum()
 
     for key in ann_demands_per_type:
-        assert np.isclose(demands[key], ann_demands_per_type[key])
+        assert np.isclose(demands[key], ann_demands_per_type[key], rtol=1e-04)
