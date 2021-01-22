@@ -21,7 +21,7 @@ setup(name='demandlib',
       long_description=read('README.rst'),
       packages=find_packages(),
       install_requires=['numpy >= 1.17.0',
-                        'pandas >= 1.0'],
+                        'pandas >= 1.0, <1.2'],
       package_data={
           'demandlib': [os.path.join('bdew_data', '*.csv')],
           'demandlib.examples': ['*.csv']},
