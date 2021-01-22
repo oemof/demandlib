@@ -85,9 +85,9 @@ def power_example(
                          'weekend': {'day': 0.8, 'night': 0.6}})
 
     if not testmode:
-        print("Be aware that the values in the DataFrame are 15minute values with "
-              "a power unit. If you sum up a table with 15min values the result "
-              "will be of the unit 'kW15minutes'.")
+        print("Be aware that the values in the DataFrame are 15 minute values"
+              + "with a power unit. If you sum up a table with 15min values"
+              + "the result will be of the unit 'kW15minutes'.")
         print(elec_demand.sum())
 
         print("You will have to divide the result by 4 to get kWh.")
