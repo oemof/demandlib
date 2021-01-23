@@ -72,17 +72,20 @@ def power_example(
 
     # Beginning and end of workday, weekdays and weekend days, and scaling
     # factors by default
-    elec_demand['i0'] = ilp.simple_profile(ann_el_demand_per_sector['i0'])
+    if 'i0' in ann_el_demand_per_sector:
+        elec_demand['i0'] = ilp.simple_profile(ann_el_demand_per_sector['i0'])
 
     # Set beginning of workday to 9 am
-    elec_demand['i1'] = ilp.simple_profile(ann_el_demand_per_sector['i1'],
-                                           am=settime(9, 0, 0))
+    if 'i1' in ann_el_demand_per_sector:
+        elec_demand['i1'] = ilp.simple_profile(ann_el_demand_per_sector['i1'],
+                                               am=settime(9, 0, 0))
 
     # Change scaling factors
-    elec_demand['i2'] = ilp.simple_profile(
-        ann_el_demand_per_sector['i2'],
-        profile_factors={'week': {'day': 1.0, 'night': 0.8},
-                         'weekend': {'day': 0.8, 'night': 0.6}})
+    if 'i2' in ann_el_demand_per_sector:
+        elec_demand['i2'] = ilp.simple_profile(
+            ann_el_demand_per_sector['i2'],
+            profile_factors={'week': {'day': 1.0, 'night': 0.8},
+                             'weekend': {'day': 0.8, 'night': 0.6}})
 
     if not testmode:
         print("Be aware that the values in the DataFrame are 15 minute values"

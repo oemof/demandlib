@@ -63,27 +63,31 @@ def heat_example(testmode=False,
                             periods=8760, freq='H'))
     
     # Single family house (efh: Einfamilienhaus)
-    demand['efh'] = bdew.HeatBuilding(
-        demand.index, holidays=holidays, temperature=temperature,
-        shlp_type='EFH',
-        building_class=1, wind_class=1,
-        annual_heat_demand=ann_demands_per_type['efh'],
-        name='EFH').get_bdew_profile()
+    if "efh" in ann_demands_per_type:
+        demand['efh'] = bdew.HeatBuilding(
+            demand.index, holidays=holidays, temperature=temperature,
+            shlp_type='EFH',
+            building_class=1, wind_class=1,
+            annual_heat_demand=ann_demands_per_type['efh'],
+            name='EFH').get_bdew_profile()
+
 
     # Multi family house (mfh: Mehrfamilienhaus)
-    demand['mfh'] = bdew.HeatBuilding(
-        demand.index, holidays=holidays, temperature=temperature,
-        shlp_type='MFH',
-        building_class=2, wind_class=0,
-        annual_heat_demand=ann_demands_per_type['mfh'],
-        name='MFH').get_bdew_profile()
+    if "mfh" in ann_demands_per_type:
+        demand['mfh'] = bdew.HeatBuilding(
+            demand.index, holidays=holidays, temperature=temperature,
+            shlp_type='MFH',
+            building_class=2, wind_class=0,
+            annual_heat_demand=ann_demands_per_type['mfh'],
+            name='MFH').get_bdew_profile()
 
     # Industry, trade, service (ghd: Gewerbe, Handel, Dienstleistung)
-    demand['ghd'] = bdew.HeatBuilding(
-        demand.index, holidays=holidays, temperature=temperature,
-        shlp_type='ghd', wind_class=0,
-        annual_heat_demand=ann_demands_per_type['ghd'],
-        name='ghd').get_bdew_profile()
+    if "ghd" in ann_demands_per_type:
+        demand['ghd'] = bdew.HeatBuilding(
+            demand.index, holidays=holidays, temperature=temperature,
+            shlp_type='ghd', wind_class=0,
+            annual_heat_demand=ann_demands_per_type['ghd'],
+            name='ghd').get_bdew_profile()
 
     if not testmode:
         if plt is not None:
