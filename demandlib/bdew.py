@@ -347,7 +347,7 @@ class HeatBuilding:
 
         return np.array(list(map(float, pd.DataFrame.merge(
             tmp_df, self.df, left_on='weekdays', right_on='weekday',
-            how='inner', left_index=True).sort_index()['wochentagsfaktor'])))
+            how='inner').set_index(self.df.index)['wochentagsfaktor'])))
 
     def get_bdew_profile(self):
         """ Calculation of the hourly heat demand using the bdew-equations
