@@ -160,11 +160,12 @@ class ElecSlp:
             quartersinyear = len(self.slp_frame)
             for quarter in range(quartersinyear):
                 quarterhour_to_day = (quarter + 1) / (24 * 4)
-                smoothing_factor = -3.916649251 * 10 ** -10 \
-                                   * quarterhour_to_day ** 4 + 3.2 * 10 ** -7 \
-                                   * quarterhour_to_day ** 3 - 7.02 * 10 ** -5 \
-                                   * quarterhour_to_day ** 2 + 0.0021 \
-                                   * quarterhour_to_day + 1.24
+                smoothing_factor = (
+                        -3.916649251 * 10 ** -10
+                        * quarterhour_to_day ** 4 + 3.2 * 10 ** -7
+                        * quarterhour_to_day ** 3 - 7.02 * 10 ** -5
+                        * quarterhour_to_day ** 2 + 0.0021
+                        * quarterhour_to_day + 1.24)
 
                 self.slp_frame['h0'][quarter] = self.slp_frame['h0'][
                                                     quarter] * smoothing_factor
