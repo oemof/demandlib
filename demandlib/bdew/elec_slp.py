@@ -112,11 +112,19 @@ class ElecSlp:
                                   self.seasons[p][1], 0, 0)
             b = datetime.datetime(self.year, self.seasons[p][2],
                                   self.seasons[p][3], 23, 59)
-            new_df.update(pd.DataFrame.merge(
+            merged_df = pd.DataFrame.merge(
                 tmp_df[tmp_df['period'] == p[:-1]], time_df[a:b],
                 left_on=left_cols, right_on=right_cols,
-                how='inner', left_index=True).sort_index().drop(
-                ['hour_of_day'], 1))
+                how='inner').drop(
+                ['hour_of_day'], 1)
+
+            merged_df.index = (
+                    pd.to_datetime(merged_df['date'])
+                    + pd.to_timedelta(merged_df['hour'], unit='h')
+                    + pd.to_timedelta(merged_df['minute'], unit='m'))
+            merged_df.sort_index(inplace=True)
+
+            new_df.update(merged_df)
 
         new_df.drop('date', axis=1, inplace=True)
         return new_df.div(new_df.sum(axis=0), axis=1)
