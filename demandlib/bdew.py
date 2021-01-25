@@ -107,12 +107,10 @@ class ElecSlp:
                                   self.seasons[p][1], 0, 0)
             b = datetime.datetime(self.year, self.seasons[p][2],
                                   self.seasons[p][3], 23, 59)
-            period_df = tmp_df[tmp_df['period'] == p[:-1]]
-            season_df = time_df[a:b]
             new_df.update(pd.DataFrame.merge(
-                period_df, season_df,
+                tmp_df[tmp_df['period'] == p[:-1]], time_df[a:b],
                 left_on=left_cols, right_on=right_cols,
-                how='inner').set_index(season_df.index).drop(
+                how='inner', left_index=True).sort_index().drop(
                 ['hour_of_day'], 1))
 
         new_df.drop('date', axis=1, inplace=True)
