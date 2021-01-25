@@ -54,7 +54,7 @@ class HeatBuilding:
         self.df = pd.DataFrame(index=df_index)
         self.df = add_weekdays2df(self.df, holiday_is_sunday=True,
                                   holidays=kwargs.get('holidays'))
-        self.df['hour'] = self.df.index.hour + 1
+        self.df['hour'] = self.df.index.hour + 1  # hour of the day
         self.temperature = kwargs.get('temperature')
         self.annual_heat_demand = kwargs.get('annual_heat_demand')
         self.shlp_type = kwargs.get('shlp_type').upper()
@@ -147,7 +147,12 @@ class HeatBuilding:
         right_cols = ['hour'] + (['weekday'] if not residential else [])
         sf_mat = pd.DataFrame.merge(
             hour_factors, self.df, left_on=left_cols, right_on=right_cols,
-            how='outer', left_index=True).sort_index()
+            how='outer')
+
+        sf_mat.index = (
+                pd.to_datetime(sf_mat['date'])
+                + pd.to_timedelta(sf_mat['hour_of_day'] - 1, unit='h'))
+        sf_mat.sort_index(inplace=True)
 
         # drop unnecessary columns
         drop_cols = (
@@ -206,9 +211,15 @@ class HeatBuilding:
 
         tmp_df['weekdays'] = np.array(list(range(7))) + 1
 
-        return np.array(list(map(float, pd.DataFrame.merge(
+        merged_df = pd.DataFrame.merge(
             tmp_df, self.df, left_on='weekdays', right_on='weekday',
-            how='inner', left_index=True).sort_index()['wochentagsfaktor'])))
+            how='inner')
+        merged_df.index = (
+                pd.to_datetime(merged_df['date'])
+                + pd.to_timedelta(merged_df['hour'] - 1, unit='h'))
+        merged_df.sort_index(inplace=True)
+
+        return np.array(list(map(float, merged_df['wochentagsfaktor'])))
 
     def get_bdew_profile(self):
         """ Calculation of the hourly heat demand using the bdew-equations
