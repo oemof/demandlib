@@ -94,13 +94,13 @@ class ElecSlp:
         new_df = add_weekdays2df(new_df, holidays=holidays,
                                  holiday_is_sunday=True)
 
-        new_df['hour'] = dt_index.hour + 1
+        new_df['hour'] = dt_index.hour
         new_df['minute'] = dt_index.minute
         time_df = new_df[['date', 'hour', 'minute', 'weekday']].copy()
         tmp_df[slp_types] = tmp_df[slp_types].astype(float)
 
         # Inner join the slps on the time_df to the slp's for a whole year
-        tmp_df['hour_of_day'] = tmp_df.index.hour + 1
+        tmp_df['hour_of_day'] = tmp_df.index.hour
         tmp_df['minute_of_hour'] = tmp_df.index.minute
         left_cols = ['hour_of_day', 'minute_of_hour', 'weekday']
         right_cols = ['hour', 'minute', 'weekday']
