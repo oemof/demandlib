@@ -14,6 +14,7 @@ import datetime
 import pandas as pd
 import os
 import calendar
+import warnings
 
 from demandlib.tools import add_weekdays2df
 
@@ -138,7 +139,7 @@ class ElecSlp:
         ann_el_demand_per_sector : dictionary
             Key: sector, value: annual value
         dyn_function_h0: bool, default None
-            (None is interpreted as False but also raises a FutureWarning.)
+            (None is interpreted as False but also issues a FutureWarning.)
             Use the dynamisation function of the BDEW to smoothen the
             seasonal edges. Functions resolution is daily.
             f(x) = -3.916649251 * 10^-10 * x^4 + 3,2 * 10^-7 * x³ - 7,02
@@ -151,11 +152,11 @@ class ElecSlp:
 
         """
         if dyn_function_h0 is None:
-            warning_message = ("Current default for 'dyn_function_h0' is"
-                               + "'False'. This is about to change to 'True'."
+            warning_message = ("Current default for 'dyn_function_h0' is "
+                               + "'False'. This is about to change to 'True'. "
                                + "Set 'False' explicitly to retain the current"
-                               + "behaviour.")
-            raise FutureWarning(warning_message)
+                               + " behaviour.")
+            warnings.warn(warning_message, FutureWarning)
         elif dyn_function_h0:
             quartersinyear = len(self.slp_frame)
             for quarter in range(quartersinyear):
