@@ -1,4 +1,4 @@
-v0.1.7 ()
+v0.1.7 (January 27, 2021)
 +++++++++++++++++++++++++
 
 New features
@@ -25,3 +25,4 @@ Contributors
 *   Steffen Wehkamp
 *   Patrik Schönfeldt
 *   Uwe Krien
+

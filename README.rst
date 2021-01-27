@@ -26,7 +26,7 @@ Install the demandlib using pypi:
 
     pip install demandlib
 
-You can also install the beta version with the most actual changes:
+You can also install the beta version with the most recent changes:
 
 ::
 

@@ -12,10 +12,10 @@ def read(fname):
 
 
 setup(name='demandlib',
-      version='0.1.7dev',
+      version='0.1.7',
       author='oemof developer group',
       url='https://oemof.org/',
-      license='GPL3',
+      license='MIT',
       author_email='contact@oemof.org',
       description='Demandlib of the open energy modelling framework',
       long_description=read('README.rst'),
