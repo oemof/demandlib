@@ -1,21 +1,11 @@
-v0.1.7 (January 27, 2021)
+v0.1.8 (January 27, 2021)
 +++++++++++++++++++++++++
-
-New features
-############
-*   
 
 Bug fixes
 #########
-*   
-
-
-Other changes
-#############
-*   
-
+*   FutureWarning for "dyn_function_h0" was raised instead of printed
 
 Contributors
 ############
-*   
+*   Patrik Schönfeldt
 
