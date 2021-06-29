@@ -14,7 +14,6 @@ import datetime
 import pandas as pd
 import os
 import calendar
-import warnings
 
 from demandlib.tools import add_weekdays2df
 
