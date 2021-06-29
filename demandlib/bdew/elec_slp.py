@@ -64,6 +64,7 @@ class ElecSlp:
         self.year = year
         self.slp_frame = self.all_load_profiles(self.date_time_index,
                                                 holidays=holidays)
+        self.create_dynamic_h0_profile()
 
     def all_load_profiles(self, time_df, holidays=None):
         slp_types = ['h0', 'g0', 'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'l0',
@@ -130,6 +131,25 @@ class ElecSlp:
         new_df.drop('date', axis=1, inplace=True)
         return new_df.div(new_df.sum(axis=0), axis=1)
 
+    def create_dynamic_h0_profile(self):
+        # Create a Series with the day of the year as decimal number
+        decimal_day = pd.Series(
+                [((q + 1) / (24 * 4)) for q in range(len(self.slp_frame))],
+                index=self.slp_frame.index,
+            )
+
+        # Calculate the smoothing factor of the BDEW dynamic H0 profile
+        smoothing_factor = (
+                -3.916649251 * 10 ** -10 * decimal_day ** 4
+                + 3.2 * 10 ** -7 * decimal_day ** 3
+                - 7.02 * 10 ** -5 * decimal_day ** 2
+                + 0.0021 * decimal_day
+                + 1.24
+        )
+
+        # Multiply the smoothing factor with the default H0 profile
+        self.slp_frame["h0_dyn"] = self.slp_frame["h0"].mul(smoothing_factor)
+
     def get_profile(self, ann_el_demand_per_sector,
                     dyn_function_h0: bool = None):
         """ Get the profiles for the given annual demand
@@ -151,24 +171,5 @@ class ElecSlp:
         pandas.DataFrame : Table with all profiles
 
         """
-        if dyn_function_h0 is None:
-            warning_message = ("Current default for 'dyn_function_h0' is "
-                               + "'False'. This is about to change to 'True'. "
-                               + "Set 'False' explicitly to retain the current"
-                               + " behaviour.")
-            warnings.warn(warning_message, FutureWarning)
-        elif dyn_function_h0:
-            quartersinyear = len(self.slp_frame)
-            for quarter in range(quartersinyear):
-                quarterhour_to_day = (quarter + 1) / (24 * 4)
-                smoothing_factor = (
-                        -3.916649251 * 10 ** -10
-                        * quarterhour_to_day ** 4 + 3.2 * 10 ** -7
-                        * quarterhour_to_day ** 3 - 7.02 * 10 ** -5
-                        * quarterhour_to_day ** 2 + 0.0021
-                        * quarterhour_to_day + 1.24)
-
-                self.slp_frame['h0'][quarter] = self.slp_frame['h0'][
-                                                    quarter] * smoothing_factor
         return self.slp_frame.multiply(pd.Series(ann_el_demand_per_sector),
                                        axis=1).dropna(how='all', axis=1) * 4
