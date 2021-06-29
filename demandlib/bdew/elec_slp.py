@@ -62,8 +62,10 @@ class ElecSlp:
         else:
             self.seasons = seasons
         self.year = year
+        # Create the default profiles
         self.slp_frame = self.all_load_profiles(self.date_time_index,
                                                 holidays=holidays)
+        # Add the dynamic H0 profile
         self.create_dynamic_h0_profile()
 
     def all_load_profiles(self, time_df, holidays=None):
@@ -132,6 +134,16 @@ class ElecSlp:
         return new_df.div(new_df.sum(axis=0), axis=1)
 
     def create_dynamic_h0_profile(self):
+        """
+        Use the dynamisation function of the BDEW to smoothen the seasonal
+        edges. Functions resolution is daily.
+
+            .. math::
+                f(x) = -3.916649251 * 10^-10 * x^4 + 3,2 * 10^-7 * x³ - 7,02
+                * 10^-5 * x²+0,0021 * x +1,24
+
+        Adjustment of accuracy: from -3,92 to -3.916649251
+        """
         # Create a Series with the day of the year as decimal number
         decimal_day = pd.Series(
                 [((q + 1) / (24 * 4)) for q in range(len(self.slp_frame))],
@@ -150,21 +162,13 @@ class ElecSlp:
         # Multiply the smoothing factor with the default H0 profile
         self.slp_frame["h0_dyn"] = self.slp_frame["h0"].mul(smoothing_factor)
 
-    def get_profile(self, ann_el_demand_per_sector,
-                    dyn_function_h0: bool = None):
+    def get_profile(self, ann_el_demand_per_sector):
         """ Get the profiles for the given annual demand
 
         Parameters
         ----------
         ann_el_demand_per_sector : dictionary
             Key: sector, value: annual value
-        dyn_function_h0: bool, default None
-            (None is interpreted as False but also issues a FutureWarning.)
-            Use the dynamisation function of the BDEW to smoothen the
-            seasonal edges. Functions resolution is daily.
-            f(x) = -3.916649251 * 10^-10 * x^4 + 3,2 * 10^-7 * x³ - 7,02
-            * 10^-5 * x²+0,0021 * x +1,24
-            Adjustment of accuracy: from -3,92 to -3.916649251
 
         Returns
         -------
