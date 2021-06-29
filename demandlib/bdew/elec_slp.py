@@ -105,8 +105,7 @@ class ElecSlp:
         tmp_df['minute_of_hour'] = tmp_df.index.minute
         left_cols = ['hour_of_day', 'minute_of_hour', 'weekday']
         right_cols = ['hour', 'minute', 'weekday']
-        tmp_df = tmp_df.reset_index()
-        tmp_df.pop('index')
+        tmp_df = tmp_df.reset_index(drop=True)
 
         for p in self.seasons.keys():
             a = datetime.datetime(self.year, self.seasons[p][0],
