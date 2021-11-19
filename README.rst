@@ -11,7 +11,7 @@ Overview
       - |docs|
     * - tests
       - | |appveyor| |requires|
-        | |coveralls| |codecov|
+        | |coveralls|
     * - package
       - | |version| |wheel| |supported-versions| |supported-implementations|
         | |commits-since|
@@ -30,10 +30,6 @@ Overview
 .. |coveralls| image:: https://coveralls.io/repos/oemof/demandlib/badge.svg?branch=master&service=github
     :alt: Coverage Status
     :target: https://coveralls.io/r/oemof/demandlib
-
-.. |codecov| image:: https://codecov.io/gh/oemof/demandlib/branch/master/graphs/badge.svg?branch=master
-    :alt: Coverage Status
-    :target: https://codecov.io/github/oemof/demandlib
 
 .. |version| image:: https://img.shields.io/pypi/v/demandlib.svg
     :alt: PyPI Package latest release
