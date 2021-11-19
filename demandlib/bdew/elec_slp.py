@@ -71,7 +71,7 @@ class ElecSlp:
         new_df = self.create_bdew_load_profiles(time_df, slp_types,
                                                 holidays=holidays)
 
-        new_df.drop(['hour', 'weekday'], 1, inplace=True)
+
         return new_df
 
     def create_bdew_load_profiles(self, dt_index, slp_types, holidays=None):
@@ -126,7 +126,8 @@ class ElecSlp:
 
             new_df.update(merged_df)
 
-        new_df.drop(['date', 'minute'], axis=1, inplace=True)
+        new_df.drop(['date', 'minute', 'hour', 'weekday'],
+                    axis=1, inplace=True)
         return new_df.div(new_df.sum(axis=0), axis=1)
 
     def get_profile(self, ann_el_demand_per_sector,
