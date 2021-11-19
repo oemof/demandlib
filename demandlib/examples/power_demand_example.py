@@ -53,6 +53,7 @@ def power_example(
         ann_el_demand_per_sector = {
             'g0': 3000,
             'h0': 3000,
+            'h0_dyn': 3000,
             'i0': 3000,
             'i1': 5000,
             'i2': 6000,
@@ -63,8 +64,7 @@ def power_example(
     e_slp = bdew.ElecSlp(year, holidays=holidays)
 
     # multiply given annual demand with timeseries
-    elec_demand = e_slp.get_profile(ann_el_demand_per_sector,
-                                    dyn_function_h0=False)
+    elec_demand = e_slp.get_profile(ann_el_demand_per_sector)
 
     # Add the slp for the industrial group
     ilp = profiles.IndustrialLoadProfile(e_slp.date_time_index,
