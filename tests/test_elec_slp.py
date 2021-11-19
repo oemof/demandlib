@@ -51,6 +51,7 @@ class TestElecSLP:
             "g5",
             "g6",
             "h0",
+            "h0_dyn",
             "l0",
             "l1",
             "l2",
@@ -66,6 +67,9 @@ class TestElecSLP:
     def test_frame_without_holidays(self):
         my_frame = self.slp.create_bdew_load_profiles(
             self.dt_index, self.slp_types, holidays=None
+        )
+        my_frame = pd.concat(
+            [my_frame, self.slp.create_dynamic_h0_profile()], axis=1
         )
         pd.testing.assert_frame_equal(self.slp.slp_frame, my_frame)
 

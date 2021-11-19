@@ -7,5 +7,5 @@ SPDX-FileCopyrightText: Patrik Schönfeldt
 SPDX-License-Identifier: MIT
 """
 
-from .elec_slp import ElecSlp
-from .heat_building import HeatBuilding
+from .elec_slp import ElecSlp  # noqa: F401
+from .heat_building import HeatBuilding  # noqa: F401

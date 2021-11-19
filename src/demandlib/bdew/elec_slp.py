@@ -91,7 +91,9 @@ class ElecSlp:
         return new_df
 
     def create_bdew_load_profiles(self, dt_index, slp_types, holidays=None):
-        """Calculates the hourly electricity load profile in MWh/h of a region."""
+        """
+        Calculates the hourly electricity load profile in MWh/h of a region.
+        """
 
         # define file path of slp csv data
         file_path = os.path.join(self.datapath, "selp_series.csv")
@@ -181,6 +183,7 @@ class ElecSlp:
 
         # Multiply the smoothing factor with the default H0 profile
         self.slp_frame["h0_dyn"] = self.slp_frame["h0"].mul(smoothing_factor)
+        return self.slp_frame["h0_dyn"]
 
     def get_profile(self, ann_el_demand_per_sector):
         """Get the profiles for the given annual demand
