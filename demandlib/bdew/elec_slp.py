@@ -73,7 +73,7 @@ class ElecSlp:
         new_df = self.create_bdew_load_profiles(time_df, slp_types,
                                                 holidays=holidays)
 
-        new_df.drop(['hour', 'weekday'], 1, inplace=True)
+
         return new_df
 
     def create_bdew_load_profiles(self, dt_index, slp_types, holidays=None):
@@ -107,8 +107,7 @@ class ElecSlp:
         tmp_df['minute_of_hour'] = tmp_df.index.minute
         left_cols = ['hour_of_day', 'minute_of_hour', 'weekday']
         right_cols = ['hour', 'minute', 'weekday']
-        tmp_df = tmp_df.reset_index()
-        tmp_df.pop('index')
+        tmp_df = tmp_df.reset_index(drop=True)
 
         for p in self.seasons.keys():
             a = datetime.datetime(self.year, self.seasons[p][0],
@@ -129,7 +128,8 @@ class ElecSlp:
 
             new_df.update(merged_df)
 
-        new_df.drop('date', axis=1, inplace=True)
+        new_df.drop(['date', 'minute', 'hour', 'weekday'],
+                    axis=1, inplace=True)
         return new_df.div(new_df.sum(axis=0), axis=1)
 
     def create_dynamic_h0_profile(self):
