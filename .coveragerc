@@ -1,4 +1,14 @@
+[paths]
+source = src
+
 [run]
-omit = tests/*
-       *example.py
-source = demandlib
+branch = true
+source =
+    src
+    tests
+parallel = true
+
+[report]
+show_missing = true
+precision = 2
+omit = *migrations*

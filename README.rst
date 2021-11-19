@@ -1,83 +1,107 @@
-The **demandlib** is part of the oemof group but works as a standalone application.
+========
+Overview
+========
 
-.. image:: https://travis-ci.com/oemof/demandlib.svg?branch=master
-    :target: https://travis-ci.com/oemof/demandlib
+.. start-badges
 
-.. image:: https://coveralls.io/repos/github/oemof/demandlib/badge.svg?branch=master
-    :target: https://coveralls.io/github/oemof/demandlib?branch=master
+.. list-table::
+    :stub-columns: 1
 
-.. contents:: `Table of contents`
-    :depth: 1
-    :local:
-    :backlinks: top
+    * - docs
+      - |docs|
+    * - tests
+      - | |appveyor| |requires|
+        | |coveralls| |codecov|
+    * - package
+      - | |version| |wheel| |supported-versions| |supported-implementations|
+        | |commits-since|
+.. |docs| image:: https://readthedocs.org/projects/demandlib/badge/?style=flat
+    :target: https://demandlib.readthedocs.io/
+    :alt: Documentation Status
 
-Introduction
+.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/oemof/demandlib?branch=master&svg=true
+    :alt: AppVeyor Build Status
+    :target: https://ci.appveyor.com/project/oemof/demandlib
+
+.. |requires| image:: https://requires.io/github/oemof/demandlib/requirements.svg?branch=master
+    :alt: Requirements Status
+    :target: https://requires.io/github/oemof/demandlib/requirements/?branch=master
+
+.. |coveralls| image:: https://coveralls.io/repos/oemof/demandlib/badge.svg?branch=master&service=github
+    :alt: Coverage Status
+    :target: https://coveralls.io/r/oemof/demandlib
+
+.. |codecov| image:: https://codecov.io/gh/oemof/demandlib/branch/master/graphs/badge.svg?branch=master
+    :alt: Coverage Status
+    :target: https://codecov.io/github/oemof/demandlib
+
+.. |version| image:: https://img.shields.io/pypi/v/demandlib.svg
+    :alt: PyPI Package latest release
+    :target: https://pypi.org/project/demandlib
+
+.. |wheel| image:: https://img.shields.io/pypi/wheel/demandlib.svg
+    :alt: PyPI Wheel
+    :target: https://pypi.org/project/demandlib
+
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/demandlib.svg
+    :alt: Supported versions
+    :target: https://pypi.org/project/demandlib
+
+.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/demandlib.svg
+    :alt: Supported implementations
+    :target: https://pypi.org/project/demandlib
+
+.. |commits-since| image:: https://img.shields.io/github/commits-since/oemof/demandlib/v0.1.9.svg
+    :alt: Commits since latest release
+    :target: https://github.com/oemof/demandlib/compare/v0.1.9...master
+
+
+
+.. end-badges
+
+Creating heat and power demand profiles from annual values.
+
+* Free software: MIT license
+
+Installation
 ============
-
-With the demandlib you can create power and heat profiles for various sectors by scaling them to your desired demand. Additionally you can specify a year so that holidays are considered respectively.
-
-
-Current Release
-===============
-
-Install the demandlib using pypi:
 
 ::
 
     pip install demandlib
 
-You can also install the beta version with the most recent changes:
+You can also install the in-development version with::
 
-::
+    pip install https://github.com/oemof/demandlib/archive/master.zip
 
-    pip install git+https://github.com/oemof/demandlib
-
-
-Developing Version
-==================
 
 Documentation
-~~~~~~~~~~~~~
-
-Read the latest documentation at Readthedocs.org
-
-http://demandlib.readthedocs.org
+=============
 
 
-Installation
-~~~~~~~~~~~~
-
-Clone the demandlib from github.
-
-::
-
-    git clone git@github.com:oemof/demandlib.git
-    
-
-If the project is cloned you can install it using pip with the -e flag. 
-
-::
-
-    pip install -e <path/to/the/demandlib/root/dir>
+https://demandlib.readthedocs.io/
 
 
-Developing the demandlib
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Development
+===========
 
-As the demandlib is part of the oemof developer group we use the same developer rules:
+To run all the tests run::
 
-http://oemof.readthedocs.io/en/stable/developing_oemof.html
+    tox
 
-If you have push rights clone this repository to your local system.
+Note, to combine the coverage data from all the tox environments run:
 
-::
+.. list-table::
+    :widths: 10 90
+    :stub-columns: 1
 
-    git clone git@github.com:oemof/demandlib.git
-    
-If you want to contribute, fork the project at github, clone your personal fork to your system and send a pull request.
-    
-  
-Example
-=======
+    - - Windows
+      - ::
 
-We provide two examples on how to use the demandlib. One for the heat sector, executable by calling ``demandlib_heat_example``, and one showing how to create electricity demand time series, executable by calling ``demandlib_power_example``. Both examples are callable from anywhere in the command-line.
+            set PYTEST_ADDOPTS=--cov-append
+            tox
+
+    - - Other
+      - ::
+
+            PYTEST_ADDOPTS=--cov-append tox
