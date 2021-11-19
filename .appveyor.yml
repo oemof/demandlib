@@ -4,7 +4,7 @@ image: Visual Studio 2019
 environment:
   global:
     COVERALLS_EXTRAS: '-v'
-    COVERALLS_REPO_TOKEN: COVERALLS_TOKEN
+    COVERALLS_REPO_TOKEN: JVitTjQVdcRCicP5tvLOg0sAS0nSjGqJB
   matrix:
     - TOXENV: check
       TOXPYTHON: C:\Python36\python.exe
