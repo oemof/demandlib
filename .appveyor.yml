@@ -7,93 +7,17 @@ environment:
     COVERALLS_REPO_TOKEN: JVitTjQVdcRCicP5tvLOg0sAS0nSjGqJB
   matrix:
     - TOXENV: check
-      TOXPYTHON: C:\Python36\python.exe
-      PYTHON_HOME: C:\Python36
-      PYTHON_VERSION: '3.6'
-      PYTHON_ARCH: '32'
-    - TOXENV: py36-cover,codecov,coveralls
-      TOXPYTHON: C:\Python36\python.exe
-      PYTHON_HOME: C:\Python36
-      PYTHON_VERSION: '3.6'
-      PYTHON_ARCH: '32'
-    - TOXENV: py36-cover,codecov,coveralls
-      TOXPYTHON: C:\Python36-x64\python.exe
-      PYTHON_HOME: C:\Python36-x64
-      PYTHON_VERSION: '3.6'
-      PYTHON_ARCH: '64'
-    - TOXENV: py36-nocov
-      TOXPYTHON: C:\Python36\python.exe
-      PYTHON_HOME: C:\Python36
-      PYTHON_VERSION: '3.6'
-      PYTHON_ARCH: '32'
-      WHEEL_PATH: .tox/dist
-    - TOXENV: py36-nocov
-      TOXPYTHON: C:\Python36-x64\python.exe
-      PYTHON_HOME: C:\Python36-x64
-      PYTHON_VERSION: '3.6'
-      PYTHON_ARCH: '64'
-      WHEEL_PATH: .tox/dist
-    - TOXENV: py37-cover,codecov,coveralls
-      TOXPYTHON: C:\Python37\python.exe
-      PYTHON_HOME: C:\Python37
-      PYTHON_VERSION: '3.7'
-      PYTHON_ARCH: '32'
-    - TOXENV: py37-cover,codecov,coveralls
-      TOXPYTHON: C:\Python37-x64\python.exe
-      PYTHON_HOME: C:\Python37-x64
-      PYTHON_VERSION: '3.7'
-      PYTHON_ARCH: '64'
-    - TOXENV: py37-nocov
-      TOXPYTHON: C:\Python37\python.exe
-      PYTHON_HOME: C:\Python37
-      PYTHON_VERSION: '3.7'
-      PYTHON_ARCH: '32'
-      WHEEL_PATH: .tox/dist
-    - TOXENV: py37-nocov
-      TOXPYTHON: C:\Python37-x64\python.exe
-      PYTHON_HOME: C:\Python37-x64
-      PYTHON_VERSION: '3.7'
-      PYTHON_ARCH: '64'
-      WHEEL_PATH: .tox/dist
-    - TOXENV: py38-cover,codecov,coveralls
-      TOXPYTHON: C:\Python38\python.exe
-      PYTHON_HOME: C:\Python38
-      PYTHON_VERSION: '3.8'
-      PYTHON_ARCH: '32'
-    - TOXENV: py38-cover,codecov,coveralls
-      TOXPYTHON: C:\Python38-x64\python.exe
-      PYTHON_HOME: C:\Python38-x64
-      PYTHON_VERSION: '3.8'
-      PYTHON_ARCH: '64'
-    - TOXENV: py38-nocov
-      TOXPYTHON: C:\Python38\python.exe
-      PYTHON_HOME: C:\Python38
-      PYTHON_VERSION: '3.8'
-      PYTHON_ARCH: '32'
-      WHEEL_PATH: .tox/dist
-    - TOXENV: py38-nocov
-      TOXPYTHON: C:\Python38-x64\python.exe
-      PYTHON_HOME: C:\Python38-x64
-      PYTHON_VERSION: '3.8'
-      PYTHON_ARCH: '64'
-      WHEEL_PATH: .tox/dist
-    - TOXENV: py39-cover,codecov,coveralls
       TOXPYTHON: C:\Python39\python.exe
-      PYTHON_HOME: C:\Python39
+      PYTHON_HOME: C:\Python36
       PYTHON_VERSION: '3.9'
       PYTHON_ARCH: '32'
-    - TOXENV: py39-cover,codecov,coveralls
-      TOXPYTHON: C:\Python39-x64\python.exe
-      PYTHON_HOME: C:\Python39-x64
-      PYTHON_VERSION: '3.9'
-      PYTHON_ARCH: '64'
-    - TOXENV: py39-nocov
+    - TOXENV: py39
       TOXPYTHON: C:\Python39\python.exe
       PYTHON_HOME: C:\Python39
       PYTHON_VERSION: '3.9'
       PYTHON_ARCH: '32'
       WHEEL_PATH: .tox/dist
-    - TOXENV: py39-nocov
+    - TOXENV: py39
       TOXPYTHON: C:\Python39-x64\python.exe
       PYTHON_HOME: C:\Python39-x64
       PYTHON_VERSION: '3.9'
