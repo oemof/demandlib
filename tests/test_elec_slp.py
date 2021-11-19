@@ -2,6 +2,7 @@ import datetime
 
 import pandas as pd
 import pytest
+
 from demandlib import bdew
 
 
