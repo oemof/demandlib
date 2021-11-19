@@ -14,4 +14,4 @@ import matplotlib
 def test_heat_example():
     """Test the results of the heat example."""
     matplotlib.use("Agg")
-    from demandlib.examples import heat_demand_example
+    from demandlib_examples import heat_demand_example  # noqa: F401

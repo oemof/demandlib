@@ -42,16 +42,16 @@ temperature = pd.read_csv(datapath)["temperature"]
 ann_demands_per_type = {"efh": 25000, "mfh": 80000, "ghd": 140000}
 
 holidays = {
-datetime.date(2010, 5, 24): "Whit Monday",
-datetime.date(2010, 4, 5): "Easter Monday",
-datetime.date(2010, 5, 13): "Ascension Thursday",
-datetime.date(2010, 1, 1): "New year",
-datetime.date(2010, 10, 3): "Day of German Unity",
-datetime.date(2010, 12, 25): "Christmas Day",
-datetime.date(2010, 5, 1): "Labour Day",
-datetime.date(2010, 4, 2): "Good Friday",
-datetime.date(2010, 12, 26): "Second Christmas Day",
-}
+    datetime.date(2010, 5, 24): "Whit Monday",
+    datetime.date(2010, 4, 5): "Easter Monday",
+    datetime.date(2010, 5, 13): "Ascension Thursday",
+    datetime.date(2010, 1, 1): "New year",
+    datetime.date(2010, 10, 3): "Day of German Unity",
+    datetime.date(2010, 12, 25): "Christmas Day",
+    datetime.date(2010, 5, 1): "Labour Day",
+    datetime.date(2010, 4, 2): "Good Friday",
+    datetime.date(2010, 12, 26): "Second Christmas Day",
+    }
 
 # Create DataFrame for 2010
 demand = pd.DataFrame(
@@ -95,12 +95,11 @@ demand["ghd"] = bdew.HeatBuilding(
     name="ghd",
 ).get_bdew_profile()
 
-if plt is not None:
-    # Plot demand of building
-    ax = demand.plot()
-    ax.set_xlabel("Date")
-    ax.set_ylabel("Heat demand in kW")
-    plt.show()
+# Plot demand of building
+ax = demand.plot()
+ax.set_xlabel("Date")
+ax.set_ylabel("Heat demand in kW")
+plt.show()
 
 print("Annual consumption: \n{}".format(demand.sum()))
 

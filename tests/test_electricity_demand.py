@@ -9,9 +9,8 @@ SPDX-License-Identifier: MIT
 """
 
 import matplotlib
-# import numpy as np
 
 
 def test_power_example():
     matplotlib.use("Agg")
-    import demandlib.examples.power_demand_example  # noqa: F401
+    import demandlib_examples.power_demand_example  # noqa: F401
