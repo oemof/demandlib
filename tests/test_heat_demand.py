@@ -8,6 +8,7 @@ SPDX-License-Identifier: MIT
 
 """
 
+import matplotlib
 import numpy as np
 
 from demandlib.examples import heat_demand_example
@@ -15,10 +16,11 @@ from demandlib.examples import heat_demand_example
 
 def test_heat_example():
     """Test the results of the heat example."""
+    matplotlib.use("Agg")
     ann_demands_per_type = {"efh": 25000, "mfh": 80000, "ghd": 140000}
 
     demands = heat_demand_example.heat_example(
-        ann_demands_per_type=ann_demands_per_type, testmode=True
+        ann_demands_per_type=ann_demands_per_type
     ).sum()
 
     for key in ann_demands_per_type:

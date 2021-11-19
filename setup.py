@@ -76,6 +76,6 @@ setup(
         "demandlib.examples": ["*.csv"],
     },
     extras_require={
-        "dev": ["pytest", "sphinx", "sphinx_rtd_theme"],
+        "dev": ["pytest", "sphinx", "sphinx_rtd_theme", "matplotlib"],
     },
 )

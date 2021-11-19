@@ -8,6 +8,7 @@ SPDX-License-Identifier: MIT
 
 """
 
+import matplotlib
 import numpy as np
 
 from demandlib.examples import power_demand_example
@@ -15,7 +16,7 @@ from demandlib.examples import power_demand_example
 
 def test_power_example():
     """Test the results of the power example."""
-
+    matplotlib.use("Agg")
     ann_el_demands_per_sector = {
         "g0": 3000,
         "h0": 3000,
@@ -27,7 +28,7 @@ def test_power_example():
 
     demands = (
         power_demand_example.power_example(
-            ann_el_demand_per_sector=ann_el_demands_per_sector, testmode=True
+            ann_el_demand_per_sector=ann_el_demands_per_sector
         ).sum()
         / 4
     )

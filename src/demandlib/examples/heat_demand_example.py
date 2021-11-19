@@ -43,7 +43,7 @@ temperature = pd.read_csv(datapath)["temperature"]
 # >>> holidays = dict(cal.holidays(2010))
 
 
-def heat_example(testmode=False, ann_demands_per_type=None):
+def heat_example(ann_demands_per_type=None):
     if ann_demands_per_type is None:
         ann_demands_per_type = {"efh": 25000, "mfh": 80000, "ghd": 140000}
     holidays = {
@@ -103,15 +103,14 @@ def heat_example(testmode=False, ann_demands_per_type=None):
             name="ghd",
         ).get_bdew_profile()
 
-    if not testmode:
-        if plt is not None:
-            # Plot demand of building
-            ax = demand.plot()
-            ax.set_xlabel("Date")
-            ax.set_ylabel("Heat demand in kW")
-            plt.show()
-        else:
-            print("Annual consumption: \n{}".format(demand.sum()))
+    if plt is not None:
+        # Plot demand of building
+        ax = demand.plot()
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Heat demand in kW")
+        plt.show()
+
+    print("Annual consumption: \n{}".format(demand.sum()))
 
     return demand
 

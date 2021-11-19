@@ -49,7 +49,7 @@ holidays = {
 }
 
 
-def power_example(ann_el_demand_per_sector=None, testmode=False):
+def power_example(ann_el_demand_per_sector=None):
     if ann_el_demand_per_sector is None:
         ann_el_demand_per_sector = {
             "g0": 3000,
@@ -94,32 +94,31 @@ def power_example(ann_el_demand_per_sector=None, testmode=False):
             },
         )
 
-    if not testmode:
-        print(
-            "Be aware that the values in the DataFrame are 15 minute values"
-            + "with a power unit. If you sum up a table with 15min values"
-            + "the result will be of the unit 'kW15minutes'."
-        )
-        print(elec_demand.sum())
+    print(
+        "Be aware that the values in the DataFrame are 15 minute values"
+        + "with a power unit. If you sum up a table with 15min values"
+        + "the result will be of the unit 'kW15minutes'."
+    )
+    print(elec_demand.sum())
 
-        print("You will have to divide the result by 4 to get kWh.")
-        print(elec_demand.sum() / 4)
+    print("You will have to divide the result by 4 to get kWh.")
+    print(elec_demand.sum() / 4)
 
-        print(
-            "Or resample the DataFrame to hourly values using the mean() "
-            "method."
-        )
+    print(
+        "Or resample the DataFrame to hourly values using the mean() "
+        "method."
+    )
 
-        # Resample 15-minute values to hourly values.
-        elec_demand = elec_demand.resample("H").mean()
-        print(elec_demand.sum())
+    # Resample 15-minute values to hourly values.
+    elec_demand_resampled = elec_demand.resample("H").mean()
+    print(elec_demand_resampled.sum())
 
-        if plt is not None:
-            # Plot demand
-            ax = elec_demand.plot()
-            ax.set_xlabel("Date")
-            ax.set_ylabel("Power demand")
-            plt.show()
+    if plt is not None:
+        # Plot demand
+        ax = elec_demand_resampled.plot()
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Power demand")
+        plt.show()
 
     return elec_demand
 
