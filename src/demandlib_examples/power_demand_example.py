@@ -64,9 +64,7 @@ e_slp = bdew.ElecSlp(year, holidays=holidays)
 elec_demand = e_slp.get_profile(ann_el_demand_per_sector)
 
 # Add the slp for the industrial group
-ilp = profiles.IndustrialLoadProfile(
-    e_slp.date_time_index, holidays=holidays
-)
+ilp = profiles.IndustrialLoadProfile(e_slp.date_time_index, holidays=holidays)
 
 # Beginning and end of workday, weekdays and weekend days, and scaling
 # factors by default
@@ -74,17 +72,17 @@ elec_demand["i0"] = ilp.simple_profile(ann_el_demand_per_sector["i0"])
 
 # Set beginning of workday to 9 am
 elec_demand["i1"] = ilp.simple_profile(
-        ann_el_demand_per_sector["i1"], am=settime(9, 0, 0)
-    )
+    ann_el_demand_per_sector["i1"], am=settime(9, 0, 0)
+)
 
 # Change scaling factors
 elec_demand["i2"] = ilp.simple_profile(
-        ann_el_demand_per_sector["i2"],
-        profile_factors={
-            "week": {"day": 1.0, "night": 0.8},
-            "weekend": {"day": 0.8, "night": 0.6},
-        },
-    )
+    ann_el_demand_per_sector["i2"],
+    profile_factors={
+        "week": {"day": 1.0, "night": 0.8},
+        "weekend": {"day": 0.8, "night": 0.6},
+    },
+)
 
 print(
     "Be aware that the values in the DataFrame are 15 minute values"
@@ -96,10 +94,7 @@ print(elec_demand.sum())
 print("You will have to divide the result by 4 to get kWh.")
 print(elec_demand.sum() / 4)
 
-print(
-    "Or resample the DataFrame to hourly values using the mean() "
-    "method."
-)
+print("Or resample the DataFrame to hourly values using the mean() " "method.")
 
 # Resample 15-minute values to hourly values.
 elec_demand_resampled = elec_demand.resample("H").mean()
@@ -114,4 +109,6 @@ plt.show()
 print(elec_demand)
 
 for key in ann_el_demand_per_sector:
-    assert np.isclose(elec_demand[key].sum()/4, ann_el_demand_per_sector[key])
+    assert np.isclose(
+        elec_demand[key].sum() / 4, ann_el_demand_per_sector[key]
+    )

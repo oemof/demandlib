@@ -51,7 +51,7 @@ holidays = {
     datetime.date(2010, 5, 1): "Labour Day",
     datetime.date(2010, 4, 2): "Good Friday",
     datetime.date(2010, 12, 26): "Second Christmas Day",
-    }
+}
 
 # Create DataFrame for 2010
 demand = pd.DataFrame(
