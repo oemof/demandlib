@@ -12,6 +12,7 @@ import numpy as np
 
 from demandlib.examples import power_demand_example
 
+
 def test_power_example():
     """Test the results of the power example."""
 
