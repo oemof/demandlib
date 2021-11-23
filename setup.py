@@ -73,7 +73,6 @@ setup(
     install_requires=["numpy >= 1.17.0", "pandas >= 1.0"],
     package_data={
         "demandlib": [join("bdew_data", "*.csv")],
-        "demandlib_examples": ["*.csv"],
     },
     extras_require={
         "dev": ["pytest", "sphinx", "sphinx_rtd_theme", "matplotlib"],

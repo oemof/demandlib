@@ -7,11 +7,14 @@ SPDX-FileCopyrightText: Patrik Schönfeldt
 SPDX-License-Identifier: MIT
 
 """
+import os
 
 import matplotlib
 
 
-def test_heat_example():
+def test_examples():
     """Test the results of the heat example."""
     matplotlib.use("Agg")
-    from demandlib_examples import heat_demand_example  # noqa: F401
+    for filename in os.listdir("."):
+        if filename.endswith("_example.py"):
+            exec(open(filename).read())
