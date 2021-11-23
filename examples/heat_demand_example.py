@@ -28,7 +28,7 @@ import pandas as pd
 import demandlib.bdew as bdew
 
 # read example temperature series
-datapath = os.path.join(os.path.dirname(__file__), "example_data.csv")
+datapath = os.path.join(os.getcwd(), "example_data.csv")
 temperature = pd.read_csv(datapath)["temperature"]
 
 
