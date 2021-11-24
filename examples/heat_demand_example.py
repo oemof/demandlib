@@ -33,14 +33,16 @@ dirname = os.getcwd()
 datapath = os.path.join(dirname, filename)
 
 if not os.path.isfile(datapath):
-    msg = ("The file {0} could not be found in the current working directory."
-           "\nThis could happen due to the following reasons:\n"
-           "* you forgot to download the example data from the repository\n"
-           "* the filename is wrong\n"
-           "* the file is not located in {1}\n"
-           "Download the file from the demandlib repository and copy it to "
-           "the right directory.\nAlternatively you can adapt the name of "
-           "the file or the name of the directory in the example script.")
+    msg = (
+        "The file {0} could not be found in the current working directory.\n "
+        "This could happen due to the following reasons:\n"
+        "* you forgot to download the example data from the repository\n"
+        "* the filename is wrong\n"
+        "* the file is not located in {1}\n"
+        "Download the file from the demandlib repository and copy it to the "
+        "right directory.\nAlternatively you can adapt the name of the file "
+        "or the name of the directory in the example script."
+    )
     print(msg.format(filename, dirname))
     exit(0)
 
