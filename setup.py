@@ -26,12 +26,11 @@ setup(
     version="0.1.9",
     license="MIT",
     description="Creating heat and power demand profiles from annual values.",
-    long_description="%s\n%s"
+    long_description="%s"
     % (
         re.compile("^.. start-badges.*^.. end-badges", re.M | re.S).sub(
             "", read("README.rst")
-        ),
-        re.sub(":[a-z]+:`~?(.*?)`", r"``\1``", read("CHANGELOG.rst")),
+        )
     ),
     author="oemof developer group",
     author_email="contact@oemof.org",
