@@ -19,17 +19,17 @@ Overview
     :target: https://demandlib.readthedocs.io/
     :alt: Documentation Status
 
-.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/oemof/demandlib?branch=master&svg=true
+.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/uvchik/demandlib?branch=master&svg=true
     :alt: AppVeyor Build Status
-    :target: https://ci.appveyor.com/project/oemof/demandlib
+    :target: https://ci.appveyor.com/project/uvchik/demandlib
 
-.. |requires| image:: https://requires.io/github/oemof/demandlib/requirements.svg?branch=master
+.. |requires| image:: https://requires.io/github/oemof/demandlib/requirements.svg?branch=dev
     :alt: Requirements Status
-    :target: https://requires.io/github/oemof/demandlib/requirements/?branch=master
+    :target: https://requires.io/github/oemof/demandlib/requirements/?branch=dev
 
-.. |coveralls| image:: https://coveralls.io/repos/oemof/demandlib/badge.svg?branch=master&service=github
+.. |coveralls| image:: https://coveralls.io/repos/oemof/demandlib/badge.svg?branch=dev&service=github
     :alt: Coverage Status
-    :target: https://coveralls.io/r/oemof/demandlib
+    :target: https://coveralls.io/r/oemof/demandlib?branch=dev
 
 .. |version| image:: https://img.shields.io/pypi/v/demandlib.svg
     :alt: PyPI Package latest release
