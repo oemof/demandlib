@@ -19,9 +19,9 @@ Overview
     :target: https://demandlib.readthedocs.io/
     :alt: Documentation Status
 
-.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/uvchik/demandlib?branch=master&svg=true
+.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/ng4rb36cx5fuerf2?svg=true
     :alt: AppVeyor Build Status
-    :target: https://ci.appveyor.com/project/uvchik/demandlib
+    :target: https://ci.appveyor.com/project/uvchik/demandlib/branch/dev
 
 .. |requires| image:: https://requires.io/github/oemof/demandlib/requirements.svg?branch=dev
     :alt: Requirements Status
@@ -29,7 +29,7 @@ Overview
 
 .. |coveralls| image:: https://coveralls.io/repos/oemof/demandlib/badge.svg?branch=dev&service=github
     :alt: Coverage Status
-    :target: https://coveralls.io/r/oemof/demandlib?branch=dev
+    :target: https://coveralls.io/github/oemof/demandlib?branch=dev
 
 .. |version| image:: https://img.shields.io/pypi/v/demandlib.svg
     :alt: PyPI Package latest release
