@@ -10,11 +10,20 @@ Overview
     * - docs
       - |docs|
     * - tests
-      - | |appveyor| |requires|
-        | |coveralls|
+      - | |tox-pytest| |tox-checks| |appveyor| |requires| |coveralls|
     * - package
-      - | |version| |wheel| |supported-versions| |supported-implementations|
-        | |commits-since|
+      - | |version| |wheel| |supported-versions| |supported-implementations| |commits-since| |packaging|
+
+
+.. |tox-pytest| image:: https://github.com/oemof/demandlib/workflows/tox%20pytests/badge.svg?branch=dev
+     :target: https://github.com/oemof/demandlib/actions?query=workflow%3A%22tox+checks%22
+
+.. |tox-checks| image:: https://github.com/oemof/demandlib/workflows/tox%20checks/badge.svg?branch=dev
+     :target: https://github.com/oemof/demandlib/actions?query=workflow%3A%22tox+checks%22
+
+.. |packaging| image:: https://github.com/oemof/demandlib/workflows/packaging/badge.svg?branch=dev
+     :target: https://github.com/oemof/demandlib/actions?query=workflow%3Apackaging
+
 .. |docs| image:: https://readthedocs.org/projects/demandlib/badge/?style=flat
     :target: https://demandlib.readthedocs.io/
     :alt: Documentation Status
