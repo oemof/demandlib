@@ -62,7 +62,7 @@ The electrical profiles are the standard load profiles from BDEW. You can choose
 
 .. csv-table:: German (original)
    :header: Typ,Beschreibung,Erläuterung
-   :widths: 5, 20, 20
+   :widths: 5, 10, 20
 
     G0, "Gewerbe allgemein", "Gewogener Mittelwert der Profile G1-G6"
     G1, "Gewerbe werktags 8–18 Uhr", "z.B. Büros, Arztpraxen, Werkstätten, Verwaltungseinrichtungen"
@@ -81,7 +81,7 @@ I am not sure how to translate `"Gewerbe"` -> business, commerce, trade ?
 
 .. csv-table:: British English (translation)
    :header: type, description, explanation
-   :widths: 5, 20, 20
+   :widths: 5, 10, 20
 
     G0, "General trade/business/commerce", "Weighted average of profiles G1-G6"
     G1, "Business on weekdays 8 a.m. - 6 p.m.", "e.g. offices, doctors' surgeries, workshops, administrative facilities"
