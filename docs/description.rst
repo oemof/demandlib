@@ -58,7 +58,43 @@ Types of houses:
 Electrical Profiles
 ++++++++++++++++++++
 
-The electrical profiles are the standard load profiles from BDEW. You can choose from H0, G0...G6 and L0...L3 (?) by defining an annual demand for any of these options.
+The electrical profiles are the standard load profiles from BDEW. You can choose from the following types:
+
+.. csv-table:: German (original)
+   :header: Typ,Beschreibung,Erläuterung
+   :widths: 5, 20, 20
+
+    G0, "Gewerbe allgemein", "Gewogener Mittelwert der Profile G1-G6"
+    G1, "Gewerbe werktags 8–18 Uhr", "z.B. Büros, Arztpraxen, Werkstätten, Verwaltungseinrichtungen"
+    G2, "Gewerbe mit starkem bis überwiegendem Verbrauch in den Abendstunden", "z.B. Sportvereine, Fitnessstudios, Abendgaststätten"
+    G3, "Gewerbe durchlaufend", "z.B. Kühlhäuser, Pumpen, Kläranlagen"
+    G4, "Laden/Friseur",
+    G5, "Bäckerei mit Backstube",
+    G6, "Wochenendbetrieb", "z.B. Kinos"
+    G7, "Mobilfunksendestation", "durchgängiges Bandlastprofil"
+    L0, "Landwirtschaftsbetriebe allgemein", "Gewogener Mittelwert der Profile L1 und L2"
+    L1, "Landwirtschaftsbetriebe mit Milchwirtschaft/Nebenerwerbs-Tierzucht",
+    L2, "Übrige Landwirtschaftsbetriebe",
+    H0, "Haushalt",
+
+I am not sure how to translate `"Gewerbe"` -> business, commerce, trade ?
+
+.. csv-table:: British English (translation)
+   :header: type, description, explanation
+   :widths: 5, 20, 20
+
+    G0, "General trade/business/commerce", "Weighted average of profiles G1-G6"
+    G1, "Business on weekdays 8 a.m. - 6 p.m.", "e.g. offices, doctors' surgeries, workshops, administrative facilities"
+    G2, "Businesses with heavy to predominant consumption in the evening hours", "e.g. sports clubs, fitness studios, evening restaurants"
+    G3, "Continuous business", "e.g. cold stores, pumps, sewage treatment plants"
+    G4, "Shop/barber shop"
+    G5, "Bakery with bakery"
+    G6, "Weekend operation", "e.g. cinemas"
+    G7, "Mobile phone transmitter station", "continuous band load profile"
+    L0, "General farms", "Weighted average of profiles L1 and L2"
+    L1, "Farms with dairy farming/part-time livestock farming",
+    L2, "Other farms",
+    H0, "Household",
 
 
 Further Profiles
