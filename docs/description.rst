@@ -67,7 +67,11 @@ have a resolution of 15 minutes. They are based on measurements in the German
 electricity sector. There is a dynamic function (h0_dyn) for the houshold (h0)
 profile that better takes the seasonal variance into account.
 
-Ft = -3,92*10-10 * t4 + 3,2*10-7 * t3– 7,02*10-5* t2 + 2,1*10-3* t + 1,24
+.. math::
+
+    F_t = -3,92\cdot10^{-10} \cdot t^4 + 3,2\cdot10^{-7} \cdot t^3– 7,02\cdot10^{-5}\cdot t^2 + 2,1\cdot10^{-3}\cdot t + 1,24
+
+With `t` the day of the year as a decimal number.
 
 The following profile types are available.
 Be aware that the types in the code are in **lowercase**.
