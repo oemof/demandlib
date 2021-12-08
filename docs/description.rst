@@ -58,15 +58,23 @@ Types of houses:
 Electrical Profiles
 ++++++++++++++++++++
 
-The electrical profiles are the standard load profiles from BDEW. You can choose from the following types:
+The electrical profiles are the standard load profiles from BDEW. All profiles
+have a resolution of 15 minutes. They are based on measurements in the German
+electricity sector. There is a dynamic function (h0_dyn) for the houshold (h0)
+profile that better takes the seasonal variance into account.
+
+Ft = -3,92*10-10 * t4 + 3,2*10-7 * t3– 7,02*10-5* t2 + 2,1*10-3* t + 1,24
+
+The following profile types are available.
+Be aware that the types in the code are in **lowercase**.
 
 .. csv-table:: German (original)
    :header: Typ,Beschreibung,Erläuterung
-   :widths: 5, 10, 20
+   :widths: 10, 40, 50
 
     G0, "Gewerbe allgemein", "Gewogener Mittelwert der Profile G1-G6"
     G1, "Gewerbe werktags 8–18 Uhr", "z.B. Büros, Arztpraxen, Werkstätten, Verwaltungseinrichtungen"
-    G2, "Gewerbe mit starkem bis überwiegendem Verbrauch in den Abendstunden", "z.B. Sportvereine, Fitnessstudios, Abendgaststätten"
+    G2, "Gewerbe mit starkem bis überwiegendem Verbrauch in den Abendstunden","z.B. Sportvereine, Fitnessstudios, Abendgaststätten"
     G3, "Gewerbe durchlaufend", "z.B. Kühlhäuser, Pumpen, Kläranlagen"
     G4, "Laden/Friseur",
     G5, "Bäckerei mit Backstube",
@@ -75,13 +83,12 @@ The electrical profiles are the standard load profiles from BDEW. You can choose
     L0, "Landwirtschaftsbetriebe allgemein", "Gewogener Mittelwert der Profile L1 und L2"
     L1, "Landwirtschaftsbetriebe mit Milchwirtschaft/Nebenerwerbs-Tierzucht",
     L2, "Übrige Landwirtschaftsbetriebe",
-    H0, "Haushalt",
+    H0/H0_dyn, "Haushalt/Haushalt dynamisiert",
 
-I am not sure how to translate `"Gewerbe"` -> business, commerce, trade ?
 
 .. csv-table:: British English (translation)
    :header: type, description, explanation
-   :widths: 5, 10, 20
+   :widths: 10, 40, 50
 
     G0, "General trade/business/commerce", "Weighted average of profiles G1-G6"
     G1, "Business on weekdays 8 a.m. - 6 p.m.", "e.g. offices, doctors' surgeries, workshops, administrative facilities"
@@ -94,7 +101,11 @@ I am not sure how to translate `"Gewerbe"` -> business, commerce, trade ?
     L0, "General farms", "Weighted average of profiles L1 and L2"
     L1, "Farms with dairy farming/part-time livestock farming",
     L2, "Other farms",
-    H0, "Household",
+    H0/H0_dyn, "Household/dynamic houshold"",
+
+
+Further information in German language is available at the
+`BDEW <https://www.bdew.de/energie/standardlastprofile-strom/>`_.
 
 
 Further Profiles
