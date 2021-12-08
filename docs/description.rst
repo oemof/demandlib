@@ -105,7 +105,7 @@ Be aware that the types in the code are in **lowercase**.
     L0, "General farms", "Weighted average of profiles L1 and L2"
     L1, "Farms with dairy farming/part-time livestock farming",
     L2, "Other farms",
-    H0/H0_dyn, "Household/dynamic houshold"",
+    H0/H0_dyn, "Household/dynamic houshold",
 
 
 Further information in German language is available at the
