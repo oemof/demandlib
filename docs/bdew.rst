@@ -1,16 +1,15 @@
-
-=========================================
- Model Description
-=========================================
-
-BDEW
-~~~~
+==================
+BDEW Load Profiles
+==================
 
 Using the demandlib you can create heat and electrical profiles by scaling the BDEW profiles to your desired annual demand.
 The BDEW profiles are the standard load profiles from BDEW.
 
 Heat Profiles
-+++++++++++++
+~~~~~~~~~~~~~
+
+Description
++++++++++++
 
 Heat profiles are created according to the approach described in the `BDEW guideline <https://www.enwg-veroeffentlichungen.de/badtoelz/Netze/Gasnetz/Netzbeschreibung/LF-Abwicklung-von-Standardlastprofilen-Gas-20110630-final.pdf>`_.
 
@@ -59,8 +58,14 @@ Types of houses:
 | **GMF**: haushaltsähnliche Gewerbebetriebe (household-like business enterprises)
 | **GHD**: Summenlastprofil Gewerbe/Handel/Dienstleistungen (Total load profile Business/Commerce/Services)
 
+Usage
++++++
+
 Electrical Profiles
-++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~
+
+Description
++++++++++++
 
 The electrical profiles are the standard load profiles from BDEW. All profiles
 have a resolution of 15 minutes. They are based on measurements in the German
@@ -74,7 +79,7 @@ profile that better takes the seasonal variance into account.
 With `t` the day of the year as a decimal number.
 
 The following profile types are available.
-Be aware that the types in the code are in **lowercase**.
+Be aware that the types in Python code are strings in **lowercase**.
 
 .. csv-table:: German (original)
    :header: Typ,Beschreibung,Erläuterung
@@ -115,13 +120,9 @@ Be aware that the types in the code are in **lowercase**.
 Further information in German language is available at the
 `BDEW <https://www.bdew.de/energie/standardlastprofile-strom/>`_.
 
+Usage
++++++
 
-Further Profiles
-~~~~~~~~~~~~~~~~
+.. code-block:: python
 
-We implemented further profiles (one until now) to represent further demand sectors which are not covered by the BDEW load profiles.
-
-Industrial Electrical Profile
-++++++++++++++++++++++++++++++
-
-The industrial electrical profile uses a step function.
+    from demandlib import bdew

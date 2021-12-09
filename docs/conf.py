@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import os
+
+from sphinx.ext.autodoc import between
+
+
+def setup(app):
+    # Register a sphinx.ext.autodoc.between listener to ignore everything
+    # between lines that contain the word IGNORE
+    app.connect("autodoc-process-docstring", between("^SPDX.*$", exclude=True))
+    return app
+
 
 extensions = [
     "sphinx.ext.autodoc",
@@ -17,7 +26,7 @@ extensions = [
 ]
 source_suffix = ".rst"
 master_doc = "index"
-project = "oemof"
+project = "demandlib"
 year = "2016-2021"
 author = "oemof developer group"
 copyright = "{0}, {1}".format(year, author)
@@ -46,3 +55,6 @@ html_short_title = "%s-%s" % (project, version)
 napoleon_use_ivar = True
 napoleon_use_rtype = False
 napoleon_use_param = False
+nitpicky = False
+
+linkcheck_ignore = [r"https://requires.io/.*"]
