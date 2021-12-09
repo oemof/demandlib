@@ -95,3 +95,9 @@ class TestElecSLP:
             )
             == 0.000038
         )
+
+    def test_deprecated_method(self):
+        with pytest.warns(FutureWarning) as record:
+            self.slp.get_profile(ann_el_demand_per_sector={"h0": 5000})
+        assert len(record) == 1
+        assert "This method is deprecated" in record[0].message.args[0]

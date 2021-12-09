@@ -13,6 +13,7 @@ SPDX-License-Identifier: MIT
 import calendar
 import datetime
 import os
+import warnings
 
 import pandas as pd
 
@@ -186,7 +187,8 @@ class ElecSlp:
         return self.slp_frame["h0_dyn"]
 
     def get_profile(self, ann_el_demand_per_sector):
-        """Get the profiles for the given annual demand
+        """
+        DEPRECATED: Use :py:meth:`~get_scaled_power_profiles()` instead
 
         Parameters
         ----------
@@ -198,6 +200,11 @@ class ElecSlp:
         pandas.DataFrame : Table with all profiles
 
         """
+        msg = (
+            "This method is deprecated and will be removed in future "
+            "versions\nUse the method get_scaled_power_profiles() instead."
+        )
+        warnings.warn(msg, FutureWarning)
         return (
             self.slp_frame.multiply(
                 pd.Series(ann_el_demand_per_sector), axis=1
@@ -206,12 +213,67 @@ class ElecSlp:
         )
 
     def get_profiles(self, *args):
+        """Get all or the selected profiles. To select profiles you can pass
+         the name of the types as strings. The profiles are normalised to 1.
+
+        Try `print(get_profiles().columns` to get all valid types.
+
+        Returns
+        -------
+        pandas.DataFrame : Table with all or the selected profiles.
+
+        Examples
+        --------
+        >>> from demandlib import bdew
+        >>> e_slp = bdew.ElecSlp(year=2020)
+        >>> e_slp.get_profiles("h0", "g0").head()
+                                   h0        g0
+        2020-01-01 00:00:00  0.000017  0.000016
+        2020-01-01 00:15:00  0.000015  0.000015
+        2020-01-01 00:30:00  0.000014  0.000015
+        2020-01-01 00:45:00  0.000012  0.000014
+        2020-01-01 01:00:00  0.000012  0.000013
+
+        >>> e_slp.get_profiles("h0", "g0").sum()
+        h0    1.0
+        g0    1.0
+        dtype: float64
+        """
         if len(args) == 0:
             return self.slp_frame
         else:
             return self.slp_frame[list(args)]
 
-    def scale_profiles(self, ann_el_demand_per_sector):
+    def get_scaled_profiles(self, ann_el_demand_per_sector):
+        """Get profiles scaled by there annual value.
+
+        Parameters
+        ----------
+        ann_el_demand_per_sector : dict
+            The annual demand in an energy unit for each type.
+
+        Returns
+        -------
+        pandas.DataFrame : Table with scaled profiles.
+
+        Examples
+        --------
+        >>> from demandlib import bdew
+        >>> e_slp = bdew.ElecSlp(year=2020)
+        >>> e_slp.get_scaled_profiles({"h0": 3000, "g0": 5000}).head()
+                                   g0        h0
+        2020-01-01 00:00:00  0.080084  0.050657
+        2020-01-01 00:15:00  0.076466  0.045591
+        2020-01-01 00:30:00  0.072897  0.041125
+        2020-01-01 00:45:00  0.069671  0.037408
+        2020-01-01 01:00:00  0.067030  0.034650
+
+        >>> e_slp.get_scaled_profiles({"h0": 3000, "g0": 5000}).sum()
+        g0    5000.0
+        h0    3000.0
+        dtype: float64
+        """
+
         return self.slp_frame.multiply(
             pd.Series(ann_el_demand_per_sector), axis=1
         ).dropna(how="all", axis=1)
@@ -219,6 +281,51 @@ class ElecSlp:
     def get_scaled_power_profiles(
         self, ann_el_demand_per_sector, conversion_factor=4
     ):
+        """
+        Get profiles scaled by there annual value. Each value represents
+        the average power of an interval. Therefore, it is not possible to
+        sum up the array. A conversion factor is used to calculate power
+        units from energy units. By default the conversion factor is `4`. As
+        the interval of each profile is 15 minutes a conversion factor of `4`
+        will convert energy units like Wh, kWh, MWh etc. to power units like W,
+        kW, MW etc..
+
+        Parameters
+        ----------
+        ann_el_demand_per_sector : dict
+            The annual demand in an energy unit for each type.
+        conversion_factor : float
+            Factor to convert the energy unit of the annual value to the
+            power unit of each interval.
+
+        Returns
+        -------
+        pandas.DataFrame : Table with scaled profiles.
+
+        Examples
+        --------
+        >>> from demandlib import bdew
+        >>> e_slp = bdew.ElecSlp(year=2020)
+        >>> e_slp.get_scaled_power_profiles({"h0": 3000, "g0": 5000}).head()
+                                   g0        h0
+        2020-01-01 00:00:00  0.320338  0.202627
+        2020-01-01 00:15:00  0.305866  0.182365
+        2020-01-01 00:30:00  0.291590  0.164500
+        2020-01-01 00:45:00  0.278682  0.149633
+        2020-01-01 01:00:00  0.268122  0.138602
+        >>> cf = 4
+        >>> spp = e_slp.get_scaled_power_profiles({"h0": 3000, "g0": 5000},
+        ...                                       conversion_factor=cf)
+        >>> spp.sum()
+        g0    20000.0
+        h0    12000.0
+        dtype: float64
+        >>> spp.div(cf).sum()
+        g0    5000.0
+        h0    3000.0
+        dtype: float64
+        """
         return (
-            self.scale_profiles(ann_el_demand_per_sector) * conversion_factor
+            self.get_scaled_profiles(ann_el_demand_per_sector)
+            * conversion_factor
         )
