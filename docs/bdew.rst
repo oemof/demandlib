@@ -61,6 +61,12 @@ Types of houses:
 Usage
 +++++
 
+.. code-block:: python
+
+    from demandlib import bdew
+
+    ...
+
 Electrical Profiles
 ~~~~~~~~~~~~~~~~~~~
 
@@ -126,3 +132,27 @@ Usage
 .. code-block:: python
 
     from demandlib import bdew
+    e_slp = bdew.ElecSlp(year=2020)
+
+    # get all available types
+    print(e_slp.get_profiles().columns)
+
+    # get the "h0" and "g0" profile
+    profiles = e_slp.get_profiles("h0", "g0")
+
+    # get scaled profiles
+    scaled_profiles = e_slp.get_scaled_profiles({"h0": 3000, "g0": 5000})
+
+    # get scaled profiles with power values instead of energy values
+    # a conversion_factor of 4 will convert Wh, kWh etc. to W, kW
+    e_slp.get_scaled_power_profiles({"h0": 3000, "g0": 5000}, conversion_factor=4)
+
+    # add holidays, holidays are treated as Sundays
+    holidays = {
+        datetime.date(2010, 1, 1): "New year",
+        datetime.date(2010, 10, 3): "Day of German Unity",
+    }
+    e_slp = bdew.ElecSlp(year=2010, holidays=holidays)
+
+    # holiday dictionaries can be created using workalendar
+    # https://github.com/workalendar/workalendar
