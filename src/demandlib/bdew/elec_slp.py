@@ -204,3 +204,21 @@ class ElecSlp:
             ).dropna(how="all", axis=1)
             * 4
         )
+
+    def get_profiles(self, *args):
+        if len(args) == 0:
+            return self.slp_frame
+        else:
+            return self.slp_frame[list(args)]
+
+    def scale_profiles(self, ann_el_demand_per_sector):
+        return self.slp_frame.multiply(
+            pd.Series(ann_el_demand_per_sector), axis=1
+        ).dropna(how="all", axis=1)
+
+    def get_scaled_power_profiles(
+        self, ann_el_demand_per_sector, conversion_factor=4
+    ):
+        return (
+            self.scale_profiles(ann_el_demand_per_sector) * conversion_factor
+        )
