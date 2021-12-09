@@ -226,6 +226,8 @@ class ElecSlp:
         --------
         >>> from demandlib import bdew
         >>> e_slp = bdew.ElecSlp(year=2020)
+        >>> ", ".join(sorted(e_slp.get_profiles().columns))
+        'g0, g1, g2, g3, g4, g5, g6, h0, h0_dyn, l0, l1, l2'
         >>> e_slp.get_profiles("h0", "g0").head()
                                    h0        g0
         2020-01-01 00:00:00  0.000017  0.000016
