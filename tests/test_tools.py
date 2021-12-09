@@ -33,6 +33,8 @@ class TestWeekdays:
 
     def test_christmas_with_holidays(self):
         """2010-12-25 is a Saturday, 6th day of the week."""
-        dt = tools.add_weekdays2df(self.df, holidays=self.holidays)
+        dt = tools.add_weekdays2df(
+            self.df, holidays=list(self.holidays.keys())
+        )
         assert dt["weekday"][34368] == 0
         assert dt.index[34368].day == 25
