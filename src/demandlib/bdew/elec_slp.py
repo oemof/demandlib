@@ -139,7 +139,7 @@ class ElecSlp:
                 left_on=left_cols,
                 right_on=right_cols,
                 how="inner",
-            ).drop(["hour_of_day"], 1)
+            ).drop(["hour_of_day"], axis=1)
 
             merged_df.index = (
                 pd.to_datetime(merged_df["date"])
