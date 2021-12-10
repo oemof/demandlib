@@ -32,6 +32,8 @@ class ElecSlp:
     -------------------
     seasons : dictionary
         Describing the time ranges for summer, winter and transition periods.
+        The seasons dictionary will update the existing one, so only changed
+        keys have to be defined. Make sure not to create time gaps.
     holidays : dictionary or list
         The keys of the dictionary or the items of the list should be datetime
         objects of the days that are holidays.
@@ -46,17 +48,18 @@ class ElecSlp:
         self._date_time_index = pd.date_range(
             datetime.datetime(year, 1, 1, 0), periods=hoy * 4, freq="15Min"
         )
-        if seasons is None:
-            self.seasons = {
-                "summer1": [5, 15, 9, 14],  # summer: 15.05. to 14.09
-                "transition1": [3, 21, 5, 14],  # transition1 :21.03. to 14.05
-                "transition2": [9, 15, 10, 31],  # transition2 :15.09. to 31.10
-                "winter1": [1, 1, 3, 20],  # winter1:  01.01. to 20.03
-                "winter2": [11, 1, 12, 31],  # winter2: 01.11. to 31.12
-            }
-        else:
-            self.seasons = seasons
-        self.year = year
+        self._seasons = {
+            "summer1": [5, 15, 9, 14],  # summer: 15.05. to 14.09
+            "transition1": [3, 21, 5, 14],  # transition1 :21.03. to 14.05
+            "transition2": [9, 15, 10, 31],  # transition2 :15.09. to 31.10
+            "winter1": [1, 1, 3, 20],  # winter1:  01.01. to 20.03
+            "winter2": [11, 1, 12, 31],  # winter2: 01.11. to 31.12
+        }
+        if seasons is not None:
+            self._seasons.update(seasons)
+
+        self._year = year
+
         # Create the default profiles
         self.slp_frame = self.all_load_profiles(
             self._date_time_index, holidays=holidays
