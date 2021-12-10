@@ -33,7 +33,9 @@ class ElecSlp:
     seasons : dictionary
         Describing the time ranges for summer, winter and transition periods.
         The seasons dictionary will update the existing one, so only changed
-        keys have to be defined. Make sure not to create time gaps.
+        keys have to be defined. Make sure not to create time gaps. The
+        "h0_dyn" will not work with changed seasons, so you have to use your
+        own smoothing curve to create a "h0_dyn" profile.
     holidays : dictionary or list
         The keys of the dictionary or the items of the list should be datetime
         objects of the days that are holidays.
