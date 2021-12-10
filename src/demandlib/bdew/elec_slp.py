@@ -23,13 +23,6 @@ from demandlib.tools import add_weekdays2df
 class ElecSlp:
     """Generate electrical standardized load profiles based on the BDEW method.
 
-    Attributes
-    ----------
-    datapath : string
-        Path to the csv files containing the load profile data.
-    date_time_index : pandas.DateTimeIndex
-        Time range for and frequency for the profile.
-
     Parameters
     ----------
     year : integer
@@ -49,8 +42,8 @@ class ElecSlp:
             hoy = 8784
         else:
             hoy = 8760
-        self.datapath = os.path.join(os.path.dirname(__file__), "bdew_data")
-        self.date_time_index = pd.date_range(
+        self._datapath = os.path.join(os.path.dirname(__file__), "bdew_data")
+        self._date_time_index = pd.date_range(
             datetime.datetime(year, 1, 1, 0), periods=hoy * 4, freq="15Min"
         )
         if seasons is None:
@@ -66,10 +59,14 @@ class ElecSlp:
         self.year = year
         # Create the default profiles
         self.slp_frame = self.all_load_profiles(
-            self.date_time_index, holidays=holidays
+            self._date_time_index, holidays=holidays
         )
         # Add the dynamic H0 profile
         self.create_dynamic_h0_profile()
+
+    @property
+    def date_time_index(self):
+        return self._date_time_index
 
     def all_load_profiles(self, time_df, holidays=None):
         slp_types = [
@@ -97,7 +94,7 @@ class ElecSlp:
         """
 
         # define file path of slp csv data
-        file_path = os.path.join(self.datapath, "selp_series.csv")
+        file_path = os.path.join(self._datapath, "selp_series.csv")
 
         # Read standard load profile series from csv file
         selp_series = pd.read_csv(file_path)
@@ -127,12 +124,12 @@ class ElecSlp:
         right_cols = ["hour", "minute", "weekday"]
         tmp_df = tmp_df.reset_index(drop=True)
 
-        for p in self.seasons.keys():
+        for p in self._seasons.keys():
             a = datetime.datetime(
-                self.year, self.seasons[p][0], self.seasons[p][1], 0, 0
+                self._year, self._seasons[p][0], self._seasons[p][1], 0, 0
             )
             b = datetime.datetime(
-                self.year, self.seasons[p][2], self.seasons[p][3], 23, 59
+                self._year, self._seasons[p][2], self._seasons[p][3], 23, 59
             )
             merged_df = pd.DataFrame.merge(
                 tmp_df[tmp_df["period"] == p[:-1]],

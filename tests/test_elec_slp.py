@@ -39,7 +39,7 @@ class TestElecSLP:
         }
 
     def test_elec_slp_year(self):
-        assert self.slp.year == 2010
+        assert self.slp._year == 2010
 
     def test_columns_of_frame(self):
         assert sorted(self.slp.slp_frame.columns) == [
