@@ -159,13 +159,16 @@ class ElecSlp:
         return new_df.div(new_df.sum(axis=0), axis=1)
 
     def create_dynamic_h0_profile(self):
-        """
+        r"""
         Use the dynamisation function of the BDEW to smoothen the seasonal
         edges. Functions resolution is daily.
 
             .. math::
-                f(x) = -3.916649251 * 10^-10 * x^4 + 3,2 * 10^-7 * x³ - 7,02
-                * 10^-5 * x²+0,0021 * x +1,24
+                F_t = -3,92\cdot10^{-10} \cdot t^4 + 3,2\cdot10^{-7}
+                \cdot t^3– 7,02\cdot10^{-5}\cdot t^2 + 2,1\cdot10^{-3}
+                \cdot t + 1,24
+
+        With `t` the day of the year as a decimal number.
 
         Adjustment of accuracy: from -3,92 to -3.916649251
         """
@@ -185,7 +188,9 @@ class ElecSlp:
         )
 
         # Multiply the smoothing factor with the default H0 profile
-        self.slp_frame["h0_dyn"] = self.slp_frame["h0"].mul(smoothing_factor)
+        self.slp_frame["h0_dyn"] = self.slp_frame["h0"].mul(
+            smoothing_factor, axis=0
+        )
         return self.slp_frame["h0_dyn"]
 
     def get_profile(self, ann_el_demand_per_sector):
