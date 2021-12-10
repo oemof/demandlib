@@ -101,3 +101,30 @@ class TestElecSLP:
             self.slp.get_profile(ann_el_demand_per_sector={"h0": 5000})
         assert len(record) == 1
         assert "This method is deprecated" in record[0].message.args[0]
+
+
+def test_changed_seasons():
+    """Test changing the seasons."""
+    alt_seasons = {
+        "summer1": [5, 2, 9, 14],  # summer: 2.05. to 14.09
+        "transition1": [3, 21, 5, 1],  # transition1 :21.03. to 1.05.
+    }
+    slp1 = bdew.ElecSlp(2010)
+    slp2 = bdew.ElecSlp(2010, seasons=alt_seasons)
+    # 6th-7th May, 2010
+    assert slp1.get_profiles("g0").index[12000] == datetime.datetime(
+        2010, 5, 6, 0, 0
+    )
+    assert slp1.get_profiles("g0").index[12096] == datetime.datetime(
+        2010, 5, 7, 0, 0
+    )
+    # transition1 in a normal slp
+    assert (
+        round(float(slp1.get_profiles("g0").iloc[12000:12096].sum()), 5)
+        == 0.00300
+    )
+    # summer1 in a changed time scale
+    assert (
+        round(float(slp2.get_profiles("g0").iloc[12000:12096].sum()), 5)
+        == 0.00289
+    )
