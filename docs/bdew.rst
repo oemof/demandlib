@@ -76,7 +76,7 @@ Description
 The electrical profiles are the standard load profiles from BDEW. All profiles
 have a resolution of 15 minutes. They are based on measurements in the German
 electricity sector. There is a dynamic function (h0_dyn) for the houshold (h0)
-profile that better takes the seasonal variance into account.
+profile that better takes the seasonal variance into account [`BDEW <https://www.bdew.de/energie/standardlastprofile-strom/>`_].
 
 .. math::
 
@@ -87,7 +87,7 @@ With `t` the day of the year as a decimal number.
 The following profile types are available.
 Be aware that the types in Python code are strings in **lowercase**.
 
-.. csv-table:: German (original)
+.. csv-table:: German (original) [`Wikipedia <https://de.wikipedia.org/wiki/Standardlastprofil>`_]
    :header: Typ,Beschreibung,Erläuterung
    :widths: 10, 40, 50
 
