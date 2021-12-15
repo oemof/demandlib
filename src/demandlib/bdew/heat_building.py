@@ -89,7 +89,7 @@ class HeatBuilding:
 
         References
         ----------
-        .. [1] `BDEW <https://www.avacon.de/cps/rde/xbcr/avacon/15-06-30_Leitfaden_Abwicklung_SLP_Gas.pdf>`_,
+        .. [1] `BDEW <https://www.avacon-netz.de/content/dam/revu-global/avacon-netz/documents/Energie_anschliessen/netzzugang-gas/Leitfaden_20180329_Abwicklung-Standardlastprofile-Gas.pdf>`_,  # noqa: E501
             BDEW Documentation for heat profiles.
         """
 
