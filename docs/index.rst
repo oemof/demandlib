@@ -3,12 +3,12 @@ Contents
 ========
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
 
    readme
    installation
-   usage
-   description
+   bdew
+   further_profiles
    reference/index
    contributing
    authors
