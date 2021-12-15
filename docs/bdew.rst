@@ -41,8 +41,7 @@ Depending on the profile type, different coefficients A, B, C, D for the sigmoid
 
    \theta_0 &= 40^\circ C
 
-Types of houses
----------------
+Types of houses:
 
 | **EFH**: Einfamilienhaus (single family house)
 | **MFH**: Mehrfamilienhaus (multi family house)
@@ -59,8 +58,7 @@ Types of houses
 | **GMF**: haushaltsähnliche Gewerbebetriebe (household-like business enterprises)
 | **GHD**: Summenlastprofil Gewerbe/Handel/Dienstleistungen (Total load profile Business/Commerce/Services)
 
-Building class
---------------
+Building class:
 
 The parameter ``building_class`` (German: Baualtersklasse) can assume values in range 1-11.
 See page 42 of `this document <https://www.eko-netz.de/files/eko-netz/download/3.5_standardlastprofile_bgw_information_lastprofile.pdf>`_ for guidance on how to determine ``building_class``.
