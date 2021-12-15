@@ -61,33 +61,12 @@ Types of houses:
 Building class:
 
 The parameter ``building_class`` (German: Baualtersklasse) can assume values in range 1-11.
-See page 42 of `this document <https://www.eko-netz.de/files/eko-netz/download/3.5_standardlastprofile_bgw_information_lastprofile.pdf>`_ for guidance on how to determine ``building_class``.
-
-You can either use the building class of 11 for Germany according to table 3 in the linked document, the ``building_class`` assigned to German federal states in table 3:
-
-    ========================= =====================================
-    Federal state                    Building class
-    ========================= =====================================
-    Baden-Württemberg           4
-    Bayern                      5
-    Berlin                      3
-    Brandenburg                 5
-    Bremen                      1
-    Hamburg                     2
-    Hessen                      3
-    Mecklenburg-Vorpommern      6
-    Niedersachsen               3
-    Nordrhein-Westfalen         3
-    Rheinland-Pfalz             4
-    Saarland                    2
-    Sachsen                     4
-    Sachsen-Anhalt              5
-    Schleswig-Holstein          4
-    Thüringen                   5
-    ========================= =====================================
-
-or determine ``building_class`` on your own by identifying the proportion of buildings with a building age prior to 1978 and a building age of 1979 or later in the total building stock
-and matching the proportion prior to 1978 with the span given in the column "Altbauanteil" in table 2 of the linked document.
+On pages 42-43 of `this document <https://www.eko-netz.de/files/eko-netz/download/3.5_standardlastprofile_bgw_information_lastprofile.pdf>`_
+you will find guidance on how to determine ``building_class``.
+You can either use the building class according to table 3 in the linked document or determine ``building_class`` on
+your own by identifying the proportion of buildings with a building age prior to 1978 and a building age of 1979 or
+later in the total building stock and by matching the proportion prior to 1978 with the span given in the column
+"Altbauanteil" in table 2 of the linked document.
 
 Usage
 +++++
