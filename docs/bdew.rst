@@ -60,7 +60,7 @@ Types of houses:
 
 Building class:
 
-The parameter ``building_class`` (German: Baualtersklasse) can assume values in range 1-11.
+The parameter ``building_class`` (German: Baualtersklasse) can assume values in the range 1-11.
 On pages 42-43 of `this document <https://www.eko-netz.de/files/eko-netz/download/3.5_standardlastprofile_bgw_information_lastprofile.pdf>`_
 you will find guidance on how to determine ``building_class``.
 You can either use the building class according to table 3 in the linked document or determine ``building_class`` on
