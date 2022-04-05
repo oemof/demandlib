@@ -58,6 +58,16 @@ Types of houses:
 | **GMF**: haushaltsähnliche Gewerbebetriebe (household-like business enterprises)
 | **GHD**: Summenlastprofil Gewerbe/Handel/Dienstleistungen (Total load profile Business/Commerce/Services)
 
+Building class:
+
+The parameter ``building_class`` (German: Baualtersklasse) can assume values in the range 1-11.
+On pages 42-43 of `this document <https://www.eko-netz.de/files/eko-netz/download/3.5_standardlastprofile_bgw_information_lastprofile.pdf>`_
+you will find guidance on how to determine ``building_class``.
+You can either use the building class according to table 3 in the linked document or determine ``building_class`` on
+your own by identifying the proportion of buildings with a building age prior to 1978 and a building age of 1979 or
+later in the total building stock and by matching the proportion prior to 1978 with the span given in the column
+"Altbauanteil" in table 2 of the linked document.
+
 Usage
 +++++
 
