@@ -61,6 +61,12 @@ Types of houses:
 Usage
 +++++
 
+.. code-block:: python
+
+    from demandlib import bdew
+
+    ...
+
 Electrical Profiles
 ~~~~~~~~~~~~~~~~~~~
 
@@ -70,7 +76,7 @@ Description
 The electrical profiles are the standard load profiles from BDEW. All profiles
 have a resolution of 15 minutes. They are based on measurements in the German
 electricity sector. There is a dynamic function (h0_dyn) for the houshold (h0)
-profile that better takes the seasonal variance into account.
+profile that better takes the seasonal variance into account [`BDEW <https://www.bdew.de/energie/standardlastprofile-strom/>`_].
 
 .. math::
 
@@ -81,7 +87,7 @@ With `t` the day of the year as a decimal number.
 The following profile types are available.
 Be aware that the types in Python code are strings in **lowercase**.
 
-.. csv-table:: German (original)
+.. csv-table:: German (original) [`Wikipedia <https://de.wikipedia.org/wiki/Standardlastprofil>`_]
    :header: Typ,Beschreibung,Erläuterung
    :widths: 10, 40, 50
 
@@ -126,3 +132,27 @@ Usage
 .. code-block:: python
 
     from demandlib import bdew
+    e_slp = bdew.ElecSlp(year=2020)
+
+    # get all available types
+    print(e_slp.get_profiles().columns)
+
+    # get the "h0" and "g0" profile
+    profiles = e_slp.get_profiles("h0", "g0")
+
+    # get scaled profiles
+    scaled_profiles = e_slp.get_scaled_profiles({"h0": 3000, "g0": 5000})
+
+    # get scaled profiles with power values instead of energy values
+    # a conversion_factor of 4 will convert Wh, kWh etc. to W, kW
+    e_slp.get_scaled_power_profiles({"h0": 3000, "g0": 5000}, conversion_factor=4)
+
+    # add holidays, holidays are treated as Sundays
+    holidays = {
+        datetime.date(2010, 1, 1): "New year",
+        datetime.date(2010, 10, 3): "Day of German Unity",
+    }
+    e_slp = bdew.ElecSlp(year=2010, holidays=holidays)
+
+    # holiday dictionaries can be created using workalendar
+    # https://github.com/workalendar/workalendar
