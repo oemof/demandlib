@@ -1,3 +1,56 @@
+"""
+The region module combines profiles from VDI 4655 for heat and power demand of
+houses within one region.
+
+
+Module VDI 4655
+---------------
+This is an implementation of the calculation of economic efficiency
+using the annuity method defined in the German VDI 4655.
+
+    **VDI 4655**
+
+    **Reference load profiles of single-family and
+    multi-family houses for the use of CHP systems**
+
+    *May 2008 (ICS 91.140.01)*
+
+Copyright:
+
+    *Verein Deutscher Ingenieure e.V.*
+
+    *VDI Standards Department*
+
+    *VDI-Platz 1, 40468 Duesseldorf, Germany*
+
+Reproduced with the permission of the Verein Deutscher Ingenieure e.V.,
+for non-commercial use only.
+
+Notes
+-----
+This script creates full year energy demand time series of domestic buildings
+for use in simulations. This is achieved by an implementation of the VDI 4655,
+which gives sample energy demands for a number of typical days ('Typtage').
+The energy demand contains heating, hot water and electricity.
+
+For a given year, the typical days can be matched to the actual calendar days,
+based on the following conditions:
+    - Season: summer, winter or transition
+    - Day: weekday or sunday (Or holiday, which counts as sunday)
+    - Cloud coverage: cloudy or not cloudy
+    - House type: single-family houses or multi-family houses (EFH or MFH)
+
+The holidays are loaded from an Excel file, the weather conditions are loaded
+from weather data (e.g. DWD TRY).
+Most of the settings for this script are controlled with a configuration file
+called 'config_file', the location of which is defined down below.
+
+SPDX-FileCopyrightText: Joris Zimmermann
+SPDX-FileCopyrightText: Uwe Krien
+
+SPDX-License-Identifier: MIT
+"""
+
 import calendar
 import os
 import pandas as pd
@@ -11,12 +64,36 @@ class Region:
     def __init__(
         self,
         year,
-        location,
+        try_region,
         seasons=None,
         holidays=None,
         houses=None,
         resample_rule=None,
     ):
+        """
+
+        Parameters
+        ----------
+        year : int
+            Year of the profile.
+        try_region : int
+            The number of the TRY (test reference year of the DWD) region.
+        seasons : dict (optional)
+            The times of the seasons if fixed seasons are used. In the VDI
+            norm seasons are defined by the daily average temperature: Winter
+            below 5 degree Celsius, Spring between 5 and 15 degree Celsius and
+            summer above 15 degree Celsius.
+        holidays : dict or list
+            In case of a dictionary the keys are datetime objects and the
+            values are strings with the name of the holiday. Otherwise a list
+            of datetime objects should be passed.
+        houses : list
+            A list of dictionaries in which each house is defined the
+            dictionary need to have the following keys.
+        resample_rule : str
+            Time interval to resample the profile e.g. 1H (1 hour) or 15min.
+            The value will be passed to the pandas resample method.
+        """
         if calendar.isleap(year):
             self.hoy = 8784
         else:
@@ -34,14 +111,7 @@ class Region:
         if seasons is not None:
             self._seasons.update(seasons)
 
-        if isinstance(location, int):
-            self._try_region = location
-        elif isinstance(location, tuple):
-            # try to create a spatial object from coordinates and find the
-            # TRY region.
-            raise NotImplementedError(
-                "The spatial operation is not implemented, yet"
-            )
+        self._try_region = try_region
 
         self._year = year
         self.weather = None
@@ -51,6 +121,7 @@ class Region:
         self.houses = []
         if houses is not None:
             self.add_houses(houses)
+
         if resample_rule is not None:
             self._resample_profiles(resample_rule)
 
@@ -61,12 +132,33 @@ class Region:
         self.type_days = self.type_days.resample(rule, label="right").first()
 
     def _get_typical_days(self, holidays, set_season="temperature"):
+        """
+        Find the code for the typical days from dwd. The code consists of three
+        letters:
+
+          1. Season: W (winter), S (summer), U (transition)
+          2. Day of the week: W (weekday), S (sunday/holiday)
+          3. Cloud coverage for winter and transition: B (covered), H (partly
+             clouded/sunny)
+
+        Parameters
+        ----------
+        holidays
+        set_season
+
+        Returns
+        -------
+
+        """
+        # Create the default time index
         date_time_index = pd.date_range(
             datetime.datetime(self._year, 1, 1, 0),
             periods=self.hoy / 24,
             freq="D",
         )
         days = pd.DataFrame(index=date_time_index)
+
+        # Set season by fixed dates
         for p in self._seasons:
             a = datetime.datetime(
                 self._year, self._seasons[p][0], self._seasons[p][1], 0, 0
@@ -76,9 +168,11 @@ class Region:
             )
             days.loc[a:b, "season_fix"] = p[:-1]
 
+        # Set weekdays and holidays
         days = add_weekdays2df(days, holidays=holidays, holiday_is_sunday=True)
         days.pop("date")
 
+        # Fetch weather data
         fn_weather = os.path.join(
             os.path.dirname(__file__),
             "resources_weather",
@@ -98,11 +192,14 @@ class Region:
         )
         days = pd.concat([days, self.weather[["CCOVER", "TAMB"]]], axis=1)
 
+        # 1. Set first letter of type days (season) from fixed season or season
+        # by temperature.
         seasons_dict = {
             "summer": "S",
             "winter": "W",
             "transition": "U",
         }
+        days.replace(to_replace=seasons_dict, inplace=True)
         days.loc[days["TAMB"] < 5, "season_t"] = "W"
         days.loc[days["TAMB"] >= 5, "season_t"] = "U"
         days.loc[days["TAMB"] > 15, "season_t"] = "S"
@@ -118,19 +215,21 @@ class Region:
             msg = "Method <{0}> for the season does not exist."
             raise NotImplementedError(msg.format(set_season))
 
-        days.replace(to_replace=seasons_dict, inplace=True)
+        # 2. Set second letter of type days: Day of the week
         days.loc[days["weekday"] == 7, "day_of_week"] = "S"
         days.loc[days["weekday"] < 7, "day_of_week"] = "W"
         days.pop("weekday")
+
+        # 3. Set third letter of type days: Cloud coverage
         days.loc[days["CCOVER"] >= 5, "cloud_coverage"] = "B"
         days.loc[days["CCOVER"] < 5, "cloud_coverage"] = "H"
         days.loc[days["season"] == "S", "cloud_coverage"] = "X"
         days.pop("CCOVER")
 
+        # Combine the three letters in one column
         days["day_types"] = (
             days["season"] + days["day_of_week"] + days["cloud_coverage"]
         )
-
         days.drop(
             ["season", "day_of_week", "cloud_coverage"], axis=1, inplace=True
         )
@@ -241,15 +340,22 @@ class Region:
         return load_profile
 
     def add_houses(self, houses):
-        houses_iter = houses.copy()
-        for h in houses_iter:
-            if h["house_type"] not in ["EFH", "MFH"]:
-                msg = (
-                    "<{0}> is a not supported house type and will be "
-                    "removed."
-                )
-                warnings.warn(msg.format(h["house_type"]), UserWarning)
-                houses.remove(h)
+        """
+
+        Parameters
+        ----------
+        houses : list
+            A list of dictionaries that describes the houses.
+
+        """
+        houses_wrong = [
+            h for h in houses if h["house_type"] not in ["EFH", "MFH"]
+        ]
+        houses = [h for h in houses if h["house_type"] in ["EFH", "MFH"]]
+        for h in houses_wrong:
+            msg = "<{0}> is a not supported house type and will be " "removed."
+            warnings.warn(msg.format(h["house_type"]), UserWarning)
+
         if len(houses) > 0:
             self.houses.extend(houses)
 
