@@ -75,11 +75,16 @@ for n in range(1):
 
 start = datetime.datetime.now()
 
+# To get the DWD TRY region from coordinates the geopandas package is needed.
+# pip3 install geopandas
+# try_region = vdi.find_try_region(13.42, 52.82)
+try_region = 4
+
 # define the region
 my_region = vdi.Region(
     2017,
     holidays=holidays,
-    location=4,
+    try_region=try_region,
     houses=my_houses,
     resample_rule="15min",
 )

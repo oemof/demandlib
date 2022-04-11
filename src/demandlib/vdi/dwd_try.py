@@ -1,4 +1,46 @@
+# -*- coding: utf-8 -*-
+"""
+Read DWD TRY (test reference year) data.
+
+SPDX-FileCopyrightText: Joris Zimmermann
+SPDX-FileCopyrightText: Uwe Krien
+
+SPDX-License-Identifier: MIT
+"""
+
 import pandas as pd
+import geopandas as gpd
+import os
+from shapely.geometry import Point
+
+
+def find_try_region(longitude, latitude):
+    """
+    Find the DWD TRY region by coordinates.
+
+    Notes
+    -----
+    The packages geopandas and shapely need to be installed to use this
+    function.
+
+    Parameters
+    ----------
+    longitude : float
+    latitude : float
+
+    Returns
+    -------
+    DWD TRY region. : int
+
+    """
+    fn_try_map = os.path.join(
+            os.path.dirname(__file__),
+            "resources_weather",
+            "TRY_polygons.geojson"
+        )
+    try_map = gpd.read_file(fn_try_map)
+    my_point = Point(longitude, latitude)
+    return int(try_map.loc[try_map.contains(my_point), "TRY_code"])
 
 
 def read_dwd_weather_file(weather_file_path):
@@ -50,10 +92,4 @@ def read_dwd_weather_file(weather_file_path):
     # Add an 'HOUR' column:
     weather_data["HOUR"] = range(1, 8761)
 
-    # Make sure all columns are in the correct order
-    # weather_data = weather_data.reindex(columns=['HOUR', 'IBEAM_H', 'IDIFF_H',
-    #                                              'TAMB', 'WSPEED', 'RHUM',
-    #                                              'WDIR', 'CCOVER', 'PAMB'])
-
-    # print weather_data
     return weather_data
