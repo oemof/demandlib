@@ -8,10 +8,15 @@ SPDX-FileCopyrightText: Uwe Krien
 SPDX-License-Identifier: MIT
 """
 
-import pandas as pd
-import geopandas as gpd
 import os
-from shapely.geometry import Point
+
+import pandas as pd
+
+try:
+    import geopandas as gpd
+    from shapely.geometry import Point
+except ModuleNotFoundError:
+    pass
 
 
 def find_try_region(longitude, latitude):
@@ -34,10 +39,8 @@ def find_try_region(longitude, latitude):
 
     """
     fn_try_map = os.path.join(
-            os.path.dirname(__file__),
-            "resources_weather",
-            "TRY_polygons.geojson"
-        )
+        os.path.dirname(__file__), "resources_weather", "TRY_polygons.geojson"
+    )
     try_map = gpd.read_file(fn_try_map)
     my_point = Point(longitude, latitude)
     return int(try_map.loc[try_map.contains(my_point), "TRY_code"])
