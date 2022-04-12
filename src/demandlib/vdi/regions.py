@@ -52,12 +52,14 @@ SPDX-License-Identifier: MIT
 """
 
 import calendar
-import os
-import pandas as pd
 import datetime
+import os
+import warnings
+
+import pandas as pd
+
 from demandlib.tools import add_weekdays2df
 from demandlib.vdi import dwd_try
-import warnings
 
 
 class Region:
@@ -190,7 +192,7 @@ class Region:
             .resample("D")
             .mean()
         )
-        days = pd.concat([days, self.weather[["CCOVER", "TAMB"]]], axis=1)
+        days = pd.concat([days, self.weather], axis=1)
 
         # 1. Set first letter of type days (season) from fixed season or season
         # by temperature.
