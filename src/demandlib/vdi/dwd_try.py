@@ -70,26 +70,17 @@ def read_dwd_weather_file(weather_file_path):
         delim_whitespace=True,
         skiprows=header_row - 1,
         index_col=["MM", "DD", "HH"],
-        usecols=["MM", "DD", "HH", "B", "D", "t", "WG", "RF", "WR", "N", "p"],
+        usecols=["MM", "DD", "HH", "t", "N"],
         comment="*",
     )
 
-    # Rename the columns to the TRNSYS standard:
+    # Rename the columns
     weather_data.rename(
         columns={
-            "B": "IBEAM_H",
-            "D": "IDIFF_H",
             "t": "TAMB",
-            "WG": "WSPEED",
-            "RF": "RHUM",
-            "WR": "WDIR",
             "N": "CCOVER",
-            "p": "PAMB",
         },
         inplace=True,
     )
-
-    # Add an 'HOUR' column:
-    weather_data["HOUR"] = range(1, 8761)
 
     return weather_data
