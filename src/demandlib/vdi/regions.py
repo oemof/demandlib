@@ -177,7 +177,7 @@ class Region:
         fn_weather = os.path.join(
             os.path.dirname(__file__),
             "resources_weather",
-            "TRY2010_04_Jahr.dat",
+            "TRY2010_{:02d}_Jahr.dat".format(self._try_region),
         )
         self.weather = dwd_try.read_dwd_weather_file(fn_weather)
         self.weather = (
