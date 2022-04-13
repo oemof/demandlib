@@ -40,7 +40,6 @@ def get_ini_filenames():
     paths.append(os.path.join(os.path.expanduser("~")))
     paths.append(os.getcwd())
 
-
     for p in paths:
         if p == "":  # Empty path string must be ignored
             continue
