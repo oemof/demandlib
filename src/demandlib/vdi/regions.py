@@ -202,9 +202,11 @@ class Region:
             "transition": "U",
         }
         days.replace(to_replace=seasons_dict, inplace=True)
-        days.loc[days["TAMB"] < 5, "season_t"] = "W"
-        days.loc[days["TAMB"] >= 5, "season_t"] = "U"
-        days.loc[days["TAMB"] > 15, "season_t"] = "S"
+        wtl = cfg.get("VDI", "winter_temperature_limit")
+        stl = cfg.get("VDI", "summer_temperature_limit")
+        days.loc[days["TAMB"] < wtl, "season_t"] = "W"
+        days.loc[days["TAMB"] >= wtl, "season_t"] = "U"
+        days.loc[days["TAMB"] > stl, "season_t"] = "S"
         days.pop("TAMB")
 
         if set_season == "temperature":
