@@ -129,10 +129,8 @@ class Region:
             self._resample_profiles(resample_rule)
 
     def _resample_profiles(self, rule):
-        self._load_profiles = self._load_profiles.resample(
-            rule, label="right"
-        ).sum()
-        self.type_days = self.type_days.resample(rule, label="right").first()
+        self._load_profiles = self._load_profiles.resample(rule).sum()
+        self.type_days = self.type_days.resample(rule).first()
 
     def _get_typical_days(self, holidays, set_season="temperature"):
         """
