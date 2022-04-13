@@ -58,6 +58,7 @@ import warnings
 
 import pandas as pd
 
+from demandlib import config as cfg
 from demandlib.tools import add_weekdays2df
 from demandlib.vdi import dwd_try
 
