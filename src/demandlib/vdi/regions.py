@@ -15,16 +15,13 @@ using the annuity method defined in the German VDI 4655.
 
     *May 2008 (ICS 91.140.01)*
 
-Copyright:
-
     *Verein Deutscher Ingenieure e.V.*
 
     *VDI Standards Department*
 
     *VDI-Platz 1, 40468 Duesseldorf, Germany*
 
-Reproduced with the permission of the Verein Deutscher Ingenieure e.V.,
-for non-commercial use only.
+Reproduced with the kind permission of the Verein Deutscher Ingenieure e.V.
 
 Notes
 -----
