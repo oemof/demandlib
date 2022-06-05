@@ -42,6 +42,6 @@ def add_weekdays2df(time_df, holidays=None, holiday_is_sunday=False):
         )
 
     if holiday_is_sunday:
-        time_df.weekday.mask(time_df.weekday == 0, 7, True)
+        time_df.weekday.mask(cond=time_df.weekday == 0, other=7, inplace=True)
 
     return time_df
