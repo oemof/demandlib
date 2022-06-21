@@ -52,10 +52,10 @@ import calendar
 import datetime
 import os
 import warnings
+from collections import namedtuple
 
 import pandas as pd
 
-from demandlib import config as cfg
 from demandlib.tools import add_weekdays2df
 from demandlib.vdi import dwd_try
 
@@ -115,21 +115,43 @@ class Region:
 
         self._year = year
         self.weather = None
-        self.type_days = self._get_typical_days(holidays)
-        self._load_profiles = self._load_profile_factors()
-
         self.houses = []
         if houses is not None:
             self.add_houses(houses)
 
-        if resample_rule is not None:
-            self._resample_profiles(resample_rule)
+        self.temperature_limits = self._get_temperature_level_combinations()
+        self.type_days = {}
+        self._load_profiles = {}
+        for temp_limit in self.temperature_limits:
+            self.type_days[temp_limit] = self._get_typical_days(
+                holidays, temp_limit
+            )
+            self._load_profiles[temp_limit] = self._load_profile_factors(
+                temp_limit
+            )
 
-    def _resample_profiles(self, rule):
-        self._load_profiles = self._load_profiles.resample(rule).sum()
-        self.type_days = self.type_days.resample(rule).first()
+            if resample_rule is not None:
+                self._resample_profiles(resample_rule, temp_limit)
 
-    def _get_typical_days(self, holidays, set_season="temperature"):
+    def _resample_profiles(self, rule, tl):
+        self._load_profiles[tl] = self._load_profiles[tl].resample(rule).sum()
+        self.type_days[tl] = self.type_days[tl].resample(rule).first()
+
+    def _get_temperature_level_combinations(self):
+        t_limit = namedtuple("temperature_limit", "summer winter")
+        return set(
+            [
+                t_limit(
+                    summer=h["summer_temperature_limit"],
+                    winter=h["winter_temperature_limit"],
+                )
+                for h in self.houses
+            ]
+        )
+
+    def _get_typical_days(
+        self, holidays, temperature_limit, set_season="temperature"
+    ):
         """
         Find the code for the typical days from dwd. The code consists of three
         letters:
@@ -198,8 +220,8 @@ class Region:
             "transition": "U",
         }
         days.replace(to_replace=seasons_dict, inplace=True)
-        wtl = cfg.get("VDI", "winter_temperature_limit")
-        stl = cfg.get("VDI", "summer_temperature_limit")
+        wtl = temperature_limit.winter
+        stl = temperature_limit.summer
         days.loc[days["TAMB"] < wtl, "season_t"] = "W"
         days.loc[days["TAMB"] >= wtl, "season_t"] = "U"
         days.loc[days["TAMB"] > stl, "season_t"] = "S"
@@ -235,7 +257,7 @@ class Region:
         )
         return days
 
-    def _load_profile_factors(self):
+    def _load_profile_factors(self, tl):
         """Run VDI 4655 - Step 2.
 
         Match 'typtag' keys and reference load profile factors for each
@@ -281,21 +303,21 @@ class Region:
 
         # Set reference time (first hour of the day) to calculate minutes of
         # the day.
-        self.type_days["ref_dt"] = self.type_days.index
+        self.type_days[tl]["ref_dt"] = self.type_days[tl].index
 
         # Fill data into the large table with minute index
-        self.type_days = pd.concat(
-            [self.type_days, minute_table], axis=1
+        self.type_days[tl] = pd.concat(
+            [self.type_days[tl], minute_table], axis=1
         ).ffill()
 
         # Add columns to merge with (house types, minute of day and day_types)
-        self.type_days["datetime"] = self.type_days.index
-        self.type_days["minute_of_day"] = (
+        self.type_days[tl]["datetime"] = self.type_days[tl].index
+        self.type_days[tl]["minute_of_day"] = (
             pd.to_timedelta(
-                self.type_days.pop("datetime")
+                self.type_days[tl].pop("datetime")
                 - pd.Series(
-                    index=self.type_days.index,
-                    data=self.type_days.pop("ref_dt"),
+                    index=self.type_days[tl].index,
+                    data=self.type_days[tl].pop("ref_dt"),
                 )
             )
             .dt.total_seconds()
@@ -307,13 +329,17 @@ class Region:
         # the typical days for every minute of the year.
         house_profiles = {}
         for house_type in house_types:
-            self.type_days["ht"] = house_type
-            house_profiles[house_type] = self.type_days.merge(
-                typtage_df,
-                how="left",
-                left_on=["day_types", "minute_of_day", "ht"],
-                right_on=["day_types", "minute_of_day", "ht"],
-            ).sort_index()
+            self.type_days[tl]["ht"] = house_type
+            house_profiles[house_type] = (
+                self.type_days[tl]
+                .merge(
+                    typtage_df,
+                    how="left",
+                    left_on=["day_types", "minute_of_day", "ht"],
+                    right_on=["day_types", "minute_of_day", "ht"],
+                )
+                .sort_index()
+            )
 
         # Combine the table of both house type
         load_profile = (
@@ -359,7 +385,7 @@ class Region:
         if len(houses) > 0:
             self.houses.extend(houses)
 
-    def get_daily_energy_demand_houses(self):
+    def get_daily_energy_demand_houses(self, tl):
         """Determine the houses' energy demand values for each 'typtag'.
 
         .. note::
@@ -407,7 +433,7 @@ class Region:
         multiindex = pd.MultiIndex.from_product(
             iterables, names=["house", "energy"]
         )
-        typtage_combinations = self.type_days["day_types"].unique()
+        typtage_combinations = self.type_days[tl]["day_types"].unique()
 
         daily_energy_demand_houses = pd.DataFrame(
             index=multiindex, columns=typtage_combinations
@@ -507,21 +533,34 @@ class Region:
         value with the daily energy demand. It returns the result: the energy
         demand values for all houses and energy types (in kWh)
         """
-        daily_energy_demand_houses = self.get_daily_energy_demand_houses()
+        daily_energy_demand_houses = {}
+        for temp_limit in self.temperature_limits:
+            daily_energy_demand_houses[
+                temp_limit
+            ] = self.get_daily_energy_demand_houses(temp_limit)
 
         house_profiles = {}
 
         for house in self.houses:
-            df_typ = self.type_days.merge(
-                daily_energy_demand_houses.T[house["name"]],
-                left_on="day_types",
-                right_index=True,
-            ).sort_index()
+            t_limit = namedtuple("temperature_limit", "summer winter")
+            tl = t_limit(
+                summer=house["summer_temperature_limit"],
+                winter=house["winter_temperature_limit"],
+            )
+            df_typ = (
+                self.type_days[tl]
+                .merge(
+                    daily_energy_demand_houses[tl].T[house["name"]],
+                    left_on="day_types",
+                    right_index=True,
+                )
+                .sort_index()
+            )
             df_typ.drop(
                 ["day_types", "minute_of_day", "ht"], axis=1, inplace=True
             )
 
-            load_profile_df = self._load_profiles.rename(
+            load_profile_df = self._load_profiles[tl].rename(
                 columns={
                     "F_Heiz_n_TT": "Q_Heiz_TT",
                     "F_el_n_TT": "W_TT",
@@ -551,6 +590,9 @@ class Region:
                 ]
             )
             house_profiles[house["name"]] = load_curve_house
-        return pd.concat(
+        df = pd.concat(
             house_profiles.values(), keys=house_profiles.keys(), axis=1
         )
+
+        df.columns = df.columns.set_names(["name", "house_type", "energy"])
+        return df
