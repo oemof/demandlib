@@ -43,19 +43,19 @@ holidays = {
 
 
 my_houses = []
-for n in range(1):
+for n in range(2):
     my_houses.append(
         {
             "N_Pers": 3,
             "name": "EFH_{0}".format(n),
             "N_WE": 1,
             "Q_Heiz_a": 6000,
-            "TRY": 4,
             "copies": 24,
             "house_type": "EFH",
-            "sigma": 4,
             "Q_TWW_a": 1500,
             "W_a": 5250,
+            "summer_temperature_limit": 15,
+            "winter_temperature_limit": 5,
         }
     )
     my_houses.append(
@@ -64,12 +64,12 @@ for n in range(1):
             "name": "MFH_{0}".format(n),
             "N_WE": 15,
             "Q_Heiz_a": 60000,
-            "TRY": 4,
             "copies": 24,
             "house_type": "MFH",
-            "sigma": 2,
             "Q_TWW_a": 15000,
             "W_a": 45000,
+            "summer_temperature_limit": 15,
+            "winter_temperature_limit": 5,
         }
     )
 
