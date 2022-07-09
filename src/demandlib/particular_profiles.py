@@ -63,24 +63,24 @@ class IndustrialLoadProfile:
         self.dataframe["ind"] = 0
 
         self.dataframe["ind"].mask(
-            self.dataframe["weekday"].between_time(am, pm).isin(week),
-            profile_factors["week"]["day"],
-            True,
+            cond=self.dataframe["weekday"].between_time(am, pm).isin(week),
+            other=profile_factors["week"]["day"],
+            inplace=True,
         )
         self.dataframe["ind"].mask(
-            self.dataframe["weekday"].between_time(pm, am).isin(week),
-            profile_factors["week"]["night"],
-            True,
+            cond=self.dataframe["weekday"].between_time(pm, am).isin(week),
+            other=profile_factors["week"]["night"],
+            inplace=True,
         )
         self.dataframe["ind"].mask(
-            self.dataframe["weekday"].between_time(am, pm).isin(weekend),
-            profile_factors["weekend"]["day"],
-            True,
+            cond=self.dataframe["weekday"].between_time(am, pm).isin(weekend),
+            other=profile_factors["weekend"]["day"],
+            inplace=True,
         )
         self.dataframe["ind"].mask(
-            self.dataframe["weekday"].between_time(pm, am).isin(weekend),
-            profile_factors["weekend"]["night"],
-            True,
+            cond=self.dataframe["weekday"].between_time(pm, am).isin(weekend),
+            other=profile_factors["weekend"]["night"],
+            inplace=True,
         )
 
         if self.dataframe["ind"].isnull().any(axis=0):
