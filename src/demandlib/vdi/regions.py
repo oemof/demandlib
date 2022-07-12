@@ -142,8 +142,8 @@ class Region:
         return set(
             [
                 t_limit(
-                    summer=h["summer_temperature_limit"],
-                    winter=h["winter_temperature_limit"],
+                    summer=h.get("summer_temperature_limit", 15),
+                    winter=h.get("winter_temperature_limit", 5),
                 )
                 for h in self.houses
             ]
