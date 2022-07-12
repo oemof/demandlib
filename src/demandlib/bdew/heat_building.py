@@ -241,7 +241,7 @@ class HeatBuilding:
             + (["weekday"] if not residential else [])
         )
 
-        sf_mat = sf_mat.drop(drop_cols, 1)
+        sf_mat = sf_mat.drop(labels=drop_cols, axis=1)
 
         # Determine the h values
         length = len(self.temperature)
