@@ -46,8 +46,14 @@ def find_try_region(longitude, latitude):
     return int(try_map.loc[try_map.contains(my_point), "TRY_code"])
 
 
-def read_dwd_weather_file(weather_file_path):
-    """Read and interpolate "DWD Testreferenzjahr" files."""
+def read_dwd_weather_file(weather_file_path=None, try_region=None):
+    """Read and interpolate 'DWD Testreferenzjahr' files."""
+    if weather_file_path is None:
+        weather_file_path = os.path.join(
+            os.path.dirname(__file__),
+            "resources_weather",
+            "TRY2010_{:02d}_Jahr.dat".format(try_region),
+        )
     # The comments in DWD files before the header are not commented out.
     # Thus we have to search for the line with the header information:
     header_row = None
