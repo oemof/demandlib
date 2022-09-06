@@ -27,7 +27,7 @@ from matplotlib import pyplot as plt
 import demandlib.bdew as bdew
 import demandlib.particular_profiles as profiles
 
-# The following dictionary is create by "workalendar"
+# The following dictionary has been created by "workalendar"
 # pip3 install workalendar
 # >>> from workalendar.europe import Germany
 # >>> cal = Germany()
