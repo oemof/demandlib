@@ -58,7 +58,7 @@ Overview
 
 .. |commits-since| image:: https://img.shields.io/github/commits-since/oemof/demandlib/v0.1.8.svg
     :alt: Commits since latest release
-    :target: https://github.com/oemof/demandlib/compare/v0.1.8...dev
+    :target: https://github.com/oemof/demandlib/compare/v0.1.9...dev
 
 
 

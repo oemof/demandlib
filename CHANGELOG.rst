@@ -1,20 +1,10 @@
 Changelog
 =========
 
-v0.1.9 (2021-?-?)
+v0.1.9 (2023-03-18)
 +++++++++++++++++++++++++
 
-New features
-############
-*
-
-Bug fixes
-#########
-*
-
-Other changes
-#############
-*
+*   Calculation of BDEW profiles was improved
 
 
 
