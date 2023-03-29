@@ -11,7 +11,7 @@ Heat Profiles
 Description
 +++++++++++
 
-Heat profiles are created according to the approach described in the `BDEW guideline <https://www.enwg-veroeffentlichungen.de/badtoelz/Netze/Gasnetz/Netzbeschreibung/LF-Abwicklung-von-Standardlastprofilen-Gas-20110630-final.pdf>`_.
+Heat profiles are created according to the approach described in the corresponding BDEW guideline.
 
 The method was originally established in this `PhD Thesis at TU Munich <https://mediatum.ub.tum.de/doc/601557/601557.pdf>`_.
 
