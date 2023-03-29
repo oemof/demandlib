@@ -23,7 +23,7 @@ def read(*names, **kwargs):
 
 setup(
     name="demandlib",
-    version="0.1.9",
+    version="0.1.10",
     license="MIT",
     description="Creating heat and power demand profiles from annual values.",
     long_description="%s"

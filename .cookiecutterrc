@@ -64,7 +64,7 @@ default_context:
     test_runner:               'pytest'
     travis:                    'no'
     travis_osx:                'no'
-    version:                   '0.1.9'
+    version:                   '0.1.10'
     version_manager:           'bump2version'
     website:                   'oemof.org'
     year_from:                 '2016'
