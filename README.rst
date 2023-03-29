@@ -10,7 +10,7 @@ Overview
     * - docs
       - |docs|
     * - tests
-      - | |tox-pytest| |tox-checks| |appveyor| |requires| |coveralls|
+      - | |tox-pytest| |tox-checks| |coveralls|
     * - package
       - | |version| |wheel| |supported-versions| |supported-implementations| |commits-since| |packaging|
 
@@ -27,14 +27,6 @@ Overview
 .. |docs| image:: https://readthedocs.org/projects/demandlib/badge/?style=flat
     :target: https://demandlib.readthedocs.io/
     :alt: Documentation Status
-
-.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/ng4rb36cx5fuerf2?svg=true
-    :alt: AppVeyor Build Status
-    :target: https://ci.appveyor.com/project/uvchik/demandlib/branch/dev
-
-.. |requires| image:: https://requires.io/github/oemof/demandlib/requirements.svg?branch=dev
-    :alt: Requirements Status
-    :target: https://requires.io/github/oemof/demandlib/requirements/?branch=dev
 
 .. |coveralls| image:: https://coveralls.io/repos/oemof/demandlib/badge.svg?branch=dev&service=github
     :alt: Coverage Status

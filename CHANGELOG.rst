@@ -10,11 +10,11 @@ New features
 
 Bug fixes
 #########
-*
+*   
 
 Other changes
 #############
-*
+*   Adhere to packaging standards
 
 
 v0.1.9 (2023-03-18)
