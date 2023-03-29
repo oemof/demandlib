@@ -32,6 +32,7 @@ setup(
             "", read("README.rst")
         )
     ),
+    long_description_content_type="text/x-rst",
     author="oemof developer group",
     author_email="contact@oemof.org",
     url="https://github.com/oemof/demandlib",
