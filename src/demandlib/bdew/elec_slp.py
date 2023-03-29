@@ -174,9 +174,9 @@ class ElecSlp:
 
         # Calculate the smoothing factor of the BDEW dynamic H0 profile
         smoothing_factor = (
-            -3.916649251 * 10 ** -10 * decimal_day ** 4
-            + 3.2 * 10 ** -7 * decimal_day ** 3
-            - 7.02 * 10 ** -5 * decimal_day ** 2
+            -3.916649251 * 10**-10 * decimal_day**4
+            + 3.2 * 10**-7 * decimal_day**3
+            - 7.02 * 10**-5 * decimal_day**2
             + 0.0021 * decimal_day
             + 1.24
         )
