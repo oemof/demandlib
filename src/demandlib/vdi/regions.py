@@ -69,6 +69,7 @@ class Region:
         holidays=None,
         houses=None,
         resample_rule=None,
+        file_weather=None,
     ):
         """
 
@@ -93,6 +94,10 @@ class Region:
         resample_rule : str
             Time interval to resample the profile e.g. 1H (1 hour) or 15min.
             The value will be passed to the pandas resample method.
+        file_weather : str (optional)
+            Path to a 'test reference year' (TRY) weather file by German DWD
+            (Deutscher Wetterdienst). If None, the file fitting the given
+            try_region will be loaded.
         """
         if calendar.isleap(year):
             self.hoy = 8784
@@ -115,6 +120,7 @@ class Region:
 
         self._year = year
         self.weather = None
+        self.file_weather = file_weather
         self.houses = []
         if houses is not None:
             self.add_houses(houses)
@@ -193,12 +199,11 @@ class Region:
         days.pop("date")
 
         # Fetch weather data
-        fn_weather = os.path.join(
-            os.path.dirname(__file__),
-            "resources_weather",
-            "TRY2010_{:02d}_Jahr.dat".format(self._try_region),
-        )
-        self.weather = dwd_try.read_dwd_weather_file(fn_weather)
+        if self.file_weather is None:
+            self.weather = dwd_try.read_dwd_weather_file(
+                try_region=self._try_region)
+        else:
+            self.weather = dwd_try.read_dwd_weather_file(self.file_weather)
         self.weather = (
             self.weather.set_index(
                 pd.date_range(
@@ -544,8 +549,8 @@ class Region:
         for house in self.houses:
             t_limit = namedtuple("temperature_limit", "summer winter")
             tl = t_limit(
-                summer=house["summer_temperature_limit"],
-                winter=house["winter_temperature_limit"],
+                summer=house.get("summer_temperature_limit", 15),
+                winter=house.get("winter_temperature_limit", 5),
             )
             df_typ = (
                 self.type_days[tl]
