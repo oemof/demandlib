@@ -459,7 +459,7 @@ class Region:
                     + " not contained in file "
                     + fn_energy_factors
                 )
-                msg2 = '       Skipping house "' + house["name"] + '"!'
+                msg2 = '       Skipping house "{}"!'.format(house["name"])
                 warnings.warn(msg + "/n" + msg2, UserWarning)
                 continue  # 'Continue' skips the rest of the current for-loop
 
@@ -493,24 +493,16 @@ class Region:
                 q_tww_tt = q_tww_a * (1.0 / 365.0 + n_pers_we * f_tww_tt)
 
                 if w_tt < 0:
-                    msg = (
-                        "Warning:     W_TT for "
-                        + house["name"]
-                        + " and "
-                        + typtag
-                        + " was negative, see VDI 4655 page 16"
-                    )
+                    msg = ("Warning: W_TT for {} and {} was negative, "
+                           "see VDI 4655 page 16".format(house["name"], typtag)
+                           )
                     warnings.warn(msg, UserWarning)
                     w_tt = w_a * (1.0 / 365.0 + n_pers_we * 0)
 
                 if q_tww_tt < 0:
-                    msg = (
-                        "Warning: Q_TWW_TT for "
-                        + house["name"]
-                        + " and "
-                        + typtag
-                        + " was negative, see VDI 4655 page 16"
-                    )
+                    msg = ("Warning: Q_TWW_TT for {} and {} was negative, "
+                           "see VDI 4655 page 16".format(house["name"], typtag)
+                           )
                     warnings.warn(msg, UserWarning)
                     q_tww_tt = q_tww_a * (1.0 / 365.0 + n_pers_we * 0)
 
