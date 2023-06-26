@@ -57,4 +57,7 @@ napoleon_use_rtype = False
 napoleon_use_param = False
 nitpicky = False
 
-linkcheck_ignore = [r"https://requires.io/.*"]
+linkcheck_ignore = [
+    r"https://requires.io/.*",
+    r"https://www.avacon-netz.de/.*",
+]
