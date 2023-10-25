@@ -274,11 +274,30 @@ class HeatBuilding:
             + "wind_impact=={0}".format(self.wind_class)
         )
 
-        a = float(sigmoid["parameter_a"])
-        b = float(sigmoid["parameter_b"])
-        c = float(sigmoid["parameter_c"])
+        # check if it finds sigmoid parameters
+        if len(sigmoid) == 0:
+            raise ValueError(
+                "No sigmoid parameters found for "
+                + "building_class={0}, shlp_type={1}, wind_class={2}".format(
+                    self.building_class, self.shlp_type, self.wind_class
+                )
+            )
+
+        # check if it finds only one row of sigmoid parameters
+        if len(sigmoid) > 1:
+            raise ValueError(
+                "Multiple sigmoid parameters found for "
+                + "building_class={0}, shlp_type={1}, wind_class={2}".format(
+                    self.building_class, self.shlp_type, self.wind_class
+                )
+            )
+
+        # get sigmoid parameters, avoid warning
+        a = float(sigmoid["parameter_a"].iloc[0])
+        b = float(sigmoid["parameter_b"].iloc[0])
+        c = float(sigmoid["parameter_c"].iloc[0])
         if self.ww_incl:
-            d = float(sigmoid["parameter_d"])
+            d = float(sigmoid["parameter_d"].iloc[0])
         else:
             d = 0
         return a, b, c, d
