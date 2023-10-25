@@ -36,8 +36,9 @@ class HeatBuilding:
     annual_heat_demand : float
         annual heat demand of building in kWh
     building_class: int
-        class of building according to bdew classification
-        possible numbers are: 1 - 11
+        class of building according to bdew classification:
+        possible numbers for EFH and MFH are: 1 - 11.
+        Possible numbers for non-residential buildings are: 0.
     shlp_type : string
         type of standardized heat load profile according to bdew
         possible types are:
@@ -62,6 +63,11 @@ class HeatBuilding:
         self.shlp_type = kwargs.get("shlp_type").upper()
         self.wind_class = kwargs.get("wind_class")
         self.building_class = kwargs.get("building_class", 0)
+        # raise error if building class is not 0 for non-residential buildings
+        if (self.shlp_type not in ["EFH", "MFH"]) & (self.building_class != 0):
+            raise ValueError(
+                "Building class must be 0 for non-residential buildings"
+                )
         self.ww_incl = kwargs.get("ww_incl", True)
         self.name = kwargs.get("name", self.shlp_type)
 
