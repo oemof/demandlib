@@ -4,6 +4,7 @@ Authors
 
 (alphabetic order)
 
+ * Amedeo Ceruti
  * Birgit Schachler
  * Caroline Möller
  * Guido Plessmann

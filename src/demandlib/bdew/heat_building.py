@@ -275,10 +275,11 @@ class HeatBuilding:
         )
 
         wrong_number_of_parameters_message = (
-            "{number} sigmoid parameters found for "
+            "{} sigmoid parameters found for "
             + f"building_class={self.building_class}, shlp_type={self.shlp_type}, "
             + f"wind_class={self.wind_class}"
         )
+
         if len(sigmoid) == 0:
             raise ValueError(
                 wrong_number_of_parameters_message.format("No")

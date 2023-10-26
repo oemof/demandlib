@@ -10,11 +10,13 @@ New features
 
 Bug fixes
 #########
-*   
+*   Raise error for non supported shlp_type 
+	in non-commercial buildings
 
 Other changes
 #############
 *   Adhere to packaging standards
+* 	Raise errors in sigmoid parameter queries
 
 
 v0.1.9 (2023-03-18)
