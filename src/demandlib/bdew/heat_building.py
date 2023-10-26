@@ -274,23 +274,21 @@ class HeatBuilding:
             + "wind_impact=={0}".format(self.wind_class)
         )
 
-        # check if it finds sigmoid parameters
+        wrong_number_of_parameters_message = (
+            "{number} sigmoid parameters found for "
+            + f"building_class={self.building_class}, shlp_type={self.shlp_type}, "
+            + f"wind_class={self.wind_class}"
+        )
         if len(sigmoid) == 0:
             raise ValueError(
-                "No sigmoid parameters found for "
-                + "building_class={0}, shlp_type={1}, wind_class={2}".format(
-                    self.building_class, self.shlp_type, self.wind_class
+                wrong_number_of_parameters_message.format("No")
                 )
-            )
 
         # check if it finds only one row of sigmoid parameters
         if len(sigmoid) > 1:
             raise ValueError(
-                "Multiple sigmoid parameters found for "
-                + "building_class={0}, shlp_type={1}, wind_class={2}".format(
-                    self.building_class, self.shlp_type, self.wind_class
-                )
-            )
+                    wrong_number_of_parameters_message.format("Multiple")
+                    )
 
         # get sigmoid parameters, avoid warning
         a = float(sigmoid["parameter_a"].iloc[0])
