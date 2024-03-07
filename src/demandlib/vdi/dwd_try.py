@@ -76,7 +76,7 @@ def read_dwd_weather_file(weather_file_path=None, try_region=None):
     # Read the file and store it in a DataFrame
     weather_data = pd.read_csv(
         weather_file_path,
-        delim_whitespace=True,
+        sep=r'\s+',
         skiprows=header_row - 1,
         index_col=["MM", "DD", "HH"],
         usecols=["MM", "DD", "HH", "t", "N"],

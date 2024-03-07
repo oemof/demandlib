@@ -179,7 +179,7 @@ class Region:
         # Create the default time index
         date_time_index = pd.date_range(
             datetime.datetime(self._year, 1, 1, 0),
-            periods=self.hoy / 24,
+            periods=int(self.hoy / 24),
             freq="D",
         )
         days = pd.DataFrame(index=date_time_index)
@@ -209,7 +209,7 @@ class Region:
                 pd.date_range(
                     datetime.datetime(self._year, 1, 1, 0),
                     periods=self.hoy,
-                    freq="H",
+                    freq="h",
                 )
             )
             .resample("D")
@@ -288,7 +288,7 @@ class Region:
         typtage_df["minute_of_day"] = (
             pd.to_timedelta(
                 typtage_df["time"]
-                - pd.Series(index=typtage_df.index, data=typtage_df["time"][0])
+                - pd.Series(index=typtage_df.index, data=typtage_df["time"].iloc[0])
             )
             .dt.total_seconds()
             .div(60)
@@ -441,7 +441,7 @@ class Region:
         typtage_combinations = self.type_days[tl]["day_types"].unique()
 
         daily_energy_demand_houses = pd.DataFrame(
-            index=multiindex, columns=typtage_combinations
+            index=multiindex, columns=typtage_combinations, dtype='float'
         )
 
         # Fill the DataFrame daily_energy_demand_houses
@@ -507,15 +507,12 @@ class Region:
                     q_tww_tt = q_tww_a * (1.0 / 365.0 + n_pers_we * 0)
 
                 # Write values into DataFrame
-                daily_energy_demand_houses.loc[house["name"], "Q_Heiz_TT"][
-                    typtag
-                ] = q_heiz_tt
-                daily_energy_demand_houses.loc[house["name"], "W_TT"][
-                    typtag
-                ] = w_tt
-                daily_energy_demand_houses.loc[house["name"], "Q_TWW_TT"][
-                    typtag
-                ] = q_tww_tt
+                daily_energy_demand_houses.loc[
+                    (house["name"], "Q_Heiz_TT"), typtag] = q_heiz_tt
+                daily_energy_demand_houses.loc[
+                    (house["name"], "W_TT"), typtag] = w_tt
+                daily_energy_demand_houses.loc[
+                    (house["name"], "Q_TWW_TT"), typtag] = q_tww_tt
 
             #    print(daily_energy_demand_houses)
         return daily_energy_demand_houses
