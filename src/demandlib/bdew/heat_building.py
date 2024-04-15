@@ -292,9 +292,9 @@ class HeatBuilding:
                     )
 
         # get sigmoid parameters, avoid warning
-        a = float(sigmoid["parameter_a"].iloc[0])
-        b = float(sigmoid["parameter_b"].iloc[0])
-        c = float(sigmoid["parameter_c"].iloc[0])
+        a = sigmoid["parameter_a"].iloc[0]
+        b = sigmoid["parameter_b"].iloc[0]
+        c = sigmoid["parameter_c"].iloc[0]
         if self.ww_incl:
             d = float(sigmoid["parameter_d"].iloc[0])
         else:
