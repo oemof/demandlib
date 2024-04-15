@@ -296,7 +296,7 @@ class HeatBuilding:
         b = sigmoid["parameter_b"].iloc[0]
         c = sigmoid["parameter_c"].iloc[0]
         if self.ww_incl:
-            d = float(sigmoid["parameter_d"].iloc[0])
+            d = sigmoid["parameter_d"].iloc[0]
         else:
             d = 0
         return a, b, c, d
