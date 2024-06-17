@@ -19,10 +19,12 @@ class IndustrialLoadProfile:
     def __init__(self, dt_index, holidays=None):
         self.dataframe = pd.DataFrame(index=dt_index)
         if holidays is not None:
+            # treat holidays as independent days (value 0 is holiday)
             self.dataframe = add_weekdays2df(
                 self.dataframe, holiday_is_sunday=False, holidays=holidays
             )
-        else: 
+        else:
+            # treat all holidays as sundays
             self.dataframe = add_weekdays2df(
                 self.dataframe, holiday_is_sunday=True, holidays=holidays
             )
@@ -34,7 +36,7 @@ class IndustrialLoadProfile:
         Parameters
         ----------
         annual_demand : float
-            Total demand.
+            Total annual demand.
 
         Other Parameters
         ----------------
@@ -47,8 +49,8 @@ class IndustrialLoadProfile:
         weekend : list
             list of weekend days
         profile_factors : dictionary
-            dictionary with scaling factors for night and day of weekdays and
-            weekend days
+            dictionary with scaling factors for night and day of weekdays,
+            weekend days and holidays.
         """
 
         # Day(am to pm), night (pm to am), week day (week),
