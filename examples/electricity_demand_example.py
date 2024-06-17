@@ -68,19 +68,20 @@ ilp = profiles.IndustrialLoadProfile(e_slp.date_time_index, holidays=holidays)
 
 # Beginning and end of workday, weekdays and weekend days, and scaling
 # factors by default
-elec_demand["i0"] = ilp.simple_profile(ann_el_demand_per_sector["i0"])
+elec_demand["l0"] = ilp.simple_profile(ann_el_demand_per_sector["l0"])
 
 # Set beginning of workday to 9 am
-elec_demand["i1"] = ilp.simple_profile(
-    ann_el_demand_per_sector["i1"], am=settime(9, 0, 0)
+elec_demand["l1"] = ilp.simple_profile(
+    ann_el_demand_per_sector["l1"], am=settime(9, 0, 0)
 )
 
 # Change scaling factors
-elec_demand["i2"] = ilp.simple_profile(
-    ann_el_demand_per_sector["i2"],
+elec_demand["l2"] = ilp.simple_profile(
+    ann_el_demand_per_sector["l2"],
     profile_factors={
         "week": {"day": 1.0, "night": 0.8},
         "weekend": {"day": 0.8, "night": 0.6},
+        "holiday": {"day": 0.2, "night": 0.2},
     },
 )
 

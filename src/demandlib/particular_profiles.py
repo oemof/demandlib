@@ -6,6 +6,7 @@ Implementation of the bdew standard load profiles for electric power.
 """
 import logging
 from datetime import time as settime
+import warnings
 
 import pandas as pd
 
@@ -17,9 +18,14 @@ class IndustrialLoadProfile:
 
     def __init__(self, dt_index, holidays=None):
         self.dataframe = pd.DataFrame(index=dt_index)
-        self.dataframe = add_weekdays2df(
-            self.dataframe, holiday_is_sunday=True, holidays=holidays
-        )
+        if holidays is not None:
+            self.dataframe = add_weekdays2df(
+                self.dataframe, holiday_is_sunday=False, holidays=holidays
+            )
+        else: 
+            self.dataframe = add_weekdays2df(
+                self.dataframe, holiday_is_sunday=True, holidays=holidays
+            )
 
     def simple_profile(self, annual_demand, **kwargs):
         """
@@ -51,37 +57,49 @@ class IndustrialLoadProfile:
         pm = kwargs.get("pm", settime(23, 30, 0))
 
         week = kwargs.get("week", [1, 2, 3, 4, 5])
-        weekend = kwargs.get("weekend", [0, 6, 7])
+        weekend = kwargs.get("weekend", [6, 7])
+        holiday = kwargs.get("holiday", [0])
 
         default_factors = {
             "week": {"day": 0.8, "night": 0.6},
             "weekend": {"day": 0.9, "night": 0.7},
+            "holiday": {"day": 0.9, "night": 0.7},
         }
 
         profile_factors = kwargs.get("profile_factors", default_factors)
 
-        self.dataframe["ind"] = 0
+        self.dataframe["ind"] = 0.0
 
-        self.dataframe["ind"].mask(
-            cond=self.dataframe["weekday"].between_time(am, pm).isin(week),
-            other=profile_factors["week"]["day"],
-            inplace=True,
-        )
-        self.dataframe["ind"].mask(
-            cond=self.dataframe["weekday"].between_time(pm, am).isin(week),
-            other=profile_factors["week"]["night"],
-            inplace=True,
-        )
-        self.dataframe["ind"].mask(
-            cond=self.dataframe["weekday"].between_time(am, pm).isin(weekend),
-            other=profile_factors["weekend"]["day"],
-            inplace=True,
-        )
-        self.dataframe["ind"].mask(
-            cond=self.dataframe["weekday"].between_time(pm, am).isin(weekend),
-            other=profile_factors["weekend"]["night"],
-            inplace=True,
-        )
+        # Apply masks to the dataframe so that the profile factors are applied
+        def apply_masks(dataframe, profile_factors, am, pm, week, weekend, holiday):
+            conditions = [
+                {"cond": dataframe["weekday"].between_time(am, pm).isin(week),
+                 "period": ("week", "day")},
+                {"cond": dataframe["weekday"].between_time(pm, am).isin(week),
+                 "period": ("week", "night")},
+                {"cond": dataframe["weekday"].between_time(am, pm).isin(weekend),
+                 "period": ("weekend", "day")},
+                {"cond": dataframe["weekday"].between_time(pm, am).isin(weekend),
+                 "period": ("weekend", "night")},
+                {"cond": dataframe["weekday"].between_time(am, pm).isin(holiday),
+                 "period": ("weekend", "day")},
+                {"cond": dataframe["weekday"].between_time(pm, am).isin(holiday),
+                 "period": ("weekend", "night")},
+            ]
+
+            for condition in conditions:
+                try:
+                    period, time_of_day = condition["period"]
+                    dataframe["ind"].mask(
+                        cond=condition["cond"],
+                        other=profile_factors[period][time_of_day],
+                        inplace=True,
+                    )
+                except KeyError as e:
+                    warnings.warn(f"Missing entry for {e} in profile_factors", UserWarning)
+
+        # Example usage
+        apply_masks(self.dataframe, profile_factors, am, pm, week, weekend, holiday)
 
         if self.dataframe["ind"].isnull().any(axis=0):
             logging.error("NAN value found in industrial load profile")
