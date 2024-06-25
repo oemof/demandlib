@@ -114,15 +114,15 @@ class ElecSlp:
             new_df, holidays=holidays, holiday_is_sunday=True
         )
 
-        new_df["hour"] = dt_index.hour.astype(float)
+        new_df["hour"] = dt_index.hour.astype(int)
         new_df["weekday"] = new_df["weekday"].astype(int)
-        new_df["minute"] = dt_index.minute.astype(float)
+        new_df["minute"] = dt_index.minute.astype(int)
         time_df = new_df[["date", "hour", "minute", "weekday"]].copy()
         tmp_df[slp_types] = tmp_df[slp_types].astype(float)
 
         # Inner join the slps on the time_df to the slp's for a whole year
-        tmp_df["hour_of_day"] = tmp_df.index.hour.astype(float)
-        tmp_df["minute_of_hour"] = tmp_df.index.minute.astype(float)
+        tmp_df["hour_of_day"] = tmp_df.index.hour
+        tmp_df["minute_of_hour"] = tmp_df.index.minute
         left_cols = ["hour_of_day", "minute_of_hour", "weekday"]
         right_cols = ["hour", "minute", "weekday"]
         tmp_df = tmp_df.reset_index(drop=True)
@@ -205,3 +205,4 @@ class ElecSlp:
             ).dropna(how="all", axis=1)
             * 4
         )
+ 
