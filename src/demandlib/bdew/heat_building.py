@@ -36,8 +36,9 @@ class HeatBuilding:
     annual_heat_demand : float
         annual heat demand of building in kWh
     building_class: int
-        class of building according to bdew classification
-        possible numbers are: 1 - 11
+        class of building according to bdew classification:
+        possible numbers for EFH and MFH are: 1 - 11.
+        Possible numbers for non-residential buildings are: 0.
     shlp_type : string
         type of standardized heat load profile according to bdew
         possible types are:
@@ -62,6 +63,11 @@ class HeatBuilding:
         self.shlp_type = kwargs.get("shlp_type").upper()
         self.wind_class = kwargs.get("wind_class")
         self.building_class = kwargs.get("building_class", 0)
+        # raise error if building class is not 0 for non-residential buildings
+        if (self.shlp_type not in ["EFH", "MFH"]) and (self.building_class != 0):
+            raise ValueError(
+                "Building class must be 0 for non-residential buildings"
+                )
         self.ww_incl = kwargs.get("ww_incl", True)
         self.name = kwargs.get("name", self.shlp_type)
 
@@ -268,11 +274,24 @@ class HeatBuilding:
             + "wind_impact=={0}".format(self.wind_class)
         )
 
-        a = float(sigmoid["parameter_a"])
-        b = float(sigmoid["parameter_b"])
-        c = float(sigmoid["parameter_c"])
+        wrong_number_of_parameters_message = (
+            "{} sigmoid parameters found for "
+            + f"building_class={self.building_class}, shlp_type={self.shlp_type}, "
+            + f"wind_class={self.wind_class}. Should be 1."
+        )
+
+        # check if it does not find one row of sigmoid parameters
+        if len(sigmoid) != 1:
+            raise ValueError(
+                wrong_number_of_parameters_message.format(len(sigmoid))
+                )
+
+        # get sigmoid parameters, avoid warning
+        a = sigmoid["parameter_a"].iloc[0]
+        b = sigmoid["parameter_b"].iloc[0]
+        c = sigmoid["parameter_c"].iloc[0]
         if self.ww_incl:
-            d = float(sigmoid["parameter_d"])
+            d = sigmoid["parameter_d"].iloc[0]
         else:
             d = 0
         return a, b, c, d
