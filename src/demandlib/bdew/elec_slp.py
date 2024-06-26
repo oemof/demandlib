@@ -109,13 +109,14 @@ class ElecSlp:
         tmp_df.set_index(index, inplace=True)
 
         # Create empty DataFrame to take the results.
-        new_df = pd.DataFrame(index=dt_index, columns=slp_types).fillna(0)
+        new_df = pd.DataFrame(index=dt_index, columns=slp_types, dtype=float).fillna(0)
         new_df = add_weekdays2df(
             new_df, holidays=holidays, holiday_is_sunday=True
         )
 
-        new_df["hour"] = dt_index.hour
-        new_df["minute"] = dt_index.minute
+        new_df["hour"] = dt_index.hour.astype(int)
+        new_df["weekday"] = new_df["weekday"].astype(int)
+        new_df["minute"] = dt_index.minute.astype(int)
         time_df = new_df[["date", "hour", "minute", "weekday"]].copy()
         tmp_df[slp_types] = tmp_df[slp_types].astype(float)
 
