@@ -1,3 +1,25 @@
+[tool.flit.sdist]
+include = [
+    ".bumpversion.cfg",
+    ".cookiecutterrc",
+    ".coveragerc",
+    ".editorconfig",
+    "tox.ini",
+    ".appveyor.yml",
+    ".readthedocs.yml",
+    "AUTHORS.rst",
+    "CHANGELOG.rst",
+    "CONTRIBUTING.rst",
+    "LICENSE",
+    "README.rst",
+    "examples/",
+    "docs/",
+    "src/",
+    "ci/",
+    "tests/",
+]
+exclude = ["__pycache__/"]
+
 [tool.black]
 line-length = 79
 target-version = ['py37', 'py38']
