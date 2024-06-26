@@ -205,4 +205,3 @@ class ElecSlp:
             ).dropna(how="all", axis=1)
             * 4
         )
- 
