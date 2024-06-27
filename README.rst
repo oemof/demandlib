@@ -15,7 +15,7 @@ Overview
       - | |version| |wheel| |supported-versions| |supported-implementations| |commits-since| |packaging|
 
 
-.. |tox-pytest| image:: https://github.com/oemof/demandlib/workflows/tox%20pytests/badge.svg?branch=dev
+.. |tox-pytest| image:: https://github.com/oemof/demandlib/workflows/tox%20pytests/badge.svg
      :target: https://github.com/oemof/demandlib/actions?query=workflow%3A%22tox+checks%22
 
 .. |tox-checks| image:: https://github.com/oemof/demandlib/workflows/tox%20checks/badge.svg?branch=dev
