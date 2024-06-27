@@ -107,8 +107,8 @@ class HeatBuilding:
             .resample("D")
             .mean()
             .reindex(self.df.index)
-            .fillna(method="ffill")
-            .fillna(method="bfill")
+            .ffill()
+            .bfill()
         )
 
         if how == "geometric_series":

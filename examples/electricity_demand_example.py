@@ -97,7 +97,7 @@ print(elec_demand.sum() / 4)
 print("Or resample the DataFrame to hourly values using the mean() " "method.")
 
 # Resample 15-minute values to hourly values.
-elec_demand_resampled = elec_demand.resample("H").mean()
+elec_demand_resampled = elec_demand.resample("h").mean()
 print(elec_demand_resampled.sum())
 
 # Plot demand
