@@ -44,8 +44,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install -U pip
-          python -m pip install -U -e .[build,docs,test,tox]
+          python -m pip install pip --upgrade
+          python -m pip install tox
 
       - name: Run ${{ matrix.toxenv }}
         run: python -m tox -e ${{ matrix.toxenv }}
