@@ -8,6 +8,7 @@ Authors
 * Birgit Schachler
 * Caroline Möller
 * Florian Maurer
+* Francesco Witte
 * Guido Plessmann
 * Hendrik Huyskens
 * Jann Launer
