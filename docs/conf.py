@@ -27,7 +27,7 @@ extensions = [
 source_suffix = ".rst"
 master_doc = "index"
 project = "demandlib"
-year = "2016-2021"
+year = "2016-2024"
 author = "oemof developer group"
 copyright = "{0}, {1}".format(year, author)
 version = release = "0.1.10"
