@@ -109,7 +109,9 @@ class ElecSlp:
         tmp_df.set_index(index, inplace=True)
 
         # Create empty DataFrame to take the results.
-        new_df = pd.DataFrame(index=dt_index, columns=slp_types, dtype=float).fillna(0)
+        new_df = pd.DataFrame(
+            index=dt_index, columns=slp_types, dtype=float
+        ).fillna(0)
         new_df = add_weekdays2df(
             new_df, holidays=holidays, holiday_is_sunday=True
         )

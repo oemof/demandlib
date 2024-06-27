@@ -64,10 +64,12 @@ class HeatBuilding:
         self.wind_class = kwargs.get("wind_class")
         self.building_class = kwargs.get("building_class", 0)
         # raise error if building class is not 0 for non-residential buildings
-        if (self.shlp_type not in ["EFH", "MFH"]) and (self.building_class != 0):
+        if (self.shlp_type not in ["EFH", "MFH"]) and (
+            self.building_class != 0
+        ):
             raise ValueError(
                 "Building class must be 0 for non-residential buildings"
-                )
+            )
         self.ww_incl = kwargs.get("ww_incl", True)
         self.name = kwargs.get("name", self.shlp_type)
 
@@ -284,7 +286,7 @@ class HeatBuilding:
         if len(sigmoid) != 1:
             raise ValueError(
                 wrong_number_of_parameters_message.format(len(sigmoid))
-                )
+            )
 
         # get sigmoid parameters, avoid warning
         a = sigmoid["parameter_a"].iloc[0]
