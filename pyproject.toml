@@ -60,12 +60,27 @@ Changelog = "https://demandlib.readthedocs.io/en/latest/changelog.html"
 "Issue Tracker" = "https://github.com/oemof/demandlib/issues/"
 
 [project.optional-dependencies]
-dev = [
+build = [
+    "build",
+    "check-manifest",
+    "flake8",
     "flit",
+    "isort",
+    "pygments",
+    "readme-renderer",
+    "twine",
+]
+docs = [
     "matplotlib",
-    "pytest",
     "sphinx",
     "sphinx_rtd_theme",
+]
+test = [
+    "pytest",
+    "coverage",
+    "coveralls",
+]
+tox = [
     "tox",
 ]
 
