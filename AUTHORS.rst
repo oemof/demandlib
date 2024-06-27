@@ -7,6 +7,7 @@ Authors
  * Amedeo Ceruti
  * Birgit Schachler
  * Caroline Möller
+ * Florian Maurer
  * Guido Plessmann
  * Hendrik Huyskens
  * Jann Launer
