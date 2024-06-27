@@ -1,0 +1,41 @@
+name: tox pytests
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+  pull_request:
+
+  workflow_dispatch:
+  schedule:
+    - cron: "0 5 * * 6"  # 5:00 UTC every Saturday
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install tox tox-gh-actions coverage coveralls
+    - name: Test with tox
+      run: tox
+
+    - name: Check test coverage
+      run: coverage report -m --fail-under=${{ matrix.vcs == 'bzr' && 84 || 85 }}
+
+    - name: Report to coveralls
+      run: coveralls
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COVERALLS_SERVICE_NAME: github
