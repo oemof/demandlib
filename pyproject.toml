@@ -71,14 +71,14 @@ build = [
     "twine",
 ]
 docs = [
-    "matplotlib",
     "sphinx",
     "sphinx_rtd_theme",
 ]
 test = [
-    "pytest",
     "coverage",
     "coveralls",
+    "matplotlib",
+    "pytest",
 ]
 tox = [
     "tox",
