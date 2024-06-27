@@ -1,6 +1,91 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.sdist]
+include = [
+    ".coveragerc",
+    ".editorconfig",
+    ".readthedocs.yml",
+    "tox.ini",
+    "AUTHORS.rst",
+    "CHANGELOG.rst",
+    "CONTRIBUTING.rst",
+    "LICENSE",
+    "README.rst",
+    "examples/",
+    "docs/",
+    "src/",
+    "tests/",
+]
+exclude = ["docs/_build", "**/*.egg-info"]
+
+[project]
+name = "demandlib"
+dynamic = ["version"]
+description = "Creating heat and power demand profiles from annual values"
+readme = "README.rst"
+authors = [
+    {name = "oemof developer group", email = "contact@oemof.org"},
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Unix",
+    "Operating System :: POSIX",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Utilities",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy >= 1.17.0",
+    "pandas >= 1.0",
+]
+license = {text = "MIT"}
+
+[project.urls]
+Homepage = "https://github.com/oemof/demandlib"
+Documentation = "https://demandlib.readthedocs.io/"
+Changelog = "https://demandlib.readthedocs.io/en/latest/changelog.html"
+"Issue Tracker" = "https://github.com/oemof/demandlib/issues/"
+
+[project.optional-dependencies]
+build = [
+    "build",
+    "check-manifest",
+    "flake8",
+    "flit",
+    "isort",
+    "pygments",
+    "readme-renderer",
+    "twine",
+]
+docs = [
+    "sphinx",
+    "sphinx_rtd_theme",
+]
+test = [
+    "coverage",
+    "matplotlib",
+    "pytest",
+]
+tox = [
+    "tox",
+]
+
 [tool.black]
 line-length = 79
-target-version = ['py37', 'py38']
+target-version = ['py39', 'py310', 'py311']
 include = '\.pyi?$'
 exclude = '''
 /(
@@ -17,3 +102,42 @@ exclude = '''
   | ci
 )/
 '''
+
+[tool.pytest.ini_options]
+norecursedirs = [
+    ".git",
+    ".tox",
+    ".env",
+    "dist",
+    "docs/_build",
+    "examples",
+]
+python_files = [
+    "test_*.py",
+    "*_test.py",
+    "*_tests.py",
+    "tests.py",
+]
+addopts = """
+    -ra
+    --strict-markers
+    --ignore=docs/conf.py
+    --ignore=.eggs
+    --doctest-modules
+    --doctest-glob=\\*.rst
+    --tb=short
+    --pyargs
+"""
+testpaths = [
+    "src/",
+    "tests/",
+    "docs/",
+]
+
+[tool.isort]
+force_single_line = true
+line_length = 79
+known_first_party = "demandlib"
+default_section = "THIRDPARTY"
+forced_separate = "test_demandlib"
+skip = "migrations"

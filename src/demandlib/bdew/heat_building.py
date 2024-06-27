@@ -278,7 +278,8 @@ class HeatBuilding:
 
         wrong_number_of_parameters_message = (
             "{} sigmoid parameters found for "
-            + f"building_class={self.building_class}, shlp_type={self.shlp_type}, "
+            + f"building_class={self.building_class}, "
+            + f"shlp_type={self.shlp_type}, "
             + f"wind_class={self.wind_class}. Should be 1."
         )
 
