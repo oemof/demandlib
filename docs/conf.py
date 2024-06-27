@@ -4,6 +4,8 @@ import os
 
 from sphinx.ext.autodoc import between
 
+from demandlib import __version__
+
 
 def setup(app):
     # Register a sphinx.ext.autodoc.between listener to ignore everything
@@ -30,7 +32,7 @@ project = "demandlib"
 year = "2016-2024"
 author = "oemof developer group"
 copyright = "{0}, {1}".format(year, author)
-version = release = "0.1.10"
+version = release = __version__
 
 pygments_style = "trac"
 templates_path = ["."]
