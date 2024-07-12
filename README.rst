@@ -15,7 +15,7 @@ Overview
       - | |version| |wheel| |supported-versions| |supported-implementations| |commits-since| |packaging|
 
 
-.. |tox-pytest| image:: https://github.com/oemof/demandlib/workflows/tox%20pytests/badge.svg?branch=dev
+.. |tox-pytest| image:: https://github.com/oemof/demandlib/workflows/tox%20pytests/badge.svg
      :target: https://github.com/oemof/demandlib/actions?query=workflow%3A%22tox+checks%22
 
 .. |tox-checks| image:: https://github.com/oemof/demandlib/workflows/tox%20checks/badge.svg?branch=dev
@@ -48,9 +48,9 @@ Overview
     :alt: Supported implementations
     :target: https://pypi.org/project/demandlib
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/oemof/demandlib/v0.1.8.svg
+.. |commits-since| image:: https://img.shields.io/github/commits-since/oemof/demandlib/latest/dev
     :alt: Commits since latest release
-    :target: https://github.com/oemof/demandlib/compare/v0.1.9...dev
+    :target: https://github.com/oemof/demandlib/compare/master...dev
 
 
 

@@ -103,6 +103,7 @@ class IndustrialLoadProfile:
         # Example usage
         apply_masks(self.dataframe, profile_factors, am, pm, week, weekend, holiday)
 
+
         if self.dataframe["ind"].isnull().any(axis=0):
             logging.error("NAN value found in industrial load profile")
 

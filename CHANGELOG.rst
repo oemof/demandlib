@@ -1,20 +1,32 @@
 Changelog
 =========
 
-v0.1.10 (?-?-?)
+v0.2.1 (yyyy-mm-dd)
 +++++++++++++++++++++++++
 
 New features
 ############
-*
 
 Bug fixes
 #########
-*   
+
+Other changes
+#############
+
+
+
+v0.2.0 (2024-06-27)
++++++++++++++++++++++++++
+
+Bug fixes
+#########
+*   Raise error for non supported shlp_type 
+	in non-commercial buildings
 
 Other changes
 #############
 *   Adhere to packaging standards
+* 	Raise errors in sigmoid parameter queries
 
 
 v0.1.9 (2023-03-18)
