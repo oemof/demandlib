@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Implementation of the bdew standard load profiles for electric power.
-
-
+Implementation of custom industrial load profiles with schedules for
+week days, weekend days and holidays.
 """
 import logging
 from datetime import time as settime
-import warnings
 
 import pandas as pd
 
@@ -16,18 +14,25 @@ from .tools import add_weekdays2df
 class IndustrialLoadProfile:
     """Generate an industrial heat or electric load profile."""
 
-    def __init__(self, dt_index, holidays=None):
+    def __init__(self, dt_index, holidays=None, holiday_is_sunday=False):
+        """
+        Initialize the industrial load profile.
+
+        Parameters
+        ----------
+        dt_index : pandas.DatetimeIndex
+            Datetime index for the load profile.
+        holidays : dict
+            dict with key of type datetime and value of holiday name as str.
+        holiday_is_sunday : bool
+            If True, Sundays are considered as a holiday schedule.
+        """
         self.dataframe = pd.DataFrame(index=dt_index)
-        if holidays is not None:
-            # treat holidays as independent days (value 0 is holiday)
-            self.dataframe = add_weekdays2df(
-                self.dataframe, holiday_is_sunday=False, holidays=holidays
-            )
-        else:
-            # treat all holidays as sundays
-            self.dataframe = add_weekdays2df(
-                self.dataframe, holiday_is_sunday=True, holidays=holidays
-            )
+        self.dataframe = add_weekdays2df(
+            self.dataframe,
+            holiday_is_sunday=holiday_is_sunday,
+            holidays=holidays
+        )
 
     def simple_profile(self, annual_demand, **kwargs):
         """
@@ -92,18 +97,17 @@ class IndustrialLoadProfile:
             for condition in conditions:
                 try:
                     period, time_of_day = condition["period"]
-                    dataframe["ind"].mask(
+                    dataframe["ind"] = dataframe["ind"].mask(
                         cond=condition["cond"],
-                        other=profile_factors[period][time_of_day],
-                        inplace=True,
+                        other=profile_factors[period][time_of_day]
                     )
                 except KeyError as e:
-                    warnings.warn(f"Missing entry for {e} in profile_factors", UserWarning)
+                    logging.warning("Missing entry for %s in profile_factors", e)
 
-        # Example usage
+        # Apply the masks to the dataframe
         apply_masks(self.dataframe, profile_factors, am, pm, week, weekend, holiday)
 
-
+        # Check for NAN values in the dataframe
         if self.dataframe["ind"].isnull().any(axis=0):
             logging.error("NAN value found in industrial load profile")
 
