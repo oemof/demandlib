@@ -60,22 +60,28 @@ class IndustrialLoadProfile:
 
         profile_factors = kwargs.get("profile_factors", default_factors)
 
-        self.dataframe["ind"] = 0
+        self.dataframe["ind"] = 0.0
+        day_mask = self.dataframe.index.indexer_between_time(am, pm)
+        night_mask = self.dataframe.index.indexer_between_time(pm, am)
+        day_filter = pd.Series(False, index=self.dataframe.index)
+        day_filter.iloc[day_mask] = True
+        night_filter = pd.Series(False, index=self.dataframe.index)
+        night_filter.iloc[night_mask] = True
 
         self.dataframe["ind"] = self.dataframe["ind"].mask(
-            cond=self.dataframe["weekday"].between_time(am, pm).isin(week),
+            cond=day_filter & self.dataframe["weekday"].isin(week),
             other=profile_factors["week"]["day"],
         )
         self.dataframe["ind"] = self.dataframe["ind"].mask(
-            cond=self.dataframe["weekday"].between_time(pm, am).isin(week),
+            cond=night_filter & self.dataframe["weekday"].isin(week),
             other=profile_factors["week"]["night"],
         )
         self.dataframe["ind"] = self.dataframe["ind"].mask(
-            cond=self.dataframe["weekday"].between_time(am, pm).isin(weekend),
+            cond=day_filter & self.dataframe["weekday"].isin(weekend),
             other=profile_factors["weekend"]["day"],
         )
         self.dataframe["ind"] = self.dataframe["ind"].mask(
-            cond=self.dataframe["weekday"].between_time(pm, am).isin(weekend),
+            cond=night_filter & self.dataframe["weekday"].isin(weekend),
             other=profile_factors["weekend"]["night"],
         )
 
