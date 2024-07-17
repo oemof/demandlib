@@ -68,22 +68,14 @@ class IndustrialLoadProfile:
         night_filter = pd.Series(False, index=self.dataframe.index)
         night_filter.iloc[night_mask] = True
 
-        self.dataframe["ind"] = self.dataframe["ind"].mask(
-            cond=day_filter & self.dataframe["weekday"].isin(week),
-            other=profile_factors["week"]["day"],
-        )
-        self.dataframe["ind"] = self.dataframe["ind"].mask(
-            cond=night_filter & self.dataframe["weekday"].isin(week),
-            other=profile_factors["week"]["night"],
-        )
-        self.dataframe["ind"] = self.dataframe["ind"].mask(
-            cond=day_filter & self.dataframe["weekday"].isin(weekend),
-            other=profile_factors["weekend"]["day"],
-        )
-        self.dataframe["ind"] = self.dataframe["ind"].mask(
-            cond=night_filter & self.dataframe["weekday"].isin(weekend),
-            other=profile_factors["weekend"]["night"],
-        )
+        week_filter = self.dataframe["weekday"].isin(week)
+        weekend_filter = self.dataframe["weekday"].isin(weekend)
+
+        # Update 'ind' column based on day/night filters and weekday/weekend conditions
+        self.dataframe.loc[day_filter & week_filter, "ind"] = profile_factors["week"]["day"]
+        self.dataframe.loc[night_filter & week_filter, "ind"] = profile_factors["week"]["night"]
+        self.dataframe.loc[day_filter & weekend_filter, "ind"] = profile_factors["weekend"]["day"]
+        self.dataframe.loc[night_filter & weekend_filter, "ind"] = profile_factors["weekend"]["night"]
 
         if self.dataframe["ind"].isnull().any(axis=0):
             logging.error("NAN value found in industrial load profile")
