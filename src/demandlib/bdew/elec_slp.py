@@ -23,6 +23,13 @@ from demandlib.tools import add_weekdays2df
 class ElecSlp:
     """Generate electrical standardized load profiles based on the BDEW method.
 
+    Attributes
+    ----------
+    datapath : string
+        Path to the csv files containing the load profile data.
+    date_time_index : pandas.DateTimeIndex
+        Time range for and frequency for the profile.
+
     Parameters
     ----------
     year : integer
@@ -50,18 +57,17 @@ class ElecSlp:
         self._date_time_index = pd.date_range(
             datetime.datetime(year, 1, 1, 0), periods=hoy * 4, freq="15Min"
         )
-        self._seasons = {
-            "summer1": [5, 15, 9, 14],  # summer: 15.05. to 14.09
-            "transition1": [3, 21, 5, 14],  # transition1 :21.03. to 14.05
-            "transition2": [9, 15, 10, 31],  # transition2 :15.09. to 31.10
-            "winter1": [1, 1, 3, 20],  # winter1:  01.01. to 20.03
-            "winter2": [11, 1, 12, 31],  # winter2: 01.11. to 31.12
-        }
-        if seasons is not None:
-            self._seasons.update(seasons)
-
-        self._year = year
-
+        if seasons is None:
+            self.seasons = {
+                "summer1": [5, 15, 9, 14],  # summer: 15.05. to 14.09
+                "transition1": [3, 21, 5, 14],  # transition1 :21.03. to 14.05
+                "transition2": [9, 15, 10, 31],  # transition2 :15.09. to 31.10
+                "winter1": [1, 1, 3, 20],  # winter1:  01.01. to 20.03
+                "winter2": [11, 1, 12, 31],  # winter2: 01.11. to 31.12
+            }
+        else:
+            self.seasons = seasons
+        self.year = year
         # Create the default profiles
         self.slp_frame = self.all_load_profiles(
             self._date_time_index, holidays=holidays
@@ -142,7 +148,7 @@ class ElecSlp:
                 left_on=left_cols,
                 right_on=right_cols,
                 how="inner",
-            ).drop(["hour_of_day"], axis=1)
+            ).drop(labels=["hour_of_day"], axis=1)
 
             merged_df.index = (
                 pd.to_datetime(merged_df["date"])

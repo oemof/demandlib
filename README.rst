@@ -10,12 +10,12 @@ Overview
     * - docs
       - |docs|
     * - tests
-      - | |tox-pytest| |tox-checks| |appveyor| |requires| |coveralls|
+      - | |tox-pytest| |tox-checks| |coveralls|
     * - package
       - | |version| |wheel| |supported-versions| |supported-implementations| |commits-since| |packaging|
 
 
-.. |tox-pytest| image:: https://github.com/oemof/demandlib/workflows/tox%20pytests/badge.svg?branch=dev
+.. |tox-pytest| image:: https://github.com/oemof/demandlib/workflows/tox%20pytests/badge.svg
      :target: https://github.com/oemof/demandlib/actions?query=workflow%3A%22tox+checks%22
 
 .. |tox-checks| image:: https://github.com/oemof/demandlib/workflows/tox%20checks/badge.svg?branch=dev
@@ -27,14 +27,6 @@ Overview
 .. |docs| image:: https://readthedocs.org/projects/demandlib/badge/?style=flat
     :target: https://demandlib.readthedocs.io/
     :alt: Documentation Status
-
-.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/ng4rb36cx5fuerf2?svg=true
-    :alt: AppVeyor Build Status
-    :target: https://ci.appveyor.com/project/uvchik/demandlib/branch/dev
-
-.. |requires| image:: https://requires.io/github/oemof/demandlib/requirements.svg?branch=dev
-    :alt: Requirements Status
-    :target: https://requires.io/github/oemof/demandlib/requirements/?branch=dev
 
 .. |coveralls| image:: https://coveralls.io/repos/oemof/demandlib/badge.svg?branch=dev&service=github
     :alt: Coverage Status
@@ -56,9 +48,9 @@ Overview
     :alt: Supported implementations
     :target: https://pypi.org/project/demandlib
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/oemof/demandlib/v0.1.8.svg
+.. |commits-since| image:: https://img.shields.io/github/commits-since/oemof/demandlib/latest/dev
     :alt: Commits since latest release
-    :target: https://github.com/oemof/demandlib/compare/v0.1.8...dev
+    :target: https://github.com/oemof/demandlib/compare/master...dev
 
 
 

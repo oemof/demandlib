@@ -73,7 +73,7 @@ holidays = {
 # Create DataFrame for 2010
 demand = pd.DataFrame(
     index=pd.date_range(
-        datetime.datetime(2010, 1, 1, 0), periods=8760, freq="H"
+        datetime.datetime(2010, 1, 1, 0), periods=8760, freq="h"
     )
 )
 

@@ -1,5 +1,6 @@
 """Tools needed by the main classes
 """
+
 import pandas as pd
 
 
@@ -35,13 +36,16 @@ def add_weekdays2df(time_df, holidays=None, holiday_is_sunday=False):
     if holidays is not None:
         if isinstance(holidays, dict):
             holidays = list(holidays.keys())
-        time_df["weekday"].mask(
-            pd.to_datetime(time_df["date"]).isin(pd.to_datetime(holidays)),
-            0,
-            inplace=True,
-        )
+            time_df["weekday"] = time_df["weekday"].mask(
+                cond=pd.to_datetime(time_df["date"]).isin(
+                    pd.to_datetime(holidays)
+                ),
+                other=0,
+            )
 
     if holiday_is_sunday:
-        time_df.weekday.mask(time_df.weekday == 0, 7, inplace=True)
+        time_df.weekday = time_df.weekday.mask(
+            cond=time_df.weekday == 0, other=7
+        )
 
     return time_df

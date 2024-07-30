@@ -4,6 +4,8 @@ import os
 
 from sphinx.ext.autodoc import between
 
+from demandlib import __version__
+
 
 def setup(app):
     # Register a sphinx.ext.autodoc.between listener to ignore everything
@@ -27,10 +29,10 @@ extensions = [
 source_suffix = ".rst"
 master_doc = "index"
 project = "demandlib"
-year = "2016-2021"
+year = "2016-2024"
 author = "oemof developer group"
 copyright = "{0}, {1}".format(year, author)
-version = release = "0.1.9"
+version = release = __version__
 
 pygments_style = "trac"
 templates_path = ["."]
@@ -57,4 +59,7 @@ napoleon_use_rtype = False
 napoleon_use_param = False
 nitpicky = False
 
-linkcheck_ignore = [r"https://requires.io/.*"]
+linkcheck_ignore = [
+    r"https://requires.io/.*",
+    r"https://www.avacon-netz.de/.*",
+]
