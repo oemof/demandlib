@@ -71,7 +71,8 @@ class IndustrialLoadProfile:
         week_filter = self.dataframe["weekday"].isin(week)
         weekend_filter = self.dataframe["weekday"].isin(weekend)
 
-        # Update 'ind' column based on day/night filters and weekday/weekend conditions
+        # Update 'ind' column based on day/night filters
+        # and weekday/weekend conditions.
         self.dataframe.loc[day_filter & week_filter, "ind"] = profile_factors[
             "week"
         ]["day"]
