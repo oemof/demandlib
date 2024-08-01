@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-Creating power demand profiles using bdew profiles.
+Creating power demand profiles using BDEW profiles for residential, commercial and
+agricultural loads, as well as step load profiles for industrial loads.
 
 Installation requirements
 -------------------------
 This example requires at least version v0.1.4 of the oemof demandlib. Install
 by:
     pip install 'demandlib>=0.1.4,<0.2'
-Optional:
+It further requires matplotlib for plotting:
     pip install matplotlib
 
 SPDX-FileCopyrightText: Birgit Schachler
@@ -85,16 +86,16 @@ elec_demand["i2"] = ilp.simple_profile(
 )
 
 print(
-    "Be aware that the values in the DataFrame are 15 minute values"
-    + "with a power unit. If you sum up a table with 15min values"
-    + "the result will be of the unit 'kW15minutes'."
+    "Be aware that the values in the DataFrame are 15 minute values "
+    "with a power unit. If you sum up a table with 15min values "
+    "the result will be of the unit 'kW15minutes'."
 )
 print(elec_demand.sum())
 
 print("You will have to divide the result by 4 to get kWh.")
 print(elec_demand.sum() / 4)
 
-print("Or resample the DataFrame to hourly values using the mean() " "method.")
+print("Or resample the DataFrame to hourly values using the mean() method.")
 
 # Resample 15-minute values to hourly values.
 elec_demand_resampled = elec_demand.resample("h").mean()
