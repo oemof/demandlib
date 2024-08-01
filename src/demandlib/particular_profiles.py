@@ -132,12 +132,15 @@ class IndustrialLoadProfile:
                     )
 
         self.dataframe["ind"] = 0.0
-        day_mask = self.dataframe.index.indexer_between_time(am, pm)
-        night_mask = self.dataframe.index.indexer_between_time(pm, am)
+
+        day_mask = self.dataframe.index.indexer_between_time(
+            am, pm, include_start=True, include_end=True
+        )
         day_filter = pd.Series(False, index=self.dataframe.index)
         day_filter.iloc[day_mask] = True
-        night_filter = pd.Series(False, index=self.dataframe.index)
-        night_filter.iloc[night_mask] = True
+        # set up night filter as the reverse of the day filter
+        night_filter = pd.Series(True, index=self.dataframe.index)
+        night_filter.iloc[day_mask] = False
 
         week_filter = self.dataframe["weekday"].isin(week)
         weekend_filter = self.dataframe["weekday"].isin(weekend)
