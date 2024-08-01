@@ -123,17 +123,17 @@ class IndustrialLoadProfile:
         profile_factors = kwargs.get("profile_factors", default_factors)
         # check profile factors
         for key in ["week", "weekend", "holiday"]:
-            if not key in profile_factors.keys():
+            if key not in profile_factors.keys():
                 raise ValueError(
                     f"Missing entry for '{key}' in profile_factors."
                 )
             else:
-                if not "day" in profile_factors[key].keys():
+                if "day" not in profile_factors[key].keys():
                     raise ValueError(
                         f"Missing entry for 'day' in profile_factors for "
                         f"'{key}'."
                     )
-                elif not "night" in profile_factors[key].keys():
+                elif "night" not in profile_factors[key].keys():
                     raise ValueError(
                         f"Missing entry for 'night' in profile_factors for "
                         f"'{key}'."
