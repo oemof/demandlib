@@ -35,19 +35,29 @@ class TestIndustrialLoadProfile:
 
         # check factors in self.dataframe["ind"]
         # holiday
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-01 6:00"), "ind"] == 0.7
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-01 7:00"), "ind"] == 0.9
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-01 23:00"), "ind"] == 0.9
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-01 6:00"), "ind"] == 0.7
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-01 7:00"), "ind"] == 0.9
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-01 23:00"), "ind"] == 0.9
         # weekend day
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-02 6:00"), "ind"] == 0.7
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-02 7:00"), "ind"] == 0.9
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-02 23:00"), "ind"] == 0.9
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-02 6:00"), "ind"] == 0.7
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-02 7:00"), "ind"] == 0.9
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-02 23:00"), "ind"] == 0.9
         # week day
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-04 6:00"), "ind"] == 0.6
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-04 7:00"), "ind"] == 0.8
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-04 23:00"), "ind"] == 0.8
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-04 6:00"), "ind"] == 0.6
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-04 7:00"), "ind"] == 0.8
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-04 23:00"), "ind"] == 0.8
 
-        # check sum of factors to make sure not only the tested factors are correct
+        # check sum of factors to make sure not only the tested factors are
+        # correct
         assert np.isclose(self.ilp.dataframe["ind"].sum(), 131.8)
 
         # ############### test with own values ###############
@@ -68,23 +78,36 @@ class TestIndustrialLoadProfile:
 
         # check factors in self.dataframe["ind"]
         # holiday
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-01 6:00"), "ind"] == 0.3
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-01 7:00"), "ind"] == 0.8
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-01 23:00"), "ind"] == 0.3
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-01 6:00"), "ind"] == 0.3
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-01 7:00"), "ind"] == 0.8
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-01 23:00"), "ind"] == 0.3
         # weekend day
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-02 6:00"), "ind"] == 0.4
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-02 7:00"), "ind"] == 0.7
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-02 22:00"), "ind"] == 0.7
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-02 6:00"), "ind"] == 0.4
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-02 7:00"), "ind"] == 0.7
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-02 22:00"), "ind"] == 0.7
         # Monday - now set to be weekend day
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-04 6:00"), "ind"] == 0.4
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-04 7:00"), "ind"] == 0.7
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-04 23:00"), "ind"] == 0.4
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-04 6:00"), "ind"] == 0.4
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-04 7:00"), "ind"] == 0.7
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-04 23:00"), "ind"] == 0.4
         # week day
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-05 6:00"), "ind"] == 0.5
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-05 7:00"), "ind"] == 0.6
-        assert self.ilp.dataframe.at[pd.Timestamp("2010-01-05 23:00"), "ind"] == 0.5
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-05 6:00"), "ind"] == 0.5
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-05 7:00"), "ind"] == 0.6
+        assert self.ilp.dataframe.at[
+                   pd.Timestamp("2010-01-05 23:00"), "ind"] == 0.5
 
-        # check sum of factors to make sure not only the tested factors are correct
+        # check sum of factors to make sure not only the tested factors are
+        # correct
         assert np.isclose(self.ilp.dataframe["ind"].sum(), 99.2)
 
         # ############### test missing profile factors ###############
@@ -108,7 +131,7 @@ class TestIndustrialLoadProfile:
                 profile_factors=profile_factors,
             )
 
-        # ########### test with default values and holiday_is_sunday = True ###########
+        # ##### test with default values and holiday_is_sunday = True #####
         profile_factors = {
             "week": {"day": 0.6, "night": 0.5},
             "weekend": {"day": 0.7, "night": 0.4},
@@ -120,17 +143,27 @@ class TestIndustrialLoadProfile:
 
         # check factors in self.dataframe["ind"]
         # holiday - now treated as Sunday
-        assert self.ilp_holiday.dataframe.at[pd.Timestamp("2010-01-01 6:00"), "ind"] == 0.4
-        assert self.ilp_holiday.dataframe.at[pd.Timestamp("2010-01-01 7:00"), "ind"] == 0.7
-        assert self.ilp_holiday.dataframe.at[pd.Timestamp("2010-01-01 23:00"), "ind"] == 0.7
+        assert self.ilp_holiday.dataframe.at[
+                   pd.Timestamp("2010-01-01 6:00"), "ind"] == 0.4
+        assert self.ilp_holiday.dataframe.at[
+                   pd.Timestamp("2010-01-01 7:00"), "ind"] == 0.7
+        assert self.ilp_holiday.dataframe.at[
+                   pd.Timestamp("2010-01-01 23:00"), "ind"] == 0.7
         # weekend day
-        assert self.ilp_holiday.dataframe.at[pd.Timestamp("2010-01-02 6:00"), "ind"] == 0.4
-        assert self.ilp_holiday.dataframe.at[pd.Timestamp("2010-01-02 7:00"), "ind"] == 0.7
-        assert self.ilp_holiday.dataframe.at[pd.Timestamp("2010-01-02 23:00"), "ind"] == 0.7
+        assert self.ilp_holiday.dataframe.at[
+                   pd.Timestamp("2010-01-02 6:00"), "ind"] == 0.4
+        assert self.ilp_holiday.dataframe.at[
+                   pd.Timestamp("2010-01-02 7:00"), "ind"] == 0.7
+        assert self.ilp_holiday.dataframe.at[
+                   pd.Timestamp("2010-01-02 23:00"), "ind"] == 0.7
         # week day
-        assert self.ilp_holiday.dataframe.at[pd.Timestamp("2010-01-04 6:00"), "ind"] == 0.5
-        assert self.ilp_holiday.dataframe.at[pd.Timestamp("2010-01-04 7:00"), "ind"] == 0.6
-        assert self.ilp_holiday.dataframe.at[pd.Timestamp("2010-01-04 23:00"), "ind"] == 0.6
+        assert self.ilp_holiday.dataframe.at[
+                   pd.Timestamp("2010-01-04 6:00"), "ind"] == 0.5
+        assert self.ilp_holiday.dataframe.at[
+                   pd.Timestamp("2010-01-04 7:00"), "ind"] == 0.6
+        assert self.ilp_holiday.dataframe.at[
+                   pd.Timestamp("2010-01-04 23:00"), "ind"] == 0.6
 
-        # check sum of factors to make sure not only the tested factors are correct
+        # check sum of factors to make sure not only the tested factors are
+        # correct
         assert np.isclose(self.ilp_holiday.dataframe["ind"].sum(), 98.9)

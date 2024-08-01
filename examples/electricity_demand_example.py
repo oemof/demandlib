@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Creating power demand profiles using BDEW profiles for residential, commercial and
-agricultural loads, as well as step load profiles for industrial loads.
+Creating power demand profiles using BDEW profiles for residential, commercial
+and agricultural loads, as well as step load profiles for industrial loads.
 
 Installation requirements
 -------------------------
