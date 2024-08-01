@@ -15,10 +15,12 @@ from .tools import add_weekdays2df
 class IndustrialLoadProfile:
     """Generate an industrial heat or electric load profile."""
 
-    def __init__(self, dt_index, holidays=None):
+    def __init__(self, dt_index, holidays=None, holiday_is_sunday=False):
         self.dataframe = pd.DataFrame(index=dt_index)
         self.dataframe = add_weekdays2df(
-            self.dataframe, holiday_is_sunday=True, holidays=holidays
+            self.dataframe,
+            holiday_is_sunday=holiday_is_sunday,
+            holidays=holidays,
         )
 
     def simple_profile(self, annual_demand, **kwargs):
@@ -45,19 +47,20 @@ class IndustrialLoadProfile:
             weekend days
         """
 
-        # Day(am to pm), night (pm to am), week day (week),
-        # weekend day (weekend)
+        # Define day (am to pm), night (pm to am), week day (week),
+        # weekend day (weekend) and holiday
         am = kwargs.get("am", settime(7, 00, 0))
         pm = kwargs.get("pm", settime(23, 30, 0))
 
         week = kwargs.get("week", [1, 2, 3, 4, 5])
-        weekend = kwargs.get("weekend", [0, 6, 7])
+        weekend = kwargs.get("weekend", [6, 7])
+        holiday = kwargs.get("holiday", [0])
 
         default_factors = {
             "week": {"day": 0.8, "night": 0.6},
             "weekend": {"day": 0.9, "night": 0.7},
+            "holiday": {"day": 0.9, "night": 0.7},
         }
-
         profile_factors = kwargs.get("profile_factors", default_factors)
 
         self.dataframe["ind"] = 0.0
@@ -70,6 +73,7 @@ class IndustrialLoadProfile:
 
         week_filter = self.dataframe["weekday"].isin(week)
         weekend_filter = self.dataframe["weekday"].isin(weekend)
+        holiday_filter = self.dataframe["weekday"].isin(holiday)
 
         # Update 'ind' column based on day/night filters
         # and weekday/weekend conditions.
@@ -85,6 +89,10 @@ class IndustrialLoadProfile:
         self.dataframe.loc[night_filter & weekend_filter, "ind"] = (
             profile_factors["weekend"]["night"]
         )
+        self.dataframe.loc[day_filter & holiday_filter, "ind"] = \
+            profile_factors["holiday"]["day"]
+        self.dataframe.loc[night_filter & holiday_filter, "ind"] = \
+            profile_factors["holiday"]["night"]
 
         if self.dataframe["ind"].isnull().any(axis=0):
             logging.error("NAN value found in industrial load profile")
