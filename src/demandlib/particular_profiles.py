@@ -62,6 +62,19 @@ class IndustrialLoadProfile:
             "holiday": {"day": 0.9, "night": 0.7},
         }
         profile_factors = kwargs.get("profile_factors", default_factors)
+        # check profile factors
+        for key in ["week", "weekend", "holiday"]:
+            if not key in profile_factors.keys():
+                raise ValueError(f"Missing entry for '{key}' in profile_factors.")
+            else:
+                if not "day" in profile_factors[key].keys():
+                    raise ValueError(
+                        f"Missing entry for 'day' in profile_factors for '{key}'."
+                    )
+                elif not "night" in profile_factors[key].keys():
+                    raise ValueError(
+                        f"Missing entry for 'night' in profile_factors for '{key}'."
+                    )
 
         self.dataframe["ind"] = 0.0
         day_mask = self.dataframe.index.indexer_between_time(am, pm)
