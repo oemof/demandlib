@@ -59,6 +59,8 @@ class TestIndustrialLoadProfile:
         # check sum of factors to make sure not only the tested factors are
         # correct
         assert np.isclose(self.ilp.dataframe["ind"].sum(), 131.8)
+        # check total demand
+        assert np.isclose(df.sum(), 1.0)
 
         # ############### test with own values ###############
         profile_factors = {
@@ -109,6 +111,8 @@ class TestIndustrialLoadProfile:
         # check sum of factors to make sure not only the tested factors are
         # correct
         assert np.isclose(self.ilp.dataframe["ind"].sum(), 99.2)
+        # check total demand
+        assert np.isclose(df.sum(), 1.0)
 
         # ############### test missing profile factors ###############
         profile_factors = {
@@ -167,3 +171,5 @@ class TestIndustrialLoadProfile:
         # check sum of factors to make sure not only the tested factors are
         # correct
         assert np.isclose(self.ilp_holiday.dataframe["ind"].sum(), 98.9)
+        # check total demand
+        assert np.isclose(df.sum(), 1.0)
