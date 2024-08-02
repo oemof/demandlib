@@ -90,11 +90,14 @@ class IndustrialLoadProfile:
             weekdays, weekend days and holidays. The dictionary must have the
             same form as the dictionary given as the default value.
             Default:
-            {
-                "week": {"day": 0.8, "night": 0.6},
-                "weekend": {"day": 0.9, "night": 0.7},
-                "holiday": {"day": 0.9, "night": 0.7},
-            }
+
+            .. code:: python
+
+                {
+                    "week": {"day": 0.8, "night": 0.6},
+                    "weekend": {"day": 0.9, "night": 0.7},
+                    "holiday": {"day": 0.9, "night": 0.7},
+                }
 
         Returns
         -------

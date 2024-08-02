@@ -20,6 +20,7 @@ The industrial profile is explained in the example `electricity_demand_example.p
 located in the examples directory of the repository.
 
 .. code-block:: python
+
     import datetime
     import demandlib.particular_profiles as profiles
     import pandas as pd
