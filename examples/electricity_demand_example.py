@@ -82,6 +82,7 @@ elec_demand["i2"] = ilp.simple_profile(
     profile_factors={
         "week": {"day": 1.0, "night": 0.8},
         "weekend": {"day": 0.8, "night": 0.6},
+        "holiday": {"day": 0.6, "night": 0.4},
     },
 )
 
