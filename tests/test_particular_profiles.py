@@ -172,7 +172,7 @@ class TestIndustrialLoadProfile:
         }
         msg = "Missing entry for 'weekend' in profile_factors."
         with pytest.raises(ValueError, match=msg):
-            df = self.ilp.simple_profile(
+            self.ilp.simple_profile(
                 1.0,
                 profile_factors=profile_factors,
             )
@@ -182,7 +182,7 @@ class TestIndustrialLoadProfile:
         }
         msg = "Missing entry for 'night' in profile_factors for 'week'."
         with pytest.raises(ValueError, match=msg):
-            df = self.ilp.simple_profile(
+            self.ilp.simple_profile(
                 1.0,
                 profile_factors=profile_factors,
             )
