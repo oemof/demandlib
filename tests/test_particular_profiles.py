@@ -27,8 +27,11 @@ class TestIndustrialLoadProfile:
             holiday_is_sunday=True,
         )
 
-    def test_simple_profile(self):
-        # ############### test with default values ###############
+    def test_simple_profile_default_values(self):
+        """
+        test with default values
+
+        """
         df = self.ilp.simple_profile(1.0)
 
         # check factors in self.dataframe["ind"]
@@ -78,7 +81,11 @@ class TestIndustrialLoadProfile:
         # check total demand
         assert np.isclose(df.sum(), 1.0)
 
-        # ############### test with own values ###############
+    def test_simple_profile_own_values(self):
+        """
+        test with own values
+
+        """
         profile_factors = {
             "week": {"day": 0.6, "night": 0.5},
             "weekend": {"day": 0.7, "night": 0.4},
@@ -155,7 +162,11 @@ class TestIndustrialLoadProfile:
         # check total demand
         assert np.isclose(df.sum(), 1.0)
 
-        # ############### test missing profile factors ###############
+    def test_simple_profile_error_raising(self):
+        """
+        test error raising in case of missing profile factors
+
+        """
         profile_factors = {
             "week": {"day": 0.6, "night": 0.5},
         }
@@ -176,7 +187,11 @@ class TestIndustrialLoadProfile:
                 profile_factors=profile_factors,
             )
 
-        # ##### test with default values and holiday_is_sunday = True #####
+    def test_simple_profile_holiday_is_sunday(self):
+        """
+        test with default values and holiday_is_sunday = True
+
+        """
         profile_factors = {
             "week": {"day": 0.6, "night": 0.5},
             "weekend": {"day": 0.7, "night": 0.4},
