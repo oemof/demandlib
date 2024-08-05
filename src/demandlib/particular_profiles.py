@@ -178,7 +178,6 @@ class IndustrialLoadProfile:
             profile_factors["holiday"]["night"]
         )
 
-        # Check for NAN values in the dataframe
         if self.dataframe["ind"].isnull().any(axis=0):
             logging.error("NAN value found in industrial load profile")
 
