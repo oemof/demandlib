@@ -76,7 +76,9 @@ class TestIndustrialLoadProfile:
         )
 
         # check sum of factors to make sure not only the tested factors are
-        # correct
+        # correct - the factors don't add up to 100 but to some number that
+        # depends on the given profile factors and time steps; as long as
+        # these don't change the number checked here should not change either
         assert np.isclose(self.ilp.dataframe["ind"].sum(), 131.8)
         # check total demand
         assert np.isclose(df.sum(), 1.0)
@@ -157,7 +159,9 @@ class TestIndustrialLoadProfile:
         )
 
         # check sum of factors to make sure not only the tested factors are
-        # correct
+        # correct - the factors don't add up to 100 but to some number that
+        # depends on the given profile factors and time steps; as long as
+        # these don't change the number checked here should not change either
         assert np.isclose(self.ilp.dataframe["ind"].sum(), 99.2)
         # check total demand
         assert np.isclose(df.sum(), 1.0)
@@ -261,7 +265,9 @@ class TestIndustrialLoadProfile:
         )
 
         # check sum of factors to make sure not only the tested factors are
-        # correct
+        # correct - the factors don't add up to 100 but to some number that
+        # depends on the given profile factors and time steps; as long as
+        # these don't change the number checked here should not change either
         assert np.isclose(self.ilp_holiday.dataframe["ind"].sum(), 98.9)
         # check total demand
         assert np.isclose(df.sum(), 1.0)
