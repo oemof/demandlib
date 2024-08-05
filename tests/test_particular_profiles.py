@@ -11,7 +11,7 @@ class TestIndustrialLoadProfile:
     @classmethod
     def setup_class(cls):
         dt_index = pd.date_range(
-            datetime.datetime(2010, 1, 1, 0), periods=24 * 7, freq="1H"
+            datetime.datetime(2010, 1, 1, 0), periods=24 * 7, freq="1h"
         )
         holidays = {
             datetime.date(2010, 1, 1): "New year",
