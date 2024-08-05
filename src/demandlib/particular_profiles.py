@@ -178,9 +178,6 @@ class IndustrialLoadProfile:
             profile_factors["holiday"]["night"]
         )
 
-        if self.dataframe["ind"].isnull().any(axis=0):
-            logging.error("NAN value found in industrial load profile")
-
         time_interval = self.dataframe.index.freq.nanos / 3.6e12
 
         return (
