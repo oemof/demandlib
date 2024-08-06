@@ -1,18 +1,18 @@
 Changelog
 =========
 
-v0.2.1 (yyyy-mm-dd)
+v0.2.1 (2024-08-06)
 +++++++++++++++++++++++++
 
 New features
 ############
+*   Allow to have holidays in industrial profile
 
 Bug fixes
 #########
-
-Other changes
-#############
-
+*   simple_profile from IndustrialLoadProfile behaved differently in version
+    0.2.0 compared to 0.1.9 due to pandas masking functions. We are now back
+    to the old (design) values.
 
 
 v0.2.0 (2024-06-27)
