@@ -48,9 +48,9 @@ Overview
     :alt: Supported implementations
     :target: https://pypi.org/project/demandlib
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/oemof/demandlib/v0.1.8.svg
+.. |commits-since| image:: https://img.shields.io/github/commits-since/oemof/demandlib/latest/dev
     :alt: Commits since latest release
-    :target: https://github.com/oemof/demandlib/compare/v0.1.9...dev
+    :target: https://github.com/oemof/demandlib/compare/master...dev
 
 
 
