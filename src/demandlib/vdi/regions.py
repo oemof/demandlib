@@ -37,10 +37,8 @@ based on the following conditions:
     - Cloud coverage: cloudy or not cloudy
     - House type: single-family houses or multi-family houses (EFH or MFH)
 
-The holidays are loaded from an Excel file, the weather conditions are loaded
+The holidays are loaded from a table file, the weather conditions are loaded
 from weather data (e.g. DWD TRY).
-Most of the settings for this script are controlled with a configuration file
-called 'config_file', the location of which is defined down below.
 
 SPDX-FileCopyrightText: Joris Zimmermann
 SPDX-FileCopyrightText: Uwe Krien
@@ -70,6 +68,7 @@ class Region:
         houses=None,
         resample_rule=None,
         file_weather=None,
+        zero_summer_heat_demand=False,
     ):
         """
 
@@ -98,6 +97,9 @@ class Region:
             Path to a 'test reference year' (TRY) weather file by German DWD
             (Deutscher Wetterdienst). If None, the file fitting the given
             try_region will be loaded.
+        zero_summer_heat_demand : bool (optional)
+            Set heat demand on all summer days to zero. This is not part
+            of VDI 4655
         """
         if calendar.isleap(year):
             self.hoy = 8784
@@ -126,6 +128,7 @@ class Region:
             self.add_houses(houses)
 
         self.temperature_limits = self._get_temperature_level_combinations()
+        self.zero_summer_heat_demand = zero_summer_heat_demand
         self.type_days = {}
         self._load_profiles = {}
         for temp_limit in self.temperature_limits:
@@ -421,12 +424,12 @@ class Region:
             index_col=[0, 1, 2],
         )
 
-        # if settings.get("zero_summer_heat_demand", None) is not None:
-        #     # Reduze the value of 'F_Heiz_TT' to zero.
-        #     # For modern houses, this eliminates the heat demand in summer
-        #     energy_factors_df.loc[
-        #         (slice(None), slice(None), "F_Heiz_TT"), ("SWX", "SSX")
-        #     ] = 0
+        if self.zero_summer_heat_demand:
+            # Reduze the value of 'F_Heiz_TT' to zero.
+            # For modern houses, this eliminates the heat demand in summer
+            energy_factors.loc[
+                (slice(None), slice(None), "F_Heiz_TT"), ("SWX", "SSX")
+            ] = 0
 
         # Create a new DataFrame with multiindex.
         # It has two levels of columns: houses and energy
@@ -464,9 +467,9 @@ class Region:
                 continue  # 'Continue' skips the rest of the current for-loop
 
             # Get yearly energy demands
-            q_heiz_a = house["Q_Heiz_a"]
-            w_a = house["W_a"]
-            q_tww_a = house["Q_TWW_a"]
+            q_heiz_a = house.get('Q_Heiz_a', float('NaN'))
+            w_a = house.get('W_a', float('NaN'))
+            q_tww_a = house.get('Q_TWW_a', float('NaN'))
 
             # (6.4) Do calculations according to VDI 4655 for each 'typtag'
             for typtag in typtage_combinations:
@@ -571,7 +574,7 @@ class Region:
             # desired total energy demand of the full year. Here we fix that:
             # houses_dict = {h["name"]: h for h in self.houses}
             for column in load_curve_house.columns:
-                q_a = house[column.replace("TT", "a")]
+                q_a = house.get(column.replace("TT", "a"), float('NaN'))
                 sum_ = load_curve_house[column].sum()
                 if sum_ > 0:  # Would produce NaN otherwise
                     load_curve_house[column] = (
