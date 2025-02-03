@@ -116,9 +116,9 @@ class ElecSlp:
             new_df, holidays=holidays, holiday_is_sunday=True
         )
 
-        new_df["hour"] = dt_index.hour.astype(int)
-        new_df["weekday"] = new_df["weekday"].astype(int)
-        new_df["minute"] = dt_index.minute.astype(int)
+        new_df["hour"] = dt_index.hour.astype('int64')
+        new_df["weekday"] = new_df["weekday"].astype('int64')
+        new_df["minute"] = dt_index.minute.astype('int64')
         time_df = new_df[["date", "hour", "minute", "weekday"]].copy()
         tmp_df[slp_types] = tmp_df[slp_types].astype(float)
 
