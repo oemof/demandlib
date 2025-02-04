@@ -287,7 +287,7 @@ class TestHeatBuilding:
             shlp_type="EFH",
             wind_class=0,
             building_class=1,
-            ww_only=True  # Set the new attribute
+            ww_only=True,  # Set the tested attribute
         )
 
     def test_ww_only_sigmoid_parameters(self):
@@ -298,4 +298,6 @@ class TestHeatBuilding:
         assert a == 0
         assert b == 0
         assert c == 0
-        assert d != 0  # Ensure d is not zero as it should be the only parameter used
+        assert (
+            d != 0
+        )  # Ensure d is not zero as it should be the only parameter used
