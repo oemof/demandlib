@@ -43,7 +43,8 @@ def find_try_region(longitude, latitude):
     )
     try_map = gpd.read_file(fn_try_map)
     my_point = Point(longitude, latitude)
-    return int(try_map.loc[try_map.contains(my_point), "TRY_code"])
+    try_region = try_map.loc[try_map.contains(my_point), "TRY_code"].iloc[0]
+    return try_region
 
 
 def read_dwd_weather_file(weather_file_path=None, try_region=None):
@@ -76,7 +77,7 @@ def read_dwd_weather_file(weather_file_path=None, try_region=None):
     # Read the file and store it in a DataFrame
     weather_data = pd.read_csv(
         weather_file_path,
-        sep=r'\s+',
+        sep=r"\s+",
         skiprows=header_row - 1,
         index_col=["MM", "DD", "HH"],
         usecols=["MM", "DD", "HH", "t", "N"],

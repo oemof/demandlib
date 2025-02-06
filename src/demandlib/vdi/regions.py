@@ -59,6 +59,12 @@ from demandlib.vdi import dwd_try
 
 
 class Region:
+    """Define region-dependent boundary conditions for the load profiles.
+
+    After adding houses to the region, the load profiles for each house
+    can be generated.
+    """
+
     def __init__(
         self,
         year,
@@ -70,7 +76,7 @@ class Region:
         file_weather=None,
         zero_summer_heat_demand=False,
     ):
-        """
+        """Initialize Region class.
 
         Parameters
         ----------
@@ -161,9 +167,9 @@ class Region:
     def _get_typical_days(
         self, holidays, temperature_limit, set_season="temperature"
     ):
-        """
-        Find the code for the typical days from dwd. The code consists of three
-        letters:
+        """Find the code for the typical days from dwd.
+
+        The code consists of three letters:
 
           1. Season: W (winter), S (summer), U (transition)
           2. Day of the week: W (weekday), S (sunday/holiday)
@@ -177,6 +183,7 @@ class Region:
 
         Returns
         -------
+        None
 
         """
         # Create the default time index
@@ -204,7 +211,8 @@ class Region:
         # Fetch weather data
         if self.file_weather is None:
             self.weather = dwd_try.read_dwd_weather_file(
-                try_region=self._try_region)
+                try_region=self._try_region
+            )
         else:
             self.weather = dwd_try.read_dwd_weather_file(self.file_weather)
         self.weather = (
@@ -272,7 +280,6 @@ class Region:
         timestep (for each 'typtag' key, one load profile is defined by
         VDI 4655)
         """
-
         # Load data of typical days from VDI
         fn_typtage = os.path.join(
             os.path.dirname(__file__), "vdi_data", "VDI_4655_Typtage.csv"
@@ -291,7 +298,9 @@ class Region:
         typtage_df["minute_of_day"] = (
             pd.to_timedelta(
                 typtage_df["time"]
-                - pd.Series(index=typtage_df.index, data=typtage_df["time"].iloc[0])
+                - pd.Series(
+                    index=typtage_df.index, data=typtage_df["time"].iloc[0]
+                )
             )
             .dt.total_seconds()
             .div(60)
@@ -374,7 +383,7 @@ class Region:
         return load_profile
 
     def add_houses(self, houses):
-        """
+        """Add houses to the region object.
 
         Parameters
         ----------
@@ -408,9 +417,6 @@ class Region:
             This occurs when ``N_Pers`` or ``N_WE`` are too large.
 
         """
-        # typtage_combinations = settings["typtage_combinations"]
-        # houses_list = settings["houses_list_VDI"]
-
         # Load the file containing the energy factors of the different typical
         # radiation year (TRY) regions, house types and 'typtage'. In VDI 4655,
         # these are the tables 10 to 24.
@@ -444,7 +450,7 @@ class Region:
         typtage_combinations = self.type_days[tl]["day_types"].unique()
 
         daily_energy_demand_houses = pd.DataFrame(
-            index=multiindex, columns=typtage_combinations, dtype='float'
+            index=multiindex, columns=typtage_combinations, dtype="float"
         )
 
         # Fill the DataFrame daily_energy_demand_houses
@@ -467,9 +473,9 @@ class Region:
                 continue  # 'Continue' skips the rest of the current for-loop
 
             # Get yearly energy demands
-            q_heiz_a = house.get('Q_Heiz_a', float('NaN'))
-            w_a = house.get('W_a', float('NaN'))
-            q_tww_a = house.get('Q_TWW_a', float('NaN'))
+            q_heiz_a = house.get("Q_Heiz_a", float("NaN"))
+            w_a = house.get("W_a", float("NaN"))
+            q_tww_a = house.get("Q_TWW_a", float("NaN"))
 
             # (6.4) Do calculations according to VDI 4655 for each 'typtag'
             for typtag in typtage_combinations:
@@ -496,28 +502,32 @@ class Region:
                 q_tww_tt = q_tww_a * (1.0 / 365.0 + n_pers_we * f_tww_tt)
 
                 if w_tt < 0:
-                    msg = ("Warning: W_TT for {} and {} was negative, "
-                           "see VDI 4655 page 16".format(house["name"], typtag)
-                           )
+                    msg = (
+                        "Warning: W_TT for {} and {} was negative, "
+                        "see VDI 4655 page 16".format(house["name"], typtag)
+                    )
                     warnings.warn(msg, UserWarning)
                     w_tt = w_a * (1.0 / 365.0 + n_pers_we * 0)
 
                 if q_tww_tt < 0:
-                    msg = ("Warning: Q_TWW_TT for {} and {} was negative, "
-                           "see VDI 4655 page 16".format(house["name"], typtag)
-                           )
+                    msg = (
+                        "Warning: Q_TWW_TT for {} and {} was negative, "
+                        "see VDI 4655 page 16".format(house["name"], typtag)
+                    )
                     warnings.warn(msg, UserWarning)
                     q_tww_tt = q_tww_a * (1.0 / 365.0 + n_pers_we * 0)
 
                 # Write values into DataFrame
                 daily_energy_demand_houses.loc[
-                    (house["name"], "Q_Heiz_TT"), typtag] = q_heiz_tt
+                    (house["name"], "Q_Heiz_TT"), typtag
+                ] = q_heiz_tt
                 daily_energy_demand_houses.loc[
-                    (house["name"], "W_TT"), typtag] = w_tt
+                    (house["name"], "W_TT"), typtag
+                ] = w_tt
                 daily_energy_demand_houses.loc[
-                    (house["name"], "Q_TWW_TT"), typtag] = q_tww_tt
+                    (house["name"], "Q_TWW_TT"), typtag
+                ] = q_tww_tt
 
-            #    print(daily_energy_demand_houses)
         return daily_energy_demand_houses
 
     def get_load_curve_houses(self):
@@ -565,16 +575,12 @@ class Region:
                 }
             )
 
-            # df = pd.concat([df_typ, mytime], axis=1).ffill()
-            # df.drop(df.head(1).index, inplace=True)
-
             load_curve_house = df_typ.mul(load_profile_df[house["house_type"]])
 
             # The typical day calculation inherently does not add up to the
             # desired total energy demand of the full year. Here we fix that:
-            # houses_dict = {h["name"]: h for h in self.houses}
             for column in load_curve_house.columns:
-                q_a = house.get(column.replace("TT", "a"), float('NaN'))
+                q_a = house.get(column.replace("TT", "a"), float("NaN"))
                 sum_ = load_curve_house[column].sum()
                 if sum_ > 0:  # Would produce NaN otherwise
                     load_curve_house[column] = (

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Creating power demand profiles using bdew profiles.
+Creating heat and power demand profiles using VDI4655 profiles.
 
 Installation requirements
 -------------------------
@@ -93,7 +93,7 @@ my_region = vdi.Region(
 lc = my_region.get_load_curve_houses()
 
 print(datetime.datetime.now() - start)
-lc = lc.groupby(level=[1, 2], axis=1).sum()
+lc = lc.T.groupby(level=[1, 2]).sum().T
 lc = lc.rolling(15).mean()
 print(datetime.datetime.now() - start)
 print(lc)
