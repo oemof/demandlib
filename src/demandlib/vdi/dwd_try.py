@@ -37,12 +37,23 @@ def find_try_region(longitude, latitude):
     -------
     DWD TRY region. : int
 
+    Raises
+    ------
+    ImportError
+        If geopandas or shapely are not installed
     """
     fn_try_map = os.path.join(
         os.path.dirname(__file__), "resources_weather", "TRY_polygons.geojson"
     )
-    try_map = gpd.read_file(fn_try_map)
-    my_point = Point(longitude, latitude)
+    try:
+        try_map = gpd.read_file(fn_try_map)
+        my_point = Point(longitude, latitude)
+    except ModuleNotFoundError as e:
+        raise ImportError(
+            "geopandas and shapely are required for find_try_region(). "
+            "Please install them with e.g.: pip install geopandas shapely"
+        ) from e
+
     try_region = try_map.loc[try_map.contains(my_point), "TRY_code"].iloc[0]
     return try_region
 
