@@ -123,6 +123,9 @@ class Region:
 
         if seasons is not None:
             self._seasons.update(seasons)
+            self._set_season = "fix"
+        else:
+            self._set_season = "temperature"
 
         self._try_region = try_region
 
@@ -139,7 +142,7 @@ class Region:
         self._load_profiles = {}
         for temp_limit in self.temperature_limits:
             self.type_days[temp_limit] = self._get_typical_days(
-                holidays, temp_limit
+                holidays, temp_limit, set_season=self._set_season
             )
             self._load_profiles[temp_limit] = self._load_profile_factors(
                 temp_limit
