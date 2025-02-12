@@ -496,10 +496,8 @@ class Region:
 
                 if house_type == "EFH":
                     n_pers_we = n_pers
-                elif house_type == "MFH":
+                else:  # house_type == "MFH"
                     n_pers_we = n_we
-                else:
-                    n_pers_we = None
 
                 w_tt = w_a * (1.0 / 365.0 + n_pers_we * f_el_tt)
                 q_tww_tt = q_tww_a * (1.0 / 365.0 + n_pers_we * f_tww_tt)
