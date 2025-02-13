@@ -2,18 +2,15 @@
 The region module combines profiles from VDI 4655 for heat and power demand of
 houses within one region.
 
-
-Module VDI 4655
----------------
-This is an implementation of the calculation of economic efficiency
-using the annuity method defined in the German VDI 4655.
+This is an implementation of the calculation of load profiles
+defined in the German VDI 4655.
 
     **VDI 4655**
 
     **Reference load profiles of single-family and
     multi-family houses for the use of CHP systems**
 
-    *May 2008 (ICS 91.140.01)*
+    *May 2008 (ICS 91.140.10)*
 
     *Verein Deutscher Ingenieure e.V.*
 
@@ -32,13 +29,11 @@ The energy demand contains heating, hot water and electricity.
 
 For a given year, the typical days can be matched to the actual calendar days,
 based on the following conditions:
+
     - Season: summer, winter or transition
     - Day: weekday or sunday (Or holiday, which counts as sunday)
     - Cloud coverage: cloudy or not cloudy
     - House type: single-family houses or multi-family houses (EFH or MFH)
-
-The holidays are loaded from a table file, the weather conditions are loaded
-from weather data (e.g. DWD TRY).
 
 SPDX-FileCopyrightText: Joris Zimmermann
 SPDX-FileCopyrightText: Uwe Krien
@@ -63,6 +58,36 @@ class Region:
 
     After adding houses to the region, the load profiles for each house
     can be generated.
+
+    Parameters
+    ----------
+    year : int
+        Year of the profile.
+    try_region : int
+        The number of the TRY (test reference year of the DWD) region.
+    seasons : dict (optional)
+        The times of the seasons if fixed seasons are used. In the VDI
+        norm seasons are defined by the daily average temperature: Winter
+        below 5 degree Celsius, Spring between 5 and 15 degree Celsius and
+        summer above 15 degree Celsius.
+    holidays : dict or list (optional)
+        In case of a dictionary the keys are datetime objects and the
+        values are strings with the name of the holiday. Otherwise a list
+        of datetime objects should be passed.
+    houses : list (optional)
+        A list of dictionaries in which each house is defined the
+        dictionary need to have the following keys.
+    resample_rule : str (optional)
+        Time interval to resample the profile e.g. 1h (1 hour) or 15min.
+        The value will be passed to the pandas resample method.
+    file_weather : str (optional)
+        Path to a 'test reference year' (TRY) weather file by German DWD
+        (Deutscher Wetterdienst). If None, the file fitting the given
+        try_region will be loaded.
+    zero_summer_heat_demand : bool (optional)
+        Set heat demand on all summer days to zero. Per default,
+        multi-family houses have a small heat demand even in summer.
+        (This is not part of VDI 4655)
     """
 
     def __init__(
@@ -76,37 +101,7 @@ class Region:
         file_weather=None,
         zero_summer_heat_demand=False,
     ):
-        """Initialize Region class.
-
-        Parameters
-        ----------
-        year : int
-            Year of the profile.
-        try_region : int
-            The number of the TRY (test reference year of the DWD) region.
-        seasons : dict (optional)
-            The times of the seasons if fixed seasons are used. In the VDI
-            norm seasons are defined by the daily average temperature: Winter
-            below 5 degree Celsius, Spring between 5 and 15 degree Celsius and
-            summer above 15 degree Celsius.
-        holidays : dict or list
-            In case of a dictionary the keys are datetime objects and the
-            values are strings with the name of the holiday. Otherwise a list
-            of datetime objects should be passed.
-        houses : list
-            A list of dictionaries in which each house is defined the
-            dictionary need to have the following keys.
-        resample_rule : str
-            Time interval to resample the profile e.g. 1H (1 hour) or 15min.
-            The value will be passed to the pandas resample method.
-        file_weather : str (optional)
-            Path to a 'test reference year' (TRY) weather file by German DWD
-            (Deutscher Wetterdienst). If None, the file fitting the given
-            try_region will be loaded.
-        zero_summer_heat_demand : bool (optional)
-            Set heat demand on all summer days to zero. This is not part
-            of VDI 4655
-        """
+        """Initialize Region class."""
         if calendar.isleap(year):
             self.hoy = 8784
         else:
@@ -393,6 +388,24 @@ class Region:
         houses : list
             A list of dictionaries that describes the houses.
 
+            Required parameters for each house:
+
+            * ``name``: Unique identifier for the house
+            * ``house_type``: Either "EFH" (single-family) or
+              "MFH" (multi-family)
+            * ``N_Pers``: Number of persons, up to 12 (relevant for EFH)
+            * ``N_WE``: Number of apartments, up to 40 (relevant for MFH)
+            * ``Q_Heiz_a``: Annual heating demand in kWh
+            * ``Q_TWW_a``: Annual hot water demand in kWh
+            * ``W_a``: Annual electricity demand in kWh
+
+            Optional parameters:
+
+            * ``summer_temperature_limit``: Temperature threshold for
+              summer season (default: 15°C)
+            * ``winter_temperature_limit``: Temperature threshold for
+              winter season (default: 5°C)
+
         """
         houses_wrong = [
             h for h in houses if h["house_type"] not in ["EFH", "MFH"]
@@ -405,7 +418,7 @@ class Region:
         if len(houses) > 0:
             self.houses.extend(houses)
 
-    def get_daily_energy_demand_houses(self, tl):
+    def _get_daily_energy_demand_houses(self, tl):
         """Determine the houses' energy demand values for each 'typtag'.
 
         .. note::
@@ -417,7 +430,9 @@ class Region:
             ``SWX`` can yield a negative value of the DHW demand. In that case,
             assume ``F_TWW_SWX`` = 0." (VDI 4655, page 16)
 
-            This occurs when ``N_Pers`` or ``N_WE`` are too large.
+            This occurs when ``N_Pers`` or ``N_WE`` are larger than their
+            allowed maximum of 12 persons (for single-family houses) and 40
+            apartments (for multi-family houses).
 
         """
         # Load the file containing the energy factors of the different typical
@@ -532,20 +547,38 @@ class Region:
         return daily_energy_demand_houses
 
     def get_load_curve_houses(self):
-        """Generate the houses' energy demand values for each timestep.
+        """Generate time series of energy demand values for all houses.
 
-        Get the energy demand values for all days.
+        This method calculates the energy demands heating, hot water,
+        and electricity for each house in the region based on the VDI 4655
+        typical day profiles. The calculation uses daily energy demands and
+        typical load profiles, which are combined to create a full year
+        time series for each house and energy type.
 
-        This functions works through the lists houses_list and
-        energy_factor_types day by day and multiplies the current load profile
-        value with the daily energy demand. It returns the result: the energy
-        demand values for all houses and energy types (in kWh)
+        The resulting time series are normalized to match the annual energy
+        demands specified in the house parameters (Q_Heiz_a, Q_TWW_a, W_a).
+
+        Returns
+        -------
+        pandas.DataFrame
+            MultiIndex DataFrame with the following structure:
+
+            - Index: DatetimeIndex with the time steps
+
+            - Columns: MultiIndex with levels
+
+              - name: House identifier
+              - house_type: Either "EFH" or "MFH"
+              - energy: Energy type ("Q_Heiz_TT", "Q_TWW_TT", or "W_TT")
+
+            - Values: Energy demand in kWh per time step
+
         """
         daily_energy_demand_houses = {}
         for temp_limit in self.temperature_limits:
             daily_energy_demand_houses[
                 temp_limit
-            ] = self.get_daily_energy_demand_houses(temp_limit)
+            ] = self._get_daily_energy_demand_houses(temp_limit)
 
         house_profiles = {}
 
