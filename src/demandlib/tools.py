@@ -1,5 +1,4 @@
-"""Tools needed by the main classes
-"""
+"""Tools needed by the main classes."""
 
 import pandas as pd
 
