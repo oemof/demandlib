@@ -274,30 +274,27 @@ class TestIndustrialLoadProfile:
         assert np.isclose(df.sum(), 1.0)
 
 
-class TestHeatBuilding:
-    @classmethod
-    def setup_class(cls):
-        dt_index = pd.date_range(
-            datetime.datetime(2010, 1, 1, 0), periods=24 * 7, freq="1h"
-        )
-        cls.heat_building = HeatBuilding(
-            df_index=dt_index,
-            temperature=pd.Series([15] * len(dt_index)),
-            annual_heat_demand=10000,
-            shlp_type="EFH",
-            wind_class=0,
-            building_class=1,
-            ww_only=True,  # Set the tested attribute
-        )
+def test_ww_only_sigmoid_parameters():
+    """
+    Test HeatBuilding sigmoid parameters with ww_only flag set to True
+    """
+    dt_index = pd.date_range(
+        datetime.datetime(2010, 1, 1, 0), periods=24 * 7, freq="1h"
+    )
+    heat_building = HeatBuilding(
+        df_index=dt_index,
+        temperature=pd.Series([15] * len(dt_index)),
+        annual_heat_demand=10000,
+        shlp_type="EFH",
+        wind_class=0,
+        building_class=1,
+        ww_only=True,  # Set the tested attribute
+    )
 
-    def test_ww_only_sigmoid_parameters(self):
-        """
-        Test sigmoid parameters with ww_only flag set to True
-        """
-        a, b, c, d = self.heat_building.get_sigmoid_parameters()
-        assert a == 0
-        assert b == 0
-        assert c == 0
-        assert (
-            d != 0
-        )  # Ensure d is not zero as it should be the only parameter used
+    a, b, c, d = heat_building.get_sigmoid_parameters()
+    assert a == 0
+    assert b == 0
+    assert c == 0
+    assert (
+        d != 0
+    )  # Ensure d is not zero as it should be the only parameter used
