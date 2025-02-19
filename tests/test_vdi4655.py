@@ -3,6 +3,7 @@ Tests for the VDI 4655 regions module.
 
 SPDX-License-Identifier: MIT
 """
+
 import datetime
 import os
 import sys
