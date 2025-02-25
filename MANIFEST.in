@@ -1,0 +1,32 @@
+graft docs
+graft src
+graft ci
+graft tests
+
+include .bumpversion.cfg
+include .cookiecutterrc
+include .coveragerc
+include .editorconfig
+include .pre-commit-config.yaml
+include .readthedocs.yml
+include pytest.ini
+include tox.ini
+
+include AUTHORS.rst
+include CHANGELOG.rst
+include CONTRIBUTING.rst
+include LICENSE
+include README.rst
+
+include *.txt
+include *.yml
+recursive-include executable *.ico
+recursive-include executable *.py
+requirements.txt
+recursive-include executable *.spec
+
+exclude tests/.coverage
+global-exclude *.xml
+prune tests/public
+
+global-exclude *.py[cod] __pycache__/* *.so *.dylib
