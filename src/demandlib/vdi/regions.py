@@ -544,9 +544,9 @@ class Region:
         """
         daily_energy_demand_houses = {}
         for temp_limit in self.temperature_limits:
-            daily_energy_demand_houses[
-                temp_limit
-            ] = self.get_daily_energy_demand_houses(temp_limit)
+            daily_energy_demand_houses[temp_limit] = (
+                self.get_daily_energy_demand_houses(temp_limit)
+            )
 
         house_profiles = {}
 

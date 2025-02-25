@@ -133,6 +133,7 @@ class ElecSlp:
         right_cols = ["hour", "minute", "weekday"]
         tmp_df = tmp_df.reset_index(drop=True)
         import warnings
+
         warnings.simplefilter("error")
 
         for p in self._seasons.keys():
