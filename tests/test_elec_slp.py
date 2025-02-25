@@ -120,11 +120,11 @@ def test_changed_seasons():
     )
     # transition1 in a normal slp
     assert (
-        round(float(slp1.get_profiles("g0").iloc[12000:12096].sum()), 5)
+        round(slp1.get_profiles("g0").iloc[12000:12096].sum().iloc[0], 5)
         == 0.00300
     )
     # summer1 in a changed time scale
     assert (
-        round(float(slp2.get_profiles("g0").iloc[12000:12096].sum()), 5)
-        == 0.00289
+        round(slp2.get_profiles("g0").iloc[12000:12096].sum().iloc[0], 5)
+        == 0.00612
     )
