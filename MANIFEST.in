@@ -17,6 +17,9 @@ include CHANGELOG.rst
 include CONTRIBUTING.rst
 include LICENSE
 include README.rst
+include MANIFEST.in
+
+include setup.py
 
 include *.txt
 include *.yml
