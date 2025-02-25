@@ -23,13 +23,6 @@ from demandlib.tools import add_weekdays2df
 class ElecSlp:
     """Generate electrical standardized load profiles based on the BDEW method.
 
-    Attributes
-    ----------
-    datapath : string
-        Path to the csv files containing the load profile data.
-    date_time_index : pandas.DateTimeIndex
-        Time range for and frequency for the profile.
-
     Parameters
     ----------
     year : integer
@@ -58,7 +51,7 @@ class ElecSlp:
             datetime.datetime(year, 1, 1, 0), periods=hoy * 4, freq="15Min"
         )
         if seasons is None:
-            self.seasons = {
+            self._seasons = {
                 "summer1": [5, 15, 9, 14],  # summer: 15.05. to 14.09
                 "transition1": [3, 21, 5, 14],  # transition1 :21.03. to 14.05
                 "transition2": [9, 15, 10, 31],  # transition2 :15.09. to 31.10
@@ -66,7 +59,7 @@ class ElecSlp:
                 "winter2": [11, 1, 12, 31],  # winter2: 01.11. to 31.12
             }
         else:
-            self.seasons = seasons
+            self._seasons = seasons
         self.year = year
         # Create the default profiles
         self.slp_frame = self.all_load_profiles(
@@ -125,6 +118,11 @@ class ElecSlp:
 
         new_df["hour"] = dt_index.hour
         new_df["minute"] = dt_index.minute
+        profile_columns = [
+            c for c in new_df.columns if "g" in c or "h0" in c or "l" in c
+        ]
+        new_df[profile_columns] = new_df[profile_columns].map(float)
+
         time_df = new_df[["date", "hour", "minute", "weekday"]].copy()
         tmp_df[slp_types] = tmp_df[slp_types].astype(float)
 
@@ -134,13 +132,15 @@ class ElecSlp:
         left_cols = ["hour_of_day", "minute_of_hour", "weekday"]
         right_cols = ["hour", "minute", "weekday"]
         tmp_df = tmp_df.reset_index(drop=True)
+        import warnings
+        warnings.simplefilter("error")
 
         for p in self._seasons.keys():
             a = datetime.datetime(
-                self._year, self._seasons[p][0], self._seasons[p][1], 0, 0
+                self.year, self._seasons[p][0], self._seasons[p][1], 0, 0
             )
             b = datetime.datetime(
-                self._year, self._seasons[p][2], self._seasons[p][3], 23, 59
+                self.year, self._seasons[p][2], self._seasons[p][3], 23, 59
             )
             merged_df = pd.DataFrame.merge(
                 tmp_df[tmp_df["period"] == p[:-1]],
@@ -156,8 +156,7 @@ class ElecSlp:
                 + pd.to_timedelta(merged_df["minute"], unit="m")
             )
             merged_df.sort_index(inplace=True)
-
-            new_df.update(merged_df)
+            new_df.update(merged_df[profile_columns])
 
         new_df.drop(
             ["date", "minute", "hour", "weekday"], axis=1, inplace=True
