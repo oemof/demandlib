@@ -33,3 +33,7 @@ global-exclude *.xml
 prune tests/public
 
 global-exclude *.py[cod] __pycache__/* *.so *.dylib
+
+# added by check-manifest
+include *.in
+include *.py
