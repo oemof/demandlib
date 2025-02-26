@@ -65,6 +65,8 @@ class Region:
         self,
         year,
         try_region,
+        temperature=None,
+        cloud_coverage=None,
         seasons=None,
         holidays=None,
         houses=None,
@@ -78,6 +80,13 @@ class Region:
             Year of the profile.
         try_region : int
             The number of the TRY (test reference year of the DWD) region.
+        temperature : iterable of numbers
+            The ambient temperature in the area as daily mean values. The
+            number of values must equal 365 or 366 for a leap year. Use the
+            TRY data if no temperature data is available.
+        cloud_coverage : iterable of numbers
+            The cloud coverage in the area as daily mean values. The
+            number of values must equal 365 or 366 for a leap year.
         seasons : dict (optional)
             The times of the seasons if fixed seasons are used. In the VDI
             norm seasons are defined by the daily average temperature: Winter
@@ -117,10 +126,11 @@ class Region:
         if seasons is not None:
             self._seasons.update(seasons)
 
+        self._year = year
+        self.temperatur = temperature
+        self.cloud_coverage = cloud_coverage
         self._try_region = try_region
 
-        self._year = year
-        self.weather = None
         self.houses = []
         if houses is not None:
             self.add_houses(houses)
@@ -128,16 +138,33 @@ class Region:
         self.temperature_limits = self._get_temperature_level_combinations()
         self.type_days = {}
         self._load_profiles = {}
-        for temp_limit in self.temperature_limits:
-            self.type_days[temp_limit] = self._get_typical_days(
-                holidays, temp_limit
-            )
-            self._load_profiles[temp_limit] = self._load_profile_factors(
-                temp_limit
-            )
+        self._holidays = holidays
+        self._resample_rule = resample_rule
 
-            if resample_rule is not None:
-                self._resample_profiles(resample_rule, temp_limit)
+    def set_weather_from_try_region(self, try_region):
+        # Fetch weather data
+        fn_weather = os.path.join(
+            os.path.dirname(__file__),
+            "resources_weather",
+            "TRY2010_{:02d}_Jahr.dat".format(try_region),
+        )
+        weather = dwd_try.read_dwd_weather_file(fn_weather)
+        weather = (
+            weather.set_index(
+                pd.date_range(
+                    datetime.datetime(self._year, 1, 1, 0),
+                    periods=self.hoy,
+                    freq="h",
+                )
+            )
+            .resample("D")
+            .mean()
+        )
+        self.temperatur = weather["TAMB"]
+
+        weather.loc[weather["CCOVER"] >= 5, "cloud_category"] = "B"
+        weather.loc[weather["CCOVER"] < 5, "cloud_category"] = "H"
+        self.cloud_coverage = weather["cloud_category"]
 
     def _resample_profiles(self, rule, tl):
         self._load_profiles[tl] = self._load_profiles[tl].resample(rule).sum()
@@ -199,25 +226,7 @@ class Region:
         days = add_weekdays2df(days, holidays=holidays, holiday_is_sunday=True)
         days.pop("date")
 
-        # Fetch weather data
-        fn_weather = os.path.join(
-            os.path.dirname(__file__),
-            "resources_weather",
-            "TRY2010_{:02d}_Jahr.dat".format(self._try_region),
-        )
-        self.weather = dwd_try.read_dwd_weather_file(fn_weather)
-        self.weather = (
-            self.weather.set_index(
-                pd.date_range(
-                    datetime.datetime(self._year, 1, 1, 0),
-                    periods=self.hoy,
-                    freq="h",
-                )
-            )
-            .resample("D")
-            .mean()
-        )
-        days = pd.concat([days, self.weather], axis=1)
+        days = pd.concat([days, self.temperatur, self.cloud_coverage], axis=1)
 
         # 1. Set first letter of type days (season) from fixed season or season
         # by temperature.
@@ -250,17 +259,14 @@ class Region:
         days.pop("weekday")
 
         # 3. Set third letter of type days: Cloud coverage
-        days.loc[days["CCOVER"] >= 5, "cloud_coverage"] = "B"
-        days.loc[days["CCOVER"] < 5, "cloud_coverage"] = "H"
-        days.loc[days["season"] == "S", "cloud_coverage"] = "X"
-        days.pop("CCOVER")
+        days.loc[days["season"] == "S", "cloud_category"] = "X"
 
         # Combine the three letters in one column
         days["day_types"] = (
-            days["season"] + days["day_of_week"] + days["cloud_coverage"]
+            days["season"] + days["day_of_week"] + days["cloud_category"]
         )
         days.drop(
-            ["season", "day_of_week", "cloud_coverage"], axis=1, inplace=True
+            ["season", "day_of_week", "cloud_category"], axis=1, inplace=True
         )
         return days
 
@@ -409,6 +415,10 @@ class Region:
             This occurs when ``N_Pers`` or ``N_WE`` are too large.
 
         """
+        if tl not in self.type_days:
+            self.type_days[tl] = self._get_typical_days(
+                self._holidays, tl
+            )
         # typtage_combinations = settings["typtage_combinations"]
         # houses_list = settings["houses_list_VDI"]
 
@@ -547,6 +557,12 @@ class Region:
             daily_energy_demand_houses[temp_limit] = (
                 self.get_daily_energy_demand_houses(temp_limit)
             )
+            if temp_limit not in self._load_profiles:
+                self._load_profiles[temp_limit] = self._load_profile_factors(
+                    temp_limit
+                )
+            if self._resample_rule is not None:
+                self._resample_profiles(self._resample_rule, temp_limit)
 
         house_profiles = {}
 
@@ -565,8 +581,9 @@ class Region:
                 )
                 .sort_index()
             )
+
             df_typ.drop(
-                ["day_types", "minute_of_day", "ht"], axis=1, inplace=True
+                ["day_types", "ht", "minute_of_day"], axis=1, inplace=True
             )
 
             load_profile_df = self._load_profiles[tl].rename(
