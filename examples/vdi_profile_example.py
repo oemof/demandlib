@@ -88,7 +88,6 @@ my_region = vdi.Region(
     houses=my_houses,
     resample_rule="15min",
 )
-my_region.set_weather_from_try_region(5)
 # calculate load profiles
 lc = my_region.get_load_curve_houses()
 

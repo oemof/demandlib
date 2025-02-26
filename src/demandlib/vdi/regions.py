@@ -129,6 +129,8 @@ class Region:
         self._year = year
         self.temperatur = temperature
         self.cloud_coverage = cloud_coverage
+        if self.temperatur is None and self.cloud_coverage is None:
+            self.set_weather_from_try_region(try_region)
         self._try_region = try_region
 
         self.houses = []
