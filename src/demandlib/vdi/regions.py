@@ -418,9 +418,7 @@ class Region:
 
         """
         if tl not in self.type_days:
-            self.type_days[tl] = self._get_typical_days(
-                self._holidays, tl
-            )
+            self.type_days[tl] = self._get_typical_days(self._holidays, tl)
         # typtage_combinations = settings["typtage_combinations"]
         # houses_list = settings["houses_list_VDI"]
 
@@ -556,9 +554,9 @@ class Region:
         """
         daily_energy_demand_houses = {}
         for temp_limit in self.temperature_limits:
-            daily_energy_demand_houses[temp_limit] = (
-                self.get_daily_energy_demand_houses(temp_limit)
-            )
+            daily_energy_demand_houses[
+                temp_limit
+            ] = self.get_daily_energy_demand_houses(temp_limit)
             if temp_limit not in self._load_profiles:
                 self._load_profiles[temp_limit] = self._load_profile_factors(
                     temp_limit
