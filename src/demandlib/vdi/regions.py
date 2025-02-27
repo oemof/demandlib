@@ -588,9 +588,9 @@ class Region:
         """
         daily_energy_demand_houses = {}
         for temp_limit in self.temperature_limits:
-            daily_energy_demand_houses[
-                temp_limit
-            ] = self.get_daily_energy_demand_houses(temp_limit)
+            daily_energy_demand_houses[temp_limit] = (
+                self.get_daily_energy_demand_houses(temp_limit)
+            )
             if temp_limit not in self._load_profiles:
                 self._load_profiles[temp_limit] = self._load_profile_factors(
                     temp_limit
