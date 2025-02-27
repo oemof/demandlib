@@ -13,6 +13,7 @@ import pandas as pd
 import pytest
 
 import demandlib.vdi
+from demandlib.vdi import Climate
 from demandlib.vdi.regions import Region
 
 
@@ -68,7 +69,7 @@ class TestVDI4655Profiles:
         """Test generation of load curves."""
         region = Region(
             2017,
-            try_region=4,
+            Climate().from_try_data(4),
             houses=example_houses,
             holidays=example_holidays,
             resample_rule="1h",
@@ -86,10 +87,16 @@ class TestVDI4655Profiles:
     def test_resample_rule(self, example_houses):
         """Test different resample rules."""
         region_hourly = Region(
-            2017, try_region=4, houses=example_houses, resample_rule="1h"
+            2017,
+            Climate().from_try_data(4),
+            houses=example_houses,
+            resample_rule="1h",
         )
         region_quarter = Region(
-            2017, try_region=4, houses=example_houses, resample_rule="15min"
+            2017,
+            Climate().from_try_data(4),
+            houses=example_houses,
+            resample_rule="15min",
         )
 
         load_curves_hourly = region_hourly.get_load_curve_houses()
@@ -101,7 +108,9 @@ class TestVDI4655Profiles:
     def test_leap_year(self):
         """Test handling of leap years."""
         # region_leap = Region(2020, try_region=4)  # Leap year
-        region_normal = Region(2017, try_region=4)  # Non-leap year
+        region_normal = Region(
+            2017, Climate().from_try_data(4)
+        )  # Non-leap year
 
         # assert region_leap.hoy == 8784  # Hours in leap year
         assert region_normal.hoy == 8760  # Hours in normal year
@@ -112,7 +121,7 @@ class TestVDI4655Profiles:
         houses[0]["summer_temperature_limit"] = 18
         houses[0]["winter_temperature_limit"] = 8
 
-        region = Region(2017, try_region=4, houses=houses)
+        region = Region(2017, Climate().from_try_data(4), houses=houses)
         temperature_limits = region._get_temperature_level_combinations()
 
         # Should have two different temperature limit combinations
@@ -121,8 +130,13 @@ class TestVDI4655Profiles:
     def test_custom_seasons(self, example_houses, example_seasons):
         """Test custom seasons."""
         region = Region(
-            2017, try_region=4, houses=example_houses, seasons=example_seasons
+            2017,
+            Climate().from_try_data(4),
+            houses=example_houses,
+            seasons=example_seasons,
         )
+        lc = region.get_load_curve_houses()
+        assert round(lc["EFH_1", "EFH", "Q_Heiz_TT"].iloc[5000], 5) == 0.03191
         assert region._seasons == example_seasons
         assert region._set_season == "fix"
 
@@ -130,7 +144,7 @@ class TestVDI4655Profiles:
         """Test zero summer heat demand option."""
         region = Region(
             2017,
-            try_region=4,
+            Climate().from_try_data(4),
             houses=example_houses,
             resample_rule="1h",
             zero_summer_heat_demand=True,
@@ -153,7 +167,7 @@ class TestVDI4655Profiles:
         houses = example_houses.copy()
         houses[0]["Q_Heiz_a"] = 0  # Set heating demand to zero
 
-        region = Region(2017, try_region=4, houses=houses)
+        region = Region(2017, Climate().from_try_data(4), houses=houses)
         load_curves = region.get_load_curve_houses()
 
         # Zero annual demand should result in zero load curve
@@ -163,23 +177,6 @@ class TestVDI4655Profiles:
         try_region = demandlib.vdi.find_try_region(13.42, 52.82)
         assert try_region == 4
 
-    def test_invalid_house_type_warning(self):
-        """Test warning for invalid house type."""
-        invalid_house = [
-            {
-                "name": "invalid_house",
-                "house_type": "INVALID",
-                "N_Pers": 3,
-                "N_WE": 1,
-            }
-        ]
-
-        with pytest.warns(
-            UserWarning, match=".*is a not supported house type.*"
-        ):
-            region = Region(2017, try_region=4, houses=invalid_house)
-            assert len(region.houses) == 0
-
     def test_negative_factors_warning(self, example_houses):
         """Test warning for negative typical day factors."""
         houses = example_houses.copy()
@@ -187,7 +184,7 @@ class TestVDI4655Profiles:
         houses[0]["N_WE"] = 999
 
         with pytest.warns(UserWarning, match=".*was negative, see VDI 4655.*"):
-            region = Region(2017, try_region=4, houses=houses)
+            region = Region(2017, Climate().from_try_data(4), houses=houses)
             load_curves = region.get_load_curve_houses()
             assert not load_curves.empty
 
@@ -208,6 +205,23 @@ class TestVDI4655Profiles:
         finally:
             os.remove(temp_filepath)
 
+    def test_wrong_house_type(self, example_houses):
+        houses = example_houses + [
+            {
+                "N_Pers": 3,
+                "name": "Wrong_heouse_type",
+                "N_WE": 1,
+                "Q_Heiz_a": 6000,
+                "house_type": "wrong",
+                "Q_TWW_a": 1500,
+                "W_a": 5250,
+                "summer_temperature_limit": 15,
+                "winter_temperature_limit": 5,
+            }
+        ]
+        with pytest.raises(ValueError, match="The following house"):
+            Region(2017, climate=Climate().from_try_data(4), houses=houses)
+
     def test_house_missing_energy_values(self, example_houses):
         """Test handling of houses with missing energy values."""
         houses = example_houses.copy()
@@ -215,7 +229,9 @@ class TestVDI4655Profiles:
         del houses[0]["Q_Heiz_a"]
         del houses[0]["W_a"]
 
-        region = Region(2017, try_region=4, houses=houses)
+        region = Region(
+            2017, climate=Climate().from_try_data(4), houses=houses
+        )
         with pytest.raises(KeyError, match="Q_Heiz_a"):
             region.get_load_curve_houses()
 
@@ -226,7 +242,7 @@ class TestVDI4655Profiles:
         ):
             Region(
                 2017,
-                try_region=999,  # Invalid region number
+                Climate().from_try_data(try_region=999),  # Invalid try region
                 houses=example_houses,
             )
 
@@ -244,21 +260,6 @@ class TestVDI4655Profiles:
         # Should raise a helpful error when trying to use find_try_region
         with pytest.raises(ImportError, match="geopandas.* required.*"):
             demandlib.vdi.dwd_try.find_try_region(13.42, 52.82)
-
-    def test_invalid_season_setting(self, example_houses):
-        """Test error handling for invalid season setting method."""
-        region = Region(2017, try_region=4, houses=example_houses)
-
-        with pytest.raises(
-            NotImplementedError,
-            match="Method <invalid> for the season does not exist.",
-        ):
-            # Access protected method directly to test invalid season setting
-            region._get_typical_days(
-                holidays=None,
-                temperature_limit=next(iter(region.temperature_limits)),
-                set_season="invalid",
-            )
 
     def test_custom_weather_data(self, example_houses):
         test_path = Path(Path(__file__).parent, "test_data")
@@ -278,15 +279,20 @@ class TestVDI4655Profiles:
             Path(test_path, "cloud_coverage_test.csv"), index_col=0
         ).squeeze()
 
-        test_region = Region(
-            2017,
+        custom_climate = Climate(
             temperature=temperatur_test,
             cloud_coverage=cloud_coverage_test,
             energy_factors=energy_factors,
+        )
+
+        test_region = Region(
+            2017,
+            climate=custom_climate,
             resample_rule="1h",
             zero_summer_heat_demand=True,
         )
         test_region.add_houses(example_houses)
+        test_region.get_load_curve_houses()
         lc = test_region.get_load_curve_houses().sum()
         assert lc.loc["EFH_1", "EFH", "Q_Heiz_TT"] == 6000.0
         assert lc.loc["MFH_1", "MFH", "Q_Heiz_TT"] == 60000.0
@@ -306,27 +312,18 @@ class TestVDI4655Profiles:
             Path(test_path, "temperature_test.csv"), index_col=0
         ).squeeze()
 
-        cloud_coverage_test = pd.read_csv(
-            Path(test_path, "cloud_coverage_test.csv"), index_col=0
-        ).squeeze()
+        my_climate = Climate(
+            temperature=temperatur_test,
+            cloud_coverage=None,
+            energy_factors=energy_factors,
+        )
 
-        with pytest.raises(ValueError, match="If you set one of the"):
+        with pytest.raises(
+            AttributeError, match="Climate object not complete."
+        ):
             Region(
                 2017,
-                temperature=temperatur_test,
-                cloud_coverage=None,
-                energy_factors=energy_factors,
-                resample_rule="1h",
-                zero_summer_heat_demand=True,
-            )
-
-        with pytest.raises(ValueError, match="Do not set try_region together"):
-            Region(
-                2017,
-                temperature=temperatur_test,
-                cloud_coverage=cloud_coverage_test,
-                energy_factors=energy_factors,
-                try_region=5,
+                climate=my_climate,
                 resample_rule="1h",
                 zero_summer_heat_demand=True,
             )

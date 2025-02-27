@@ -84,7 +84,7 @@ try_region = 4
 my_region = vdi.Region(
     2017,
     holidays=holidays,
-    try_region=try_region,
+    climate=vdi.Climate().from_try_data(try_region),
     houses=my_houses,
     resample_rule="15min",
 )

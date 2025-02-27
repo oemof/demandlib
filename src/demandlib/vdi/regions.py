@@ -52,6 +52,82 @@ from demandlib.tools import add_weekdays2df
 from demandlib.vdi import dwd_try
 
 
+class Climate:
+    """
+    Climate object for VDI time series.
+
+    Parameters
+    ----------
+    temperature : iterable of numbers
+            The ambient temperature in the area as daily mean values. The
+            number of values must equal 365 or 366 for a leap year. Use the
+            TRY data if no temperature data is available.
+    cloud_coverage : iterable of numbers
+            The cloud coverage in the area as daily mean values. The
+            number of values must equal 365 or 366 for a leap year.
+    """
+
+    def __init__(
+        self,
+        temperature=None,
+        cloud_coverage=None,
+        energy_factors=None,
+    ):
+        self.temperature = temperature
+        self.cloud_coverage = cloud_coverage
+        self.energy_factors = energy_factors
+
+    def from_try_data(self, try_region, hoy=8760):
+        if try_region not in list(range(1, 16)):
+            raise ValueError(
+                f">{try_region}< is not a valid number of a DWD TRY region."
+            )
+        fn_weather = os.path.join(
+            os.path.dirname(__file__),
+            "resources_weather",
+            "TRY2010_{:02d}_Jahr.dat".format(try_region),
+        )
+        weather = dwd_try.read_dwd_weather_file(fn_weather)
+        weather = (
+            weather.set_index(
+                pd.date_range(
+                    datetime.datetime(2010, 1, 1, 0),
+                    periods=hoy,
+                    freq="h",
+                )
+            )
+            .resample("D")
+            .mean()
+        )
+        self.temperature = weather["TAMB"]
+
+        weather.loc[weather["CCOVER"] >= 5, "cloud_category"] = "B"
+        weather.loc[weather["CCOVER"] < 5, "cloud_category"] = "H"
+        self.cloud_coverage = weather["cloud_category"]
+        fn_energy_factors = os.path.join(
+            os.path.dirname(__file__),
+            "vdi_data",
+            "VDI_4655_Typtag-Faktoren.csv",
+        )
+        self.energy_factors = pd.read_csv(
+            fn_energy_factors,
+            index_col=[0, 1, 2],
+        ).loc[try_region]
+        return self
+
+    def check_attributes(self):
+        missing = []
+        for check_attr in ["temperature", "cloud_coverage", "energy_factors"]:
+            if self.__getattribute__(check_attr) is None:
+                missing.append(check_attr)
+
+        if len(missing) > 0:
+            raise AttributeError(
+                "Climate object not complete. Set the following attribute:"
+                "\n* temperature\n* cloud_coverage\n* energy_factors"
+            )
+
+
 class Region:
     """Define region-dependent boundary conditions for the load profiles.
 
@@ -62,15 +138,6 @@ class Region:
     ----------
     year : int
         Year of the profile.
-    try_region : int
-        The number of the TRY (test reference year of the DWD) region.
-    temperature : iterable of numbers
-            The ambient temperature in the area as daily mean values. The
-            number of values must equal 365 or 366 for a leap year. Use the
-            TRY data if no temperature data is available.
-        cloud_coverage : iterable of numbers
-            The cloud coverage in the area as daily mean values. The
-            number of values must equal 365 or 366 for a leap year.
     seasons : dict (optional)
         The times of the seasons if fixed seasons are used. In the VDI
         norm seasons are defined by the daily average temperature: Winter
@@ -95,10 +162,7 @@ class Region:
     def __init__(
         self,
         year,
-        try_region=None,
-        temperature=None,
-        cloud_coverage=None,
-        energy_factors=None,
+        climate,
         seasons=None,
         holidays=None,
         houses=None,
@@ -127,11 +191,10 @@ class Region:
             self._set_season = "temperature"
 
         self._year = year
-        self.temperature = temperature
-        self.cloud_coverage = cloud_coverage
-        self.energy_factors = energy_factors
-        self._try_region = try_region
-        self._check_weather_definitions()
+        climate.check_attributes()
+        self.temperature = climate.temperature
+        self.cloud_coverage = climate.cloud_coverage
+        self.energy_factors = climate.energy_factors
 
         self.houses = []
         if houses is not None:
@@ -143,60 +206,6 @@ class Region:
         self._load_profiles = {}
         self._holidays = holidays
         self._resample_rule = resample_rule
-
-    def _check_weather_definitions(self):
-        if (
-            self.temperature is None
-            and self.cloud_coverage is None
-            and self.energy_factors is None
-        ):
-            self.set_weather_from_try_region(self._try_region)
-        else:
-            if (
-                self.temperature is None
-                or self.cloud_coverage is None
-                or self.energy_factors is None
-            ):
-                raise ValueError(
-                    "If you set one of the following parameters you have to "
-                    "set all of them:\n* temperature\n* cloud_coverage\n"
-                    "* energy_factors"
-                )
-            elif self._try_region is not None:
-                raise ValueError(
-                    "Do not set try_region together with one of the following "
-                    "parameters:\n * temperature\n* cloud_coverage\n"
-                    "* energy_factors"
-                )
-
-    def set_weather_from_try_region(self, try_region):
-        # Fetch weather data
-        if try_region not in list(range(1, 16)):
-            raise ValueError(
-                f">{try_region}< is not a valid number of a DWD TRY region."
-            )
-        fn_weather = os.path.join(
-            os.path.dirname(__file__),
-            "resources_weather",
-            "TRY2010_{:02d}_Jahr.dat".format(try_region),
-        )
-        weather = dwd_try.read_dwd_weather_file(fn_weather)
-        weather = (
-            weather.set_index(
-                pd.date_range(
-                    datetime.datetime(self._year, 1, 1, 0),
-                    periods=self.hoy,
-                    freq="h",
-                )
-            )
-            .resample("D")
-            .mean()
-        )
-        self.temperature = weather["TAMB"]
-
-        weather.loc[weather["CCOVER"] >= 5, "cloud_category"] = "B"
-        weather.loc[weather["CCOVER"] < 5, "cloud_category"] = "H"
-        self.cloud_coverage = weather["cloud_category"]
 
     def _resample_profiles(self, rule, tl):
         self._load_profiles[tl] = self._load_profiles[tl].resample(rule).sum()
@@ -214,9 +223,7 @@ class Region:
             ]
         )
 
-    def _get_typical_days(
-        self, holidays, temperature_limit, set_season="temperature"
-    ):
+    def _get_typical_days(self, holidays, temperature_limit):
         """
         Find the code for the typical days from dwd. The code consists of three
         letters:
@@ -229,8 +236,6 @@ class Region:
         Parameters
         ----------
         holidays
-        set_season
-
 
         """
         # Create the default time index
@@ -273,15 +278,12 @@ class Region:
         days.loc[days["TAMB"] > stl, "season_t"] = "S"
         days.pop("TAMB")
 
-        if set_season == "temperature":
+        if self._set_season == "temperature":
             days["season"] = days.pop("season_t")
             days.pop("season_fix")
-        elif set_season == "fix":
+        else:
             days["season"] = days.pop("season_fix")
             days.pop("season_t")
-        else:
-            msg = "Method <{0}> for the season does not exist."
-            raise NotImplementedError(msg.format(set_season))
 
         # 2. Set second letter of type days: Day of the week
         days.loc[days["weekday"] == 7, "day_of_week"] = "S"
@@ -436,16 +438,17 @@ class Region:
               winter season (default: 5°C)
 
         """
-        houses_wrong = [
-            h for h in houses if h["house_type"] not in ["EFH", "MFH"]
-        ]
-        houses = [h for h in houses if h["house_type"] in ["EFH", "MFH"]]
-        for h in houses_wrong:
-            msg = "<{0}> is a not supported house type and will be " "removed."
-            warnings.warn(msg.format(h["house_type"]), UserWarning)
+        houses_wrong = r"\n".join(
+            [str(h) for h in houses if h["house_type"] not in ["EFH", "MFH"]]
+        )
 
-        if len(houses) > 0:
-            self.houses.extend(houses)
+        if len(houses_wrong) > 0:
+            msg = (
+                f"The following house types are not supported:\n{houses_wrong}"
+            )
+            raise ValueError(msg)
+
+        self.houses.extend(houses)
         self.temperature_limits = self._get_temperature_level_combinations()
 
     def get_daily_energy_demand_houses(self, tl):
@@ -470,26 +473,12 @@ class Region:
         # typtage_combinations = settings["typtage_combinations"]
         # houses_list = settings["houses_list_VDI"]
 
-        # Load the file containing the energy factors of the different typical
-        # radiation year (TRY) regions, house types and 'typtage'. In VDI 4655,
-        # these are the tables 10 to 24.
-        if self.energy_factors is None:
-            fn_energy_factors = os.path.join(
-                os.path.dirname(__file__),
-                "vdi_data",
-                "VDI_4655_Typtag-Faktoren.csv",
-            )
-            energy_factors = pd.read_csv(
-                fn_energy_factors,
-                index_col=[0, 1, 2],
-            ).loc[self._try_region]
-        else:
-            energy_factors = self.energy_factors
-
         if self.zero_summer_heat_demand:
             # Reduze the value of 'F_Heiz_TT' to zero.
             # For modern houses, this eliminates the heat demand in summer
-            energy_factors.loc[(slice(None), "F_Heiz_TT"), ("SWX", "SSX")] = 0
+            self.energy_factors.loc[
+                (slice(None), "F_Heiz_TT"), ("SWX", "SSX")
+            ] = 0
 
         # Create a new DataFrame with multiindex.
         # It has two levels of columns: houses and energy
@@ -520,18 +509,22 @@ class Region:
 
             # (6.4) Do calculations according to VDI 4655 for each 'typtag'
             for typtag in typtage_combinations:
-                f_heiz_tt = energy_factors.loc[house_type, "F_Heiz_TT"][typtag]
-                f_el_tt = energy_factors.loc[house_type, "F_el_TT"][typtag]
-                f_tww_tt = energy_factors.loc[house_type, "F_TWW_TT"][typtag]
+                f_heiz_tt = self.energy_factors.loc[house_type, "F_Heiz_TT"][
+                    typtag
+                ]
+                f_el_tt = self.energy_factors.loc[house_type, "F_el_TT"][
+                    typtag
+                ]
+                f_tww_tt = self.energy_factors.loc[house_type, "F_TWW_TT"][
+                    typtag
+                ]
 
                 q_heiz_tt = q_heiz_a * f_heiz_tt
 
                 if house_type == "EFH":
                     n_pers_we = n_pers
-                elif house_type == "MFH":
-                    n_pers_we = n_we
                 else:
-                    raise ValueError(f"Type >{house_type}< does not exist!")
+                    n_pers_we = n_we
 
                 w_tt = w_a * (1.0 / 365.0 + n_pers_we * f_el_tt)
                 q_tww_tt = q_tww_a * (1.0 / 365.0 + n_pers_we * f_tww_tt)
