@@ -23,10 +23,12 @@ def find_try_region(longitude, latitude):
     """
     Find the DWD TRY region by coordinates.
 
-    Notes
-    -----
-    The packages geopandas and shapely need to be installed to use this
-    function.
+    .. note::
+        - Latitude and longitude must be provided in the coordinate
+          reference system ``EPSG:4326``.
+
+        - The packages geopandas and shapely need to be installed to use this
+          function.
 
     Parameters
     ----------
@@ -35,19 +37,62 @@ def find_try_region(longitude, latitude):
 
     Returns
     -------
-    DWD TRY region. : int
+    DWD TRY region number : int
 
+    Raises
+    ------
+    ImportError
+        If geopandas or shapely are not installed
     """
     fn_try_map = os.path.join(
         os.path.dirname(__file__), "resources_weather", "TRY_polygons.geojson"
     )
-    try_map = gpd.read_file(fn_try_map)
-    my_point = Point(longitude, latitude)
-    return int(try_map.loc[try_map.contains(my_point), "TRY_code"].iloc[0])
+    try:
+        try_map = gpd.read_file(fn_try_map)
+        my_point = Point(longitude, latitude)
+    except ModuleNotFoundError as e:
+        raise ImportError(
+            "geopandas and shapely are required for find_try_region(). "
+            "Please install them with e.g.: pip install geopandas shapely"
+        ) from e
+
+    try_region = try_map.loc[try_map.contains(my_point), "TRY_code"].iloc[0]
+    return try_region
 
 
 def read_dwd_weather_file(weather_file_path=None, try_region=None):
-    """Read and interpolate 'DWD Testreferenzjahr' files."""
+    """Read and parse DWD test reference year (TRY) weather data files.
+
+    This function reads TRY weather data files published by the German
+    Weather Service (Deutscher Wetterdienst, DWD) and extracts
+    temperature and cloud cover data.
+
+    The 2016 DWD weather files can be obtained from:
+    https://kunden.dwd.de/obt/ (registration required)
+
+    Parameters
+    ----------
+    weather_file_path : str, optional
+        Path to a TRY weather file. The file must follow the DWD format
+        from 2010 or 2016. If None, a default file for the given try_region
+        will be used.
+    try_region : int, optional
+        Number of the TRY region (1-15). Only used if weather_file_path is None
+        to construct the default filename "TRY2010_XX_Jahr.dat".
+
+    Returns
+    -------
+    pandas.DataFrame
+        DataFrame with hourly weather data
+
+    Raises
+    ------
+    TypeError
+        If the weather file does not follow the expected DWD format
+    FileNotFoundError
+        If the weather file cannot be found
+
+    """
     if weather_file_path is None:
         weather_file_path = os.path.join(
             os.path.dirname(__file__),

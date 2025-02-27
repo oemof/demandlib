@@ -8,6 +8,7 @@ Contents
    readme
    installation
    bdew
+   vdi4655
    further_profiles
    reference/index
    contributing

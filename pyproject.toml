@@ -78,6 +78,7 @@ test = [
     "coverage",
     "matplotlib",
     "pytest",
+    "geopandas",
 ]
 tox = [
     "tox",
