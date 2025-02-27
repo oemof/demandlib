@@ -60,7 +60,7 @@ def find_try_region(longitude, latitude):
     return try_region
 
 
-def read_dwd_weather_file(weather_file_path=None, try_region=None):
+def read_dwd_weather_file(weather_file_path):
     """Read and parse DWD test reference year (TRY) weather data files.
 
     This function reads TRY weather data files published by the German
@@ -76,9 +76,6 @@ def read_dwd_weather_file(weather_file_path=None, try_region=None):
         Path to a TRY weather file. The file must follow the DWD format
         from 2010 or 2016. If None, a default file for the given try_region
         will be used.
-    try_region : int, optional
-        Number of the TRY region (1-15). Only used if weather_file_path is None
-        to construct the default filename "TRY2010_XX_Jahr.dat".
 
     Returns
     -------
@@ -93,12 +90,6 @@ def read_dwd_weather_file(weather_file_path=None, try_region=None):
         If the weather file cannot be found
 
     """
-    if weather_file_path is None:
-        weather_file_path = os.path.join(
-            os.path.dirname(__file__),
-            "resources_weather",
-            "TRY2010_{:02d}_Jahr.dat".format(try_region),
-        )
     # The comments in DWD files before the header are not commented out.
     # Thus we have to search for the line with the header information:
     header_row = None

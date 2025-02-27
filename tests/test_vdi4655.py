@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 import datetime
 import os
 import sys
+from pathlib import Path
 
 import pandas as pd
 import pytest
@@ -257,4 +258,75 @@ class TestVDI4655Profiles:
                 holidays=None,
                 temperature_limit=next(iter(region.temperature_limits)),
                 set_season="invalid",
+            )
+
+    def test_custom_weather_data(self, example_houses):
+        test_path = Path(Path(__file__).parent, "test_data")
+
+        # Einlesen der CSV-Daten
+        energy_factors = pd.read_csv(
+            Path(test_path, "energy_factors_test.csv"),
+            index_col=[0, 1],
+            header=[0],
+        )
+
+        temperatur_test = pd.read_csv(
+            Path(test_path, "temperature_test.csv"), index_col=0
+        ).squeeze()
+
+        cloud_coverage_test = pd.read_csv(
+            Path(test_path, "cloud_coverage_test.csv"), index_col=0
+        ).squeeze()
+
+        test_region = Region(
+            2017,
+            temperature=temperatur_test,
+            cloud_coverage=cloud_coverage_test,
+            energy_factors=energy_factors,
+            resample_rule="1h",
+            zero_summer_heat_demand=True,
+        )
+        test_region.add_houses(example_houses)
+        lc = test_region.get_load_curve_houses().sum()
+        assert lc.loc["EFH_1", "EFH", "Q_Heiz_TT"] == 6000.0
+        assert lc.loc["MFH_1", "MFH", "Q_Heiz_TT"] == 60000.0
+        assert round(lc.loc["EFH_1", "EFH", "Q_TWW_TT"], 10) == 1500.0
+
+    def test_custom_weather_data_wrong_parameter(self, example_houses):
+        test_path = Path(Path(__file__).parent, "test_data")
+
+        # Einlesen der CSV-Daten
+        energy_factors = pd.read_csv(
+            Path(test_path, "energy_factors_test.csv"),
+            index_col=[0, 1],
+            header=[0],
+        )
+
+        temperatur_test = pd.read_csv(
+            Path(test_path, "temperature_test.csv"), index_col=0
+        ).squeeze()
+
+        cloud_coverage_test = pd.read_csv(
+            Path(test_path, "cloud_coverage_test.csv"), index_col=0
+        ).squeeze()
+
+        with pytest.raises(ValueError, match="If you set one of the"):
+            Region(
+                2017,
+                temperature=temperatur_test,
+                cloud_coverage=None,
+                energy_factors=energy_factors,
+                resample_rule="1h",
+                zero_summer_heat_demand=True,
+            )
+
+        with pytest.raises(ValueError, match="Do not set try_region together"):
+            Region(
+                2017,
+                temperature=temperatur_test,
+                cloud_coverage=cloud_coverage_test,
+                energy_factors=energy_factors,
+                try_region=5,
+                resample_rule="1h",
+                zero_summer_heat_demand=True,
             )

@@ -86,10 +86,6 @@ class Region:
     resample_rule : str (optional)
         Time interval to resample the profile e.g. 1h (1 hour) or 15min.
         The value will be passed to the pandas resample method.
-    file_weather : str (optional)
-        Path to a 'test reference year' (TRY) weather file by German DWD
-        (Deutscher Wetterdienst). If None, the file fitting the given
-        try_region will be loaded.
     zero_summer_heat_demand : bool (optional)
         Set heat demand on all summer days to zero. Per default,
         multi-family houses have a small heat demand even in summer.
@@ -99,9 +95,10 @@ class Region:
     def __init__(
         self,
         year,
-        try_region,
+        try_region=None,
         temperature=None,
         cloud_coverage=None,
+        energy_factors=None,
         seasons=None,
         holidays=None,
         houses=None,
@@ -130,11 +127,11 @@ class Region:
             self._set_season = "temperature"
 
         self._year = year
-        self.temperatur = temperature
+        self.temperature = temperature
         self.cloud_coverage = cloud_coverage
-        if self.temperatur is None and self.cloud_coverage is None:
-            self.set_weather_from_try_region(try_region)
+        self.energy_factors = energy_factors
         self._try_region = try_region
+        self._check_weather_definitions()
 
         self.houses = []
         if houses is not None:
@@ -146,6 +143,31 @@ class Region:
         self._load_profiles = {}
         self._holidays = holidays
         self._resample_rule = resample_rule
+
+    def _check_weather_definitions(self):
+        if (
+            self.temperature is None
+            and self.cloud_coverage is None
+            and self.energy_factors is None
+        ):
+            self.set_weather_from_try_region(self._try_region)
+        else:
+            if (
+                self.temperature is None
+                or self.cloud_coverage is None
+                or self.energy_factors is None
+            ):
+                raise ValueError(
+                    "If you set one of the following parameters you have to "
+                    "set all of them:\n* temperature\n* cloud_coverage\n"
+                    "* energy_factors"
+                )
+            elif self._try_region is not None:
+                raise ValueError(
+                    "Do not set try_region together with one of the following "
+                    "parameters:\n * temperature\n* cloud_coverage\n"
+                    "* energy_factors"
+                )
 
     def set_weather_from_try_region(self, try_region):
         # Fetch weather data
@@ -170,7 +192,7 @@ class Region:
             .resample("D")
             .mean()
         )
-        self.temperatur = weather["TAMB"]
+        self.temperature = weather["TAMB"]
 
         weather.loc[weather["CCOVER"] >= 5, "cloud_category"] = "B"
         weather.loc[weather["CCOVER"] < 5, "cloud_category"] = "H"
@@ -233,7 +255,8 @@ class Region:
         days = add_weekdays2df(days, holidays=holidays, holiday_is_sunday=True)
         days.pop("date")
 
-        days = pd.concat([days, self.temperatur, self.cloud_coverage], axis=1)
+        days["TAMB"] = self.temperature.values
+        days["cloud_category"] = self.cloud_coverage.values
 
         # 1. Set first letter of type days (season) from fixed season or season
         # by temperature.
@@ -423,6 +446,7 @@ class Region:
 
         if len(houses) > 0:
             self.houses.extend(houses)
+        self.temperature_limits = self._get_temperature_level_combinations()
 
     def get_daily_energy_demand_houses(self, tl):
         """Determine the houses' energy demand values for each 'typtag'.
@@ -449,22 +473,23 @@ class Region:
         # Load the file containing the energy factors of the different typical
         # radiation year (TRY) regions, house types and 'typtage'. In VDI 4655,
         # these are the tables 10 to 24.
-        fn_energy_factors = os.path.join(
-            os.path.dirname(__file__),
-            "vdi_data",
-            "VDI_4655_Typtag-Faktoren.csv",
-        )
-        energy_factors = pd.read_csv(
-            fn_energy_factors,
-            index_col=[0, 1, 2],
-        )
+        if self.energy_factors is None:
+            fn_energy_factors = os.path.join(
+                os.path.dirname(__file__),
+                "vdi_data",
+                "VDI_4655_Typtag-Faktoren.csv",
+            )
+            energy_factors = pd.read_csv(
+                fn_energy_factors,
+                index_col=[0, 1, 2],
+            ).loc[self._try_region]
+        else:
+            energy_factors = self.energy_factors
 
         if self.zero_summer_heat_demand:
             # Reduze the value of 'F_Heiz_TT' to zero.
             # For modern houses, this eliminates the heat demand in summer
-            energy_factors.loc[
-                (slice(None), slice(None), "F_Heiz_TT"), ("SWX", "SSX")
-            ] = 0
+            energy_factors.loc[(slice(None), "F_Heiz_TT"), ("SWX", "SSX")] = 0
 
         # Create a new DataFrame with multiindex.
         # It has two levels of columns: houses and energy
@@ -487,19 +512,6 @@ class Region:
             house_type = house["house_type"]
             n_pers = house["N_Pers"]
             n_we = house["N_WE"]
-            try_region = self._try_region
-
-            # Savety check:
-            if try_region not in energy_factors.index.get_level_values(0):
-                msg = (
-                    "Error! TRY "
-                    + str(try_region)
-                    + " not contained in file "
-                    + fn_energy_factors
-                )
-                msg2 = f"       Skipping house: {house['name']}"
-                warnings.warn(msg + "/n" + msg2, UserWarning)
-                continue  # 'Continue' skips the rest of the current for-loop
 
             # Get yearly energy demands
             q_heiz_a = house["Q_Heiz_a"]
@@ -508,15 +520,9 @@ class Region:
 
             # (6.4) Do calculations according to VDI 4655 for each 'typtag'
             for typtag in typtage_combinations:
-                f_heiz_tt = energy_factors.loc[
-                    try_region, house_type, "F_Heiz_TT"
-                ][typtag]
-                f_el_tt = energy_factors.loc[
-                    try_region, house_type, "F_el_TT"
-                ][typtag]
-                f_tww_tt = energy_factors.loc[
-                    try_region, house_type, "F_TWW_TT"
-                ][typtag]
+                f_heiz_tt = energy_factors.loc[house_type, "F_Heiz_TT"][typtag]
+                f_el_tt = energy_factors.loc[house_type, "F_el_TT"][typtag]
+                f_tww_tt = energy_factors.loc[house_type, "F_TWW_TT"][typtag]
 
                 q_heiz_tt = q_heiz_a * f_heiz_tt
 
