@@ -78,6 +78,7 @@ test = [
     "coverage",
     "matplotlib",
     "pytest",
+    "geopandas",
 ]
 tox = [
     "tox",
@@ -111,6 +112,9 @@ norecursedirs = [
     "dist",
     "docs/_build",
     "examples",
+]
+filterwarnings = [
+    "ignore::UserWarning",
 ]
 python_files = [
     "test_*.py",
