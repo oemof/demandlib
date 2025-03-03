@@ -65,6 +65,9 @@ class Climate:
     cloud_coverage : iterable of numbers
             The cloud coverage in the area as daily mean values. The
             number of values must equal 365 or 366 for a leap year.
+    energy_factors : pandas DataFrame
+            Factors for each house type, season type and energy type
+            for the appropriate TRY region, as provided by the VDI 4655.
     """
 
     def __init__(
@@ -78,15 +81,20 @@ class Climate:
         self.energy_factors = energy_factors
 
     def from_try_data(self, try_region, hoy=8760):
-        if try_region not in list(range(1, 16)):
-            raise ValueError(
-                f">{try_region}< is not a valid number of a DWD TRY region."
-            )
+        self.check_try_region(try_region)
+
         fn_weather = os.path.join(
             os.path.dirname(__file__),
             "resources_weather",
             "TRY2010_{:02d}_Jahr.dat".format(try_region),
         )
+        self.from_file(fn_weather, try_region, hoy)
+
+        return self
+
+    def from_file(self, fn_weather, try_region, hoy=8760):
+        self.check_try_region(try_region)
+
         weather = dwd_try.read_dwd_weather_file(fn_weather)
         weather = (
             weather.set_index(
@@ -125,6 +133,12 @@ class Climate:
             raise AttributeError(
                 "Climate object not complete. Set the following attribute:"
                 "\n* temperature\n* cloud_coverage\n* energy_factors"
+            )
+
+    def check_try_region(self, try_region):
+        if try_region not in list(range(1, 16)):
+            raise ValueError(
+                f">{try_region}< is not a valid number of a DWD TRY region."
             )
 
 
