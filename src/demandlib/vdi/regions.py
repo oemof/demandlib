@@ -426,16 +426,19 @@ class Region:
               "MFH" (multi-family)
             * ``N_Pers``: Number of persons, up to 12 (relevant for EFH)
             * ``N_WE``: Number of apartments, up to 40 (relevant for MFH)
-            * ``Q_Heiz_a``: Annual heating demand in kWh
-            * ``Q_TWW_a``: Annual hot water demand in kWh
-            * ``W_a``: Annual electricity demand in kWh
 
             Optional:
 
+            * ``Q_Heiz_a``: Annual heating demand in kWh
+            * ``Q_TWW_a``: Annual hot water demand in kWh
+            * ``W_a``: Annual electricity demand in kWh
             * ``summer_temperature_limit``: Temperature threshold for
               summer season (default: 15°C)
             * ``winter_temperature_limit``: Temperature threshold for
               winter season (default: 5°C)
+
+            (If any of the annual energy values are not provided, the
+            respective time series will be returned with all NaNs.)
 
         """
         houses_wrong = r"\n".join(
@@ -503,9 +506,9 @@ class Region:
             n_we = house["N_WE"]
 
             # Get yearly energy demands
-            q_heiz_a = house["Q_Heiz_a"]
-            w_a = house["W_a"]
-            q_tww_a = house["Q_TWW_a"]
+            q_heiz_a = house.get("Q_Heiz_a", float("NaN"))
+            w_a = house.get("W_a", float("NaN"))
+            q_tww_a = house.get("Q_TWW_a", float("NaN"))
 
             # (6.4) Do calculations according to VDI 4655 for each 'typtag'
             for typtag in typtage_combinations:
@@ -632,7 +635,7 @@ class Region:
             # The typical day calculation inherently does not add up to the
             # desired total energy demand of the full year. Here we fix that:
             for column in load_curve_house.columns:
-                q_a = house[column.replace("TT", "a")]
+                q_a = house.get(column.replace("TT", "a"), float("NaN"))
                 sum_ = load_curve_house[column].sum()
                 if sum_ > 0:  # Would produce NaN otherwise
                     load_curve_house[column] = (
