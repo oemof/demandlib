@@ -603,8 +603,8 @@ class Region:
         for house in self.houses:
             t_limit = namedtuple("temperature_limit", "summer winter")
             tl = t_limit(
-                summer=house["summer_temperature_limit"],
-                winter=house["winter_temperature_limit"],
+                summer=house.get("summer_temperature_limit", 15),
+                winter=house.get("winter_temperature_limit", 5),
             )
             df_typ = (
                 self.type_days[tl]
