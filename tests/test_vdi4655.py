@@ -205,6 +205,17 @@ class TestVDI4655Profiles:
         finally:
             os.remove(temp_filepath)
 
+    def test_house_parameters_missing(self):
+        houses = [{"name": "House with missing parameters"}]
+        with pytest.raises(AttributeError, match="required parameters"):
+            Region(2017, climate=Climate().from_try_data(4), houses=houses)
+
+    def test_house_parameters_unsupported(self, example_houses):
+        houses = example_houses.copy()
+        houses[0]["unsupported"] = "unsupported paramter"
+        with pytest.raises(AttributeError, match="not supported"):
+            Region(2017, climate=Climate().from_try_data(4), houses=houses)
+
     def test_wrong_house_type(self, example_houses):
         houses = example_houses + [
             {

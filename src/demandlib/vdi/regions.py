@@ -456,6 +456,34 @@ class Region:
             respective time series will be returned with all NaNs.)
 
         """
+        param_req = ["name", "house_type", "N_Pers", "N_WE"]
+        param_opt = [
+            "Q_Heiz_a",
+            "Q_TWW_a",
+            "W_a",
+            "summer_temperature_limit",
+            "winter_temperature_limit",
+        ]
+        for i, h in enumerate(houses):
+            param_missing = [p for p in param_req if p not in h.keys()]
+            if len(param_missing) > 0:
+                msg = (
+                    f"House {i} is missing the following required "
+                    f"parameters: {param_missing}"
+                )
+                raise AttributeError(msg)
+
+        for h in houses:
+            param_wrong = [
+                k for k in h.keys() if k not in param_req + param_opt
+            ]
+            if len(param_wrong) > 0:
+                msg = (
+                    f"The following parameters for house {h['name']} "
+                    f"are not supported: {param_wrong}"
+                )
+                raise AttributeError(msg)
+
         houses_wrong = r"\n".join(
             [str(h) for h in houses if h["house_type"] not in ["EFH", "MFH"]]
         )
