@@ -29,6 +29,7 @@ The energy demand contains heating, hot water and electricity.
 
 For a given year, the typical days can be matched to the actual calendar days,
 based on the following conditions:
+
     - Season: summer, winter or transition
     - Day: weekday or sunday (Or holiday, which counts as sunday)
     - Cloud coverage: cloudy or not cloudy
@@ -487,8 +488,6 @@ class Region:
         """
         if tl not in self.type_days:
             self.type_days[tl] = self._get_typical_days(self._holidays, tl)
-        # typtage_combinations = settings["typtage_combinations"]
-        # houses_list = settings["houses_list_VDI"]
 
         if self.zero_summer_heat_demand:
             # Reduze the value of 'F_Heiz_TT' to zero.
