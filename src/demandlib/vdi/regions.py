@@ -82,6 +82,19 @@ class Climate:
         self.energy_factors = energy_factors
 
     def from_try_data(self, try_region, hoy=8760):
+        """
+        Create a climate object from test-reference-year data.
+
+        Parameters
+        ----------
+        try_region : int
+            Number of the test-reference-year region where the building
+            is located, as defined by the german weather service DWD.
+            The module dwd_try provides the function find_try_region() to find
+            the correct region for given coordinates.
+        hoy : int, optional
+            Number of hours of the year. The default is 8760.
+        """
         self.check_try_region(try_region)
 
         fn_weather = os.path.join(
@@ -89,11 +102,51 @@ class Climate:
             "resources_weather",
             "TRY2010_{:02d}_Jahr.dat".format(try_region),
         )
-        self.from_file(fn_weather, try_region, hoy)
+        self.from_dwd_weather_file(fn_weather, try_region, hoy)
 
         return self
 
-    def from_file(self, fn_weather, try_region, hoy=8760):
+    def from_dwd_weather_file(self, fn_weather, try_region, hoy=8760):
+        """
+        Create a climate object from a DWD weather file.
+
+        The weather file must adhere to the standard of the TRY weather
+        data published in 2016 by the German weather service DWD,
+        available at https://kunden.dwd.de/obt/.
+
+        .. note::
+
+            The function ``from_try_data()`` is the implementation for using
+            weather data as intended by the VDI 4655, because it loads
+            the original weather data. Using different weather data is
+            not supported by the norm.
+
+            However, ``from_dwd_weather_file()`` enables users to load the
+            most recent DWD test reference year weather files **at their
+            own risk**. They still need to provide a TRY region number,
+            which is required for loading the energy factors.
+            These are used for scaling the typical days relative to each
+            other, depending on the TRY region. But users need to be aware
+            that they do not have the originally intended effect when
+            used with different weather data.
+
+            Other file types are currently not supported. Instead, users
+            need to create a ``Climate()`` object and provide temperature
+            and cloud coverage time series, as well as matching energy
+            factors.
+
+        Parameters
+        ----------
+        fn_weather : str
+            Name of the weather data file to load.
+        try_region : int
+            Number of the test-reference-year region where the building
+            is located, as defined by the German weather service DWD.
+            The module ``dwd_try`` provides the function ``find_try_region()``
+            to find the correct region for given coordinates.
+        hoy : int, optional
+            Number of hours of the year. The default is 8760.
+        """
         self.check_try_region(try_region)
 
         weather = dwd_try.read_dwd_weather_file(fn_weather)
