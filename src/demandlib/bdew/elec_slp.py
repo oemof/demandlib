@@ -15,7 +15,6 @@ import datetime
 import os
 import warnings
 
-import numpy as np
 import pandas as pd
 
 from demandlib.tools import add_weekdays2df
@@ -53,6 +52,8 @@ def dynamisation_function(timeindex: pd.DatetimeIndex) -> pd.Series:
         index=timeindex,
     )
 
+_bdew_datapath = os.path.join(os.path.dirname(__file__), "bdew_data")
+
 
 class ElecSlp:
     """Generate electrical standardized load profiles based on the BDEW method.
@@ -80,7 +81,6 @@ class ElecSlp:
             hoy = 8784
         else:
             hoy = 8760
-        self._datapath = os.path.join(os.path.dirname(__file__), "bdew_data")
         self._date_time_index = pd.date_range(
             datetime.datetime(year, 1, 1, 0), periods=hoy * 4, freq="15Min"
         )
@@ -132,7 +132,7 @@ class ElecSlp:
         """
 
         # define file path of slp csv data
-        file_path = os.path.join(self._datapath, "selp_series.csv")
+        file_path = os.path.join(_bdew_datapath, "selp_series.csv")
 
         # Read standard load profile series from csv file
         selp_series = pd.read_csv(file_path)
