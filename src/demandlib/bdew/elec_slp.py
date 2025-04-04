@@ -15,9 +15,43 @@ import datetime
 import os
 import warnings
 
+import numpy as np
 import pandas as pd
 
 from demandlib.tools import add_weekdays2df
+
+
+def dynamisation_function(timeindex: pd.DatetimeIndex) -> pd.Series:
+    r"""
+    Use the dynamisation function of the BDEW to smoothen the seasonal
+    edges. Functions resolution is daily.
+
+        .. math::
+            F_t = -3,92\cdot10^{-10} \cdot t^4 + 3,2\cdot10^{-7}
+            \cdot t^3– 7,02\cdot10^{-5}\cdot t^2 + 2,1\cdot10^{-3}
+            \cdot t + 1,24
+
+    With `t` the day of the year as a decimal number.
+    """
+
+    # The standard sais that the day of the year (1 through 365)
+    # should be used. However, normalisation works better if we
+    # allow fractional days and start by day 0.
+    day_of_year = pd.Series(
+        [((q + 1) / (24 * 4)) for q in range(len(timeindex))],
+        index=timeindex,
+    )
+
+    # Calculate the smoothing factor of the BDEW dynamic H0 profile
+    # Adjustment of for normalisation: from -3,92 to -3.916649251
+    return pd.Series(
+        -3.916649251 * 10**-10 * day_of_year**4
+        + 3.2 * 10**-7 * day_of_year**3
+        - 7.02 * 10**-5 * day_of_year**2
+        + 0.0021 * day_of_year
+        + 1.24,
+        index=timeindex,
+    )
 
 
 class ElecSlp:
@@ -165,37 +199,9 @@ class ElecSlp:
         return new_df.div(new_df.sum(axis=0), axis=1)
 
     def create_dynamic_h0_profile(self):
-        r"""
-        Use the dynamisation function of the BDEW to smoothen the seasonal
-        edges. Functions resolution is daily.
-
-            .. math::
-                F_t = -3,92\cdot10^{-10} \cdot t^4 + 3,2\cdot10^{-7}
-                \cdot t^3– 7,02\cdot10^{-5}\cdot t^2 + 2,1\cdot10^{-3}
-                \cdot t + 1,24
-
-        With `t` the day of the year as a decimal number.
-
-        Adjustment of accuracy: from -3,92 to -3.916649251
-        """
-        # Create a Series with the day of the year as decimal number
-        decimal_day = pd.Series(
-            [((q + 1) / (24 * 4)) for q in range(len(self.slp_frame))],
-            index=self.slp_frame.index,
-        )
-
-        # Calculate the smoothing factor of the BDEW dynamic H0 profile
-        smoothing_factor = (
-            -3.916649251 * 10**-10 * decimal_day**4
-            + 3.2 * 10**-7 * decimal_day**3
-            - 7.02 * 10**-5 * decimal_day**2
-            + 0.0021 * decimal_day
-            + 1.24
-        )
-
-        # Multiply the smoothing factor with the default H0 profile
+        # Multiply the smoothing factor with the static H0 profile
         self.slp_frame["h0_dyn"] = self.slp_frame["h0"].mul(
-            smoothing_factor, axis=0
+            dynamisation_function(self.slp_frame.index), axis=0
         )
         return self.slp_frame["h0_dyn"]
 
