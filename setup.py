@@ -77,6 +77,6 @@ setup(
     extras_require={
         "dev": ["pytest", "sphinx", "sphinx_rtd_theme", "matplotlib"],
         "examples": ["matplotlib", "workalendar"],
-        "geometry": ["shapely", "geopandas"],
+        "geometry": ["shapely >= 2.0.0", "geopandas"],
     },
 )
