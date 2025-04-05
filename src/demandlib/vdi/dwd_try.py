@@ -14,7 +14,7 @@ import pandas as pd
 
 try:
     import geopandas as gpd
-    from shapely.geometry import Point
+    from shapely import Point
 except ModuleNotFoundError:
     pass
 
