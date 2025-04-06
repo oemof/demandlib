@@ -29,6 +29,7 @@ The energy demand contains heating, hot water and electricity.
 
 For a given year, the typical days can be matched to the actual calendar days,
 based on the following conditions:
+
     - Season: summer, winter or transition
     - Day: weekday or sunday (Or holiday, which counts as sunday)
     - Cloud coverage: cloudy or not cloudy
@@ -65,6 +66,9 @@ class Climate:
     cloud_coverage : iterable of numbers
             The cloud coverage in the area as daily mean values. The
             number of values must equal 365 or 366 for a leap year.
+    energy_factors : pandas DataFrame
+            Factors for each house type, season type and energy type
+            for the appropriate TRY region, as provided by the VDI 4655.
     """
 
     def __init__(
@@ -78,15 +82,73 @@ class Climate:
         self.energy_factors = energy_factors
 
     def from_try_data(self, try_region, hoy=8760):
-        if try_region not in list(range(1, 16)):
-            raise ValueError(
-                f">{try_region}< is not a valid number of a DWD TRY region."
-            )
+        """
+        Create a climate object from test-reference-year data.
+
+        Parameters
+        ----------
+        try_region : int
+            Number of the test-reference-year region where the building
+            is located, as defined by the german weather service DWD.
+            The module dwd_try provides the function find_try_region() to find
+            the correct region for given coordinates.
+        hoy : int, optional
+            Number of hours of the year. The default is 8760.
+        """
+        self.check_try_region(try_region)
+
         fn_weather = os.path.join(
             os.path.dirname(__file__),
             "resources_weather",
             "TRY2010_{:02d}_Jahr.dat".format(try_region),
         )
+        self.from_dwd_weather_file(fn_weather, try_region, hoy)
+
+        return self
+
+    def from_dwd_weather_file(self, fn_weather, try_region, hoy=8760):
+        """
+        Create a climate object from a DWD weather file.
+
+        The weather file must adhere to the standard of the TRY weather
+        data published in 2016 by the German weather service DWD,
+        available at https://kunden.dwd.de/obt/.
+
+        .. note::
+
+            The function ``from_try_data()`` is the implementation for using
+            weather data as intended by the VDI 4655, because it loads
+            the original weather data. Using different weather data is
+            not supported by the norm.
+
+            However, ``from_dwd_weather_file()`` enables users to load the
+            most recent DWD test reference year weather files **at their
+            own risk**. They still need to provide a TRY region number,
+            which is required for loading the energy factors.
+            These are used for scaling the typical days relative to each
+            other, depending on the TRY region. But users need to be aware
+            that they do not have the originally intended effect when
+            used with different weather data.
+
+            Other file types are currently not supported. Instead, users
+            need to create a ``Climate()`` object and provide temperature
+            and cloud coverage time series, as well as matching energy
+            factors.
+
+        Parameters
+        ----------
+        fn_weather : str
+            Name of the weather data file to load.
+        try_region : int
+            Number of the test-reference-year region where the building
+            is located, as defined by the German weather service DWD.
+            The module ``dwd_try`` provides the function ``find_try_region()``
+            to find the correct region for given coordinates.
+        hoy : int, optional
+            Number of hours of the year. The default is 8760.
+        """
+        self.check_try_region(try_region)
+
         weather = dwd_try.read_dwd_weather_file(fn_weather)
         weather = (
             weather.set_index(
@@ -125,6 +187,12 @@ class Climate:
             raise AttributeError(
                 "Climate object not complete. Set the following attribute:"
                 "\n* temperature\n* cloud_coverage\n* energy_factors"
+            )
+
+    def check_try_region(self, try_region):
+        if try_region not in list(range(1, 16)):
+            raise ValueError(
+                f">{try_region}< is not a valid number of a DWD TRY region."
             )
 
 
@@ -426,18 +494,49 @@ class Region:
               "MFH" (multi-family)
             * ``N_Pers``: Number of persons, up to 12 (relevant for EFH)
             * ``N_WE``: Number of apartments, up to 40 (relevant for MFH)
-            * ``Q_Heiz_a``: Annual heating demand in kWh
-            * ``Q_TWW_a``: Annual hot water demand in kWh
-            * ``W_a``: Annual electricity demand in kWh
 
             Optional:
 
+            * ``Q_Heiz_a``: Annual heating demand in kWh
+            * ``Q_TWW_a``: Annual hot water demand in kWh
+            * ``W_a``: Annual electricity demand in kWh
             * ``summer_temperature_limit``: Temperature threshold for
               summer season (default: 15°C)
             * ``winter_temperature_limit``: Temperature threshold for
               winter season (default: 5°C)
 
+            (If any of the annual energy values are not provided, the
+            respective time series will be returned with all NaNs.)
+
         """
+        param_req = ["name", "house_type", "N_Pers", "N_WE"]
+        param_opt = [
+            "Q_Heiz_a",
+            "Q_TWW_a",
+            "W_a",
+            "summer_temperature_limit",
+            "winter_temperature_limit",
+        ]
+        for i, h in enumerate(houses):
+            param_missing = [p for p in param_req if p not in h.keys()]
+            if len(param_missing) > 0:
+                msg = (
+                    f"House {i} is missing the following required "
+                    f"parameters: {param_missing}"
+                )
+                raise AttributeError(msg)
+
+        for h in houses:
+            param_wrong = [
+                k for k in h.keys() if k not in param_req + param_opt
+            ]
+            if len(param_wrong) > 0:
+                msg = (
+                    f"The following parameters for house {h['name']} "
+                    f"are not supported: {param_wrong}"
+                )
+                raise AttributeError(msg)
+
         houses_wrong = r"\n".join(
             [str(h) for h in houses if h["house_type"] not in ["EFH", "MFH"]]
         )
@@ -470,8 +569,6 @@ class Region:
         """
         if tl not in self.type_days:
             self.type_days[tl] = self._get_typical_days(self._holidays, tl)
-        # typtage_combinations = settings["typtage_combinations"]
-        # houses_list = settings["houses_list_VDI"]
 
         if self.zero_summer_heat_demand:
             # Reduze the value of 'F_Heiz_TT' to zero.
@@ -503,9 +600,9 @@ class Region:
             n_we = house["N_WE"]
 
             # Get yearly energy demands
-            q_heiz_a = house["Q_Heiz_a"]
-            w_a = house["W_a"]
-            q_tww_a = house["Q_TWW_a"]
+            q_heiz_a = house.get("Q_Heiz_a", float("NaN"))
+            w_a = house.get("W_a", float("NaN"))
+            q_tww_a = house.get("Q_TWW_a", float("NaN"))
 
             # (6.4) Do calculations according to VDI 4655 for each 'typtag'
             for typtag in typtage_combinations:
@@ -603,8 +700,8 @@ class Region:
         for house in self.houses:
             t_limit = namedtuple("temperature_limit", "summer winter")
             tl = t_limit(
-                summer=house["summer_temperature_limit"],
-                winter=house["winter_temperature_limit"],
+                summer=house.get("summer_temperature_limit", 15),
+                winter=house.get("winter_temperature_limit", 5),
             )
             df_typ = (
                 self.type_days[tl]
@@ -632,7 +729,7 @@ class Region:
             # The typical day calculation inherently does not add up to the
             # desired total energy demand of the full year. Here we fix that:
             for column in load_curve_house.columns:
-                q_a = house[column.replace("TT", "a")]
+                q_a = house.get(column.replace("TT", "a"), float("NaN"))
                 sum_ = load_curve_house[column].sum()
                 if sum_ > 0:  # Would produce NaN otherwise
                     load_curve_house[column] = (

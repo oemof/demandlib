@@ -39,10 +39,13 @@ Here's a basic example of how to use the VDI 4655 module::
         }
     ]
 
+    # Create climate object with weather data
+    climate = vdi.Climate().from_try_data(try_region=4)
+
     # Create region
     region = vdi.Region(
         2017,
-        try_region=4,
+        climate=climate,
         houses=houses,
         resample_rule="1h"
     )
@@ -53,41 +56,70 @@ Here's a basic example of how to use the VDI 4655 module::
 House Parameters
 ----------------
 
+The houses need to be defined as a list of dictionaries.
 Required parameters for each house:
 
 * ``name``: Unique identifier for the house
 * ``house_type``: Either "EFH" (single-family) or "MFH" (multi-family)
 * ``N_Pers``: Number of persons, up to 12 (relevant for EFH)
 * ``N_WE``: Number of apartments, up to 40 (relevant for MFH)
+
+Optional parameters for each house:
+
 * ``Q_Heiz_a``: Annual heating demand in kWh
 * ``Q_TWW_a``: Annual hot water demand in kWh
 * ``W_a``: Annual electricity demand in kWh
-
-Optional parameters:
-
 * ``summer_temperature_limit``: Temperature threshold for summer season (default: 15°C)
 * ``winter_temperature_limit``: Temperature threshold for winter season (default: 5°C)
+
+(If any of the annual energy values are not provided, the respective time series
+will be returned with all NaNs.)
 
 Weather Data
 ------------
 
 The module uses German test reference year (TRY) weather data by 'Deutscher Wetterdienst' (DWD)
-for determining the daily temperature and cloud coverage. You can:
+for determining the daily temperature and cloud coverage. Weather data is handled through the Climate class,
+which offers several ways to initialize:
 
-* Use the weather data from one of the 15 TRY regions by DWD from 2010
+* Use built-in TRY weather data from 2010:
 
-  * Specify a TRY region number (``try_region`` parameter), or
+    ::
 
-  * Use geographical coordinates to determine the TRY region (requires geopandas)
+        climate = vdi.Climate().from_try_data(try_region=4)
 
-* Provide your own weather file (``file_weather`` parameter), adhering to the standard
-  of the TRY weather data published in 2016 by DWD (available at https://kunden.dwd.de/obt/)
+* Load data from a custom weather file:
+
+    ::
+
+        climate = vdi.Climate().from_dwd_weather_file(fn_weather='path/to/weather.dat', try_region=4)
+
+    The weather file must adhere to the standard of the TRY weather data published
+    in 2016 by DWD (available at https://kunden.dwd.de/obt/)
+
+    Please refer to the function documentation for the caveats of using custom weather data.
+    In short, the function should be used with caution, since this is not the usage intended
+    by the norm and the profiles are supposed to be generated with the 2010 TRY weather data.
+
+* Initialize with your own data:
+
+    ::
+
+        climate = vdi.Climate(
+            temperature=your_temp_data,
+            cloud_coverage=your_cloud_data,
+            energy_factors=your_energy_factors
+        )
+
+    To use other sources of weather data, a custom ``Climate()`` object can be created
+    by providing daily average temperature and cloud coverage time series, as well as
+    matching energy factors, which scale the typical days relative to each other.
 
 Further Reading
 ---------------
 
 For more details about the VDI 4655 standard, refer to:
 
-* VDI 4655: Reference load profiles of single-family and multi-family houses for the use of CHP systems
-* May 2008 (ICS 91.140.01)
-* Verein Deutscher Ingenieure e.V.
+| VDI 4655: Reference load profiles of single-family and multi-family houses for the use of CHP systems
+| May 2008 (ICS 91.140.01)
+| Verein Deutscher Ingenieure e.V.

@@ -205,11 +205,22 @@ class TestVDI4655Profiles:
         finally:
             os.remove(temp_filepath)
 
+    def test_house_parameters_missing(self):
+        houses = [{"name": "House with missing parameters"}]
+        with pytest.raises(AttributeError, match="required parameters"):
+            Region(2017, climate=Climate().from_try_data(4), houses=houses)
+
+    def test_house_parameters_unsupported(self, example_houses):
+        houses = example_houses.copy()
+        houses[0]["unsupported"] = "unsupported paramter"
+        with pytest.raises(AttributeError, match="not supported"):
+            Region(2017, climate=Climate().from_try_data(4), houses=houses)
+
     def test_wrong_house_type(self, example_houses):
         houses = example_houses + [
             {
                 "N_Pers": 3,
-                "name": "Wrong_heouse_type",
+                "name": "Wrong_house_type",
                 "N_WE": 1,
                 "Q_Heiz_a": 6000,
                 "house_type": "wrong",
@@ -224,16 +235,23 @@ class TestVDI4655Profiles:
 
     def test_house_missing_energy_values(self, example_houses):
         """Test handling of houses with missing energy values."""
-        houses = example_houses.copy()
-        # Remove some energy values
-        del houses[0]["Q_Heiz_a"]
-        del houses[0]["W_a"]
+        houses = [
+            {
+                "name": "EFH",
+                "house_type": "EFH",
+                "N_Pers": 3,
+                "N_WE": 1,
+            }
+        ]
 
         region = Region(
             2017, climate=Climate().from_try_data(4), houses=houses
         )
-        with pytest.raises(KeyError, match="Q_Heiz_a"):
-            region.get_load_curve_houses()
+
+        load_curves = region.get_load_curve_houses()
+
+        # Check if load curves for house with NaN values are all zero
+        assert load_curves.isna().all(axis=None)
 
     def test_invalid_try_region_warning(self, example_houses):
         """Test warning and skipping behavior for invalid TRY region."""

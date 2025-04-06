@@ -46,12 +46,11 @@ my_houses = []
 for n in range(2):
     my_houses.append(
         {
-            "N_Pers": 3,
             "name": "EFH_{0}".format(n),
+            "house_type": "EFH",
+            "N_Pers": 3,
             "N_WE": 1,
             "Q_Heiz_a": 6000,
-            "copies": 24,
-            "house_type": "EFH",
             "Q_TWW_a": 1500,
             "W_a": 5250,
             "summer_temperature_limit": 15,
@@ -60,12 +59,11 @@ for n in range(2):
     )
     my_houses.append(
         {
-            "N_Pers": 45,
             "name": "MFH_{0}".format(n),
+            "house_type": "MFH",
+            "N_Pers": 45,
             "N_WE": 15,
             "Q_Heiz_a": 60000,
-            "copies": 24,
-            "house_type": "MFH",
             "Q_TWW_a": 15000,
             "W_a": 45000,
             "summer_temperature_limit": 15,
