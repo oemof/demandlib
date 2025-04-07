@@ -13,8 +13,8 @@ dt_index = pd.date_range(
 h25 = bdew.H25(dt_index)
 s25 = bdew.S25(dt_index)
 
-print(h25.sum()/4)
-print(s25.sum()/4)
+print(h25.sum() / 4)
+print(s25.sum() / 4)
 
 plt.plot(h25, label="H")
 plt.plot(s25, label="S")
