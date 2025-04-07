@@ -21,6 +21,30 @@ _bdew_datapath = os.path.join(os.path.dirname(__file__), "bdew_data")
 
 
 class BDEW25Profile(pd.Series):
+
+    def __init__(self, timeindex: pd.DatetimeIndex):
+        new_df = pd.DataFrame(
+            data={
+                "month": timeindex.month,
+                "day": timeindex.day_of_week + 1,
+                "hour": timeindex.hour,
+                "minute": timeindex.minute,
+            },
+        )
+
+        new_df.replace({"day": [1, 2, 3, 4, 5]}, "WT", inplace=True)
+        new_df.replace({"day": [6]}, "SA", inplace=True)
+        new_df.replace({"day": [7, 8]}, "FT", inplace=True)
+
+        new_df = new_df.merge(
+            self.raw_profile_data,
+            on=["month", "day", "hour", "minute"],
+            how="inner",
+        )
+        new_df.set_index(timeindex, inplace=True)
+
+        super().__init__(data=new_df.value, index=timeindex)
+
     @property
     def datafile(self):
         raise NotImplementedError(
@@ -65,36 +89,13 @@ class BDEW25Profile(pd.Series):
                         "day": column[1],
                         "hour": hours,
                         "minute": minutes,
-                        "value": profile_data[column]/4,
+                        "value": profile_data[column] / 4,
                     }
                 )
             )
 
         profile_data = pd.concat(serialised_data, ignore_index=True)
         return profile_data
-
-    def __init__(self, timeindex: pd.DatetimeIndex):
-        new_df = pd.DataFrame(
-            data={
-                "month": timeindex.month,
-                "day": timeindex.day_of_week + 1,
-                "hour": timeindex.hour,
-                "minute": timeindex.minute,
-            },
-        )
-
-        new_df.replace({"day": [1, 2, 3, 4, 5]}, "WT", inplace=True)
-        new_df.replace({"day": [6]}, "SA", inplace=True)
-        new_df.replace({"day": [7, 8]}, "FT", inplace=True)
-
-        new_df = new_df.merge(
-            self.raw_profile_data,
-            on=["month", "day", "hour", "minute"],
-            how="inner",
-        )
-        new_df.set_index(timeindex, inplace=True)
-
-        super().__init__(data=new_df.value, index=timeindex)
 
 
 class DynamicBDEW25Profile(BDEW25Profile):
@@ -137,10 +138,7 @@ class H25(DynamicBDEW25Profile):
 
 
 class L25(BDEW25Profile):
-    def __init__(
-            self,
-            timeindex: pd.DatetimeIndex
-    ):
+    def __init__(self, timeindex: pd.DatetimeIndex):
         super().__init__(timeindex=timeindex)
 
     @property
