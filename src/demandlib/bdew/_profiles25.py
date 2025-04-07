@@ -16,6 +16,8 @@ import os
 
 import pandas as pd
 
+from demandlib.tools import add_weekdays2df
+
 
 _bdew_datapath = os.path.join(os.path.dirname(__file__), "bdew_data")
 
@@ -46,7 +48,11 @@ class L25(BDEW25Profile):
 
 
 if __name__ == "__main__":
-    dti = pd.date_range("2018-01-01", periods=15, freq="15min")
+    dt_index = pd.date_range(
+        start="2020-01-01 00:00",
+        end="2021-12-31 23:45",
+        freq="15min",
+    )
 
     profile_data = pd.read_csv(_bdew_datapath + "/l25.csv", header=[0,1])
 
@@ -67,7 +73,24 @@ if __name__ == "__main__":
         },
         inplace=True,
     )
+    profile_data[("time", "hour")] = [h for h in range(24) for _ in range(4)]
+    profile_data[("time", "minute")] = [
+        m for _ in range(24) for m in range(0, 60, 15)
+    ]
+
+    new_df = pd.DataFrame(
+        data={
+            "month": dt_index.month,
+            "day": dt_index.day_of_week + 1,
+            "hour": dt_index.hour,
+            "minute": dt_index.minute,
+        },
+        index=dt_index,
+    )
+
+    new_df.replace({"day": [1, 2, 3, 4, 5]}, "WT", inplace=True)
+    new_df.replace({"day": [6]}, "SA", inplace=True)
+    new_df.replace({"day": [7, 8]}, "FT", inplace=True)
 
     print(profile_data)
-
-    print(dti.month, dti.day_of_week)
+    print(new_df)
