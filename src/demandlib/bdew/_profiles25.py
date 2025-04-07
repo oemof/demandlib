@@ -89,7 +89,7 @@ class BDEW25Profile(pd.Series):
                         "day": column[1],
                         "hour": hours,
                         "minute": minutes,
-                        "value": profile_data[column] / 4,
+                        "value": 4 * profile_data[column],
                     }
                 )
             )
