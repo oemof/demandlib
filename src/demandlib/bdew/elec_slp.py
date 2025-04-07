@@ -19,6 +19,8 @@ import pandas as pd
 
 from demandlib.tools import add_weekdays2df
 
+from ._profiles25 import _bdew_datapath
+
 
 def dynamisation_function(timeindex: pd.DatetimeIndex) -> pd.Series:
     r"""
@@ -51,8 +53,6 @@ def dynamisation_function(timeindex: pd.DatetimeIndex) -> pd.Series:
         + 1.24,
         index=timeindex,
     )
-
-_bdew_datapath = os.path.join(os.path.dirname(__file__), "bdew_data")
 
 
 class ElecSlp:
