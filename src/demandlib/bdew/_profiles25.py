@@ -21,8 +21,12 @@ _bdew_datapath = os.path.join(os.path.dirname(__file__), "bdew_data")
 
 
 class BDEW25Profile(pd.Series):
-
     def __init__(self, timeindex: pd.DatetimeIndex):
+        if timeindex.freq.delta != pd.Timedelta("00:15:00"):
+            raise NotImplementedError(
+                "BDEW time series are only implemented for 15-minute steps."
+                " Please give corresponding index."
+            )
         new_df = pd.DataFrame(
             data={
                 "month": timeindex.month,
