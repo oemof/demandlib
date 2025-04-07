@@ -29,10 +29,10 @@ The energy demand contains heating, hot water and electricity.
 
 For a given year, the typical days can be matched to the actual calendar days,
 based on the following conditions:
-    - Season: summer, winter or transition
-    - Day: weekday or sunday (Or holiday, which counts as sunday)
-    - Cloud coverage: cloudy or not cloudy
-    - House type: single-family houses or multi-family houses (EFH or MFH)
+- Season: summer, winter or transition
+- Day: weekday or sunday (Or holiday, which counts as sunday)
+- Cloud coverage: cloudy or not cloudy
+- House type: single-family houses or multi-family houses (EFH or MFH)
 
 SPDX-FileCopyrightText: Joris Zimmermann
 SPDX-FileCopyrightText: Uwe Krien
