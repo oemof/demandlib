@@ -220,7 +220,7 @@ class L25(BDEW25Profile):
 
 class P25(DynamicBDEW25Profile):
     """
-    SLP for housholds with gerneric PV system,
+    SLP for housholds with generic PV system,
     see DynamicBDEW25Profile for more details.
     """
 
@@ -236,7 +236,7 @@ class P25(DynamicBDEW25Profile):
 
 class S25(DynamicBDEW25Profile):
     """
-    SLP for housholds with gerneric PV system and battery storage,
+    SLP for housholds with generic PV system and battery storage,
     see DynamicBDEW25Profile for more details.
     """
 
