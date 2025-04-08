@@ -7,6 +7,7 @@ Implementation of the 2025 BDEW standard load profiles:
 * P25 (dynamic), profile for households with PV based on 2022 and 2023 data
 * S25 (dynamic), profile for households with BES based on 2022 and 2023 data
 
+SPDX-FileCopyrightText: Deutsches Zentrum für Luft- und Raumfahrt
 SPDX-FileCopyrightText: Patrik Schönfeldt
 
 SPDX-License-Identifier: MIT
@@ -17,11 +18,15 @@ import os
 import numpy as np
 import pandas as pd
 
+from demandlib.tools import set_holidays_in_df
+
 _bdew_datapath = os.path.join(os.path.dirname(__file__), "bdew_data")
 
 
 class BDEW25Profile(pd.Series):
-    def __init__(self, timeindex: pd.DatetimeIndex):
+    def __init__(
+        self, timeindex: pd.DatetimeIndex, holidays: dict | list | None = None
+    ):
         if timeindex.freq.delta != pd.Timedelta("00:15:00"):
             raise NotImplementedError(
                 "BDEW time series are only implemented for 15-minute steps."
@@ -30,19 +35,24 @@ class BDEW25Profile(pd.Series):
         new_df = pd.DataFrame(
             data={
                 "month": timeindex.month,
-                "day": timeindex.day_of_week + 1,
+                "weekday": timeindex.day_of_week + 1,
                 "hour": timeindex.hour,
                 "minute": timeindex.minute,
             },
+            index=timeindex,
         )
 
-        new_df.replace({"day": [1, 2, 3, 4, 5]}, "WT", inplace=True)
-        new_df.replace({"day": [6]}, "SA", inplace=True)
-        new_df.replace({"day": [7, 8]}, "FT", inplace=True)
+        set_holidays_in_df(new_df, holidays=holidays)
+
+        new_df.replace({"weekday": [1, 2, 3, 4, 5]}, "WT", inplace=True)
+        new_df.replace({"weekday": [6]}, "SA", inplace=True)
+        new_df.replace(
+            {"weekday": [0, 7]}, "FT", inplace=True
+        )  # 0 for holiday
 
         new_df = new_df.merge(
             self.raw_profile_data,
-            on=["month", "day", "hour", "minute"],
+            on=["month", "weekday", "hour", "minute"],
             how="inner",
         )
         new_df.set_index(timeindex, inplace=True)
@@ -90,7 +100,7 @@ class BDEW25Profile(pd.Series):
                 pd.DataFrame(
                     data={
                         "month": column[0],
-                        "day": column[1],
+                        "weekday": column[1],
                         "hour": hours,
                         "minute": minutes,
                         "value": 4 * profile_data[column],
@@ -103,8 +113,10 @@ class BDEW25Profile(pd.Series):
 
 
 class DynamicBDEW25Profile(BDEW25Profile):
-    def __init__(self, timeindex: pd.DatetimeIndex):
-        super().__init__(timeindex=timeindex)
+    def __init__(
+        self, timeindex: pd.DatetimeIndex, holidays: dict | list | None = None
+    ):
+        super().__init__(timeindex=timeindex, holidays=holidays)
         self.update(self * self.dynamisation_function(timeindex))
 
     @staticmethod
@@ -124,8 +136,10 @@ class DynamicBDEW25Profile(BDEW25Profile):
 
 
 class G25(BDEW25Profile):
-    def __init__(self, timeindex: pd.DatetimeIndex):
-        super().__init__(timeindex=timeindex)
+    def __init__(
+        self, timeindex: pd.DatetimeIndex, holidays: dict | list | None = None
+    ):
+        super().__init__(timeindex=timeindex, holidays=holidays)
 
     @property
     def datafile(self):
@@ -133,8 +147,10 @@ class G25(BDEW25Profile):
 
 
 class H25(DynamicBDEW25Profile):
-    def __init__(self, timeindex: pd.DatetimeIndex):
-        super().__init__(timeindex=timeindex)
+    def __init__(
+        self, timeindex: pd.DatetimeIndex, holidays: dict | list | None = None
+    ):
+        super().__init__(timeindex=timeindex, holidays=holidays)
 
     @property
     def datafile(self):
@@ -142,8 +158,10 @@ class H25(DynamicBDEW25Profile):
 
 
 class L25(BDEW25Profile):
-    def __init__(self, timeindex: pd.DatetimeIndex):
-        super().__init__(timeindex=timeindex)
+    def __init__(
+        self, timeindex: pd.DatetimeIndex, holidays: dict | list | None = None
+    ):
+        super().__init__(timeindex=timeindex, holidays=holidays)
 
     @property
     def datafile(self):
@@ -151,8 +169,10 @@ class L25(BDEW25Profile):
 
 
 class P25(DynamicBDEW25Profile):
-    def __init__(self, timeindex: pd.DatetimeIndex):
-        super().__init__(timeindex=timeindex)
+    def __init__(
+        self, timeindex: pd.DatetimeIndex, holidays: dict | list | None = None
+    ):
+        super().__init__(timeindex=timeindex, holidays=holidays)
 
     @property
     def datafile(self):
@@ -160,8 +180,10 @@ class P25(DynamicBDEW25Profile):
 
 
 class S25(DynamicBDEW25Profile):
-    def __init__(self, timeindex: pd.DatetimeIndex):
-        super().__init__(timeindex=timeindex)
+    def __init__(
+        self, timeindex: pd.DatetimeIndex, holidays: dict | list | None = None
+    ):
+        super().__init__(timeindex=timeindex, holidays=holidays)
 
     @property
     def datafile(self):
