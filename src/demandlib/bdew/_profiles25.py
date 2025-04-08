@@ -87,7 +87,7 @@ class BDEW25Profile(pd.Series):
         values = new_df.value
         if original_timedelta > pd.Timedelta("00:15:00"):
             values = values.resample(original_timedelta).mean()
-        elif original_timedelta <= pd.Timedelta("00:15:00"):
+        elif original_timedelta < pd.Timedelta("00:15:00"):
             values = values.reindex(timeindex, method="ffill")
 
         super().__init__(data=values, index=timeindex)
