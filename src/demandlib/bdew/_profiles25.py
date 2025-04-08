@@ -24,22 +24,48 @@ _bdew_datapath = os.path.join(os.path.dirname(__file__), "bdew_data")
 
 
 class BDEW25Profile(pd.Series):
+    """
+    Electrical standard load profiles based on the BDEW method (2025 revision)
+
+    Parameters
+    ----------
+    timeindex : pd.DatetimeIndex
+        Time index to produce the SLP for. Only constant step-size is
+        supported, i.e. timeindex.freq needs to be defined. If time
+        steps of 15 minutes are used, that are aligned with the full
+        hour, the original SLP is reproduced. Lower resolutions will
+        be downsampled, higher resolutions wil be padded. (Pading is
+        the correct handling because the SLP defines constant values
+        for 15 minutes.)
+
+    Optional Parameters
+    -------------------
+    holidays : dictionary or list
+        The keys of the dictionary or the items of the list should be datetime
+        objects of the days that are holidays.
+    """
+
     def __init__(
-        self, timeindex: pd.DatetimeIndex, holidays: dict | list | None = None
+        self,
+        timeindex: pd.DatetimeIndex,
+        holidays: dict | list | None = None,
     ):
-        if timeindex.freq.delta != pd.Timedelta("00:15:00"):
-            raise NotImplementedError(
-                "BDEW time series are only implemented for 15-minute steps."
-                " Please give corresponding index."
+        if timeindex.freq.delta == pd.Timedelta("00:15:00"):
+            timeindex15m = timeindex
+        else:
+            timeindex15m = pd.date_range(
+                start=timeindex[0],
+                end=timeindex[-1],
+                freq="15min",
             )
         new_df = pd.DataFrame(
             data={
-                "month": timeindex.month,
-                "weekday": timeindex.day_of_week + 1,
-                "hour": timeindex.hour,
-                "minute": timeindex.minute,
+                "month": timeindex15m.month,
+                "weekday": timeindex15m.day_of_week + 1,
+                "hour": timeindex15m.hour,
+                "minute": timeindex15m.minute,
             },
-            index=timeindex,
+            index=timeindex15m,
         )
 
         set_holidays_in_df(new_df, holidays=holidays)
@@ -55,9 +81,15 @@ class BDEW25Profile(pd.Series):
             on=["month", "weekday", "hour", "minute"],
             how="inner",
         )
-        new_df.set_index(timeindex, inplace=True)
+        new_df.set_index(timeindex15m, inplace=True)
 
-        super().__init__(data=new_df.value, index=timeindex)
+        values = new_df.value
+        if timeindex.freq.delta > pd.Timedelta("00:15:00"):
+            values = values.resample(timeindex.freq.delta).mean()
+        elif timeindex.freq.delta <= pd.Timedelta("00:15:00"):
+            values = values.reindex(timeindex, method="ffill")
+
+        super().__init__(data=values, index=timeindex)
 
     @property
     def datafile(self):
@@ -113,6 +145,11 @@ class BDEW25Profile(pd.Series):
 
 
 class DynamicBDEW25Profile(BDEW25Profile):
+    """
+    BDEW25 SLP considering the dynamisation_function.
+    See BDEW25Profile for more details.
+    """
+
     def __init__(
         self, timeindex: pd.DatetimeIndex, holidays: dict | list | None = None
     ):
@@ -136,6 +173,10 @@ class DynamicBDEW25Profile(BDEW25Profile):
 
 
 class G25(BDEW25Profile):
+    """
+    SLP for industries, see BDEW25Profile for more details.
+    """
+
     def __init__(
         self, timeindex: pd.DatetimeIndex, holidays: dict | list | None = None
     ):
@@ -147,6 +188,10 @@ class G25(BDEW25Profile):
 
 
 class H25(DynamicBDEW25Profile):
+    """
+    SLP for households, see DynamicBDEW25Profile for more details.
+    """
+
     def __init__(
         self, timeindex: pd.DatetimeIndex, holidays: dict | list | None = None
     ):
@@ -158,6 +203,10 @@ class H25(DynamicBDEW25Profile):
 
 
 class L25(BDEW25Profile):
+    """
+    SLP for farms, see BDEW25Profile for more details.
+    """
+
     def __init__(
         self, timeindex: pd.DatetimeIndex, holidays: dict | list | None = None
     ):
@@ -169,6 +218,11 @@ class L25(BDEW25Profile):
 
 
 class P25(DynamicBDEW25Profile):
+    """
+    SLP for housholds with gerneric PV system,
+    see DynamicBDEW25Profile for more details.
+    """
+
     def __init__(
         self, timeindex: pd.DatetimeIndex, holidays: dict | list | None = None
     ):
@@ -180,6 +234,11 @@ class P25(DynamicBDEW25Profile):
 
 
 class S25(DynamicBDEW25Profile):
+    """
+    SLP for housholds with gerneric PV system and battery storage,
+    see DynamicBDEW25Profile for more details.
+    """
+
     def __init__(
         self, timeindex: pd.DatetimeIndex, holidays: dict | list | None = None
     ):
