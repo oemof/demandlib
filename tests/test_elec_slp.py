@@ -129,6 +129,7 @@ def test_changed_seasons():
         == 0.00612
     )
 
+
 def test_slp25():
     holiday_dict = {
         datetime.date(2010, 1, 1): "New year",
