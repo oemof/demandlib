@@ -175,6 +175,12 @@ def test_slp25():
         freq="15min",
     )
 
+    with pytest.raises(NotImplementedError):
+        _ = bdew._profiles25.BDEW25Profile(index15m)
+
+    with pytest.raises(NotImplementedError):
+        _ = bdew._profiles25.DynamicBDEW25Profile(index15m)
+
     for slp_type in [bdew.G25, bdew.H25, bdew.L25, bdew.P25, bdew.S25]:
         # We allow 1.0 % tollerenace (with holidays)
         slp_profile = slp_type(index15m, holidays=holiday_dict)
