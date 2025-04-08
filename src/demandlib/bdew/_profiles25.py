@@ -50,7 +50,8 @@ class BDEW25Profile(pd.Series):
         timeindex: pd.DatetimeIndex,
         holidays: dict | list | None = None,
     ):
-        if timeindex.freq.delta == pd.Timedelta("00:15:00"):
+        original_timedelta = pd.Timedelta(timeindex.freq)
+        if original_timedelta == pd.Timedelta("00:15:00"):
             timeindex15m = timeindex
         else:
             timeindex15m = pd.date_range(
@@ -84,9 +85,9 @@ class BDEW25Profile(pd.Series):
         new_df.set_index(timeindex15m, inplace=True)
 
         values = new_df.value
-        if timeindex.freq.delta > pd.Timedelta("00:15:00"):
-            values = values.resample(timeindex.freq.delta).mean()
-        elif timeindex.freq.delta <= pd.Timedelta("00:15:00"):
+        if original_timedelta > pd.Timedelta("00:15:00"):
+            values = values.resample(original_timedelta).mean()
+        elif original_timedelta <= pd.Timedelta("00:15:00"):
             values = values.reindex(timeindex, method="ffill")
 
         super().__init__(data=values, index=timeindex)
