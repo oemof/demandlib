@@ -27,6 +27,10 @@ class BDEW25Profile(pd.Series):
     """
     Electrical standard load profiles based on the BDEW method (2025 revision)
 
+    Note that we scale these profiles to be in units of power (values in kW),
+    meaning the integral (not the sum) over one year will be 1 GWh.
+    (For the default resolution of 15 minutes, this makes a factor of four.)
+
     Parameters
     ----------
     timeindex : pd.DatetimeIndex
