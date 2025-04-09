@@ -1,10 +1,13 @@
-"""Tools needed by the main classes
-"""
+"""Tools needed by the main classes."""
 
 import pandas as pd
 
 
-def add_weekdays2df(time_df, holidays=None, holiday_is_sunday=False):
+def add_weekdays2df(
+    time_df: pd.DataFrame,
+    holidays: dict | list | None = None,
+    holiday_is_sunday: bool = False,
+):
     r"""Giving back a DataFrame containing weekdays and optionally holidays for
      the given year.
 
@@ -15,8 +18,8 @@ def add_weekdays2df(time_df, holidays=None, holiday_is_sunday=False):
 
     Optional Parameters
     -------------------
-    holidays : array with information for every hour of the year, if holiday or
-        not (0: holiday, 1: no holiday)
+    holidays : list or dict containg dates of holidays (see set_holidays_in_df)
+
     holiday_is_sunday : boolean
         If set to True, all holidays (0) will be set to sundays (7).
 
@@ -32,16 +35,7 @@ def add_weekdays2df(time_df, holidays=None, holiday_is_sunday=False):
     time_df["weekday"] = time_df.index.weekday + 1
     time_df["date"] = time_df.index.date
 
-    # Set weekday to Holiday (0) for all holidays
-    if holidays is not None:
-        if isinstance(holidays, dict):
-            holidays = list(holidays.keys())
-            time_df["weekday"] = time_df["weekday"].mask(
-                cond=pd.to_datetime(time_df["date"]).isin(
-                    pd.to_datetime(holidays)
-                ),
-                other=0,
-            )
+    set_holidays_in_df(time_df, holidays)
 
     if holiday_is_sunday:
         time_df.weekday = time_df.weekday.mask(
@@ -49,3 +43,34 @@ def add_weekdays2df(time_df, holidays=None, holiday_is_sunday=False):
         )
 
     return time_df
+
+
+def set_holidays_in_df(time_df: pd.DataFrame, holidays: dict | list) -> None:
+    r"""Giving back a DataFrame containing weekdays and optionally holidays for
+     the given year.
+
+    Parameters
+    ----------
+    time_df : pandas DataFrame
+        DataFrame in which the "weekday" (1..7)
+        should replaced by 0 for holidays
+
+    holidays : list or dict containg dates of holidays. If a dict is chosen,
+        the key should identify the date, dict values are ignored.
+
+    Returns
+    -------
+    pandas.DataFrame : DataFrame with weekdays
+    """
+    # Set weekday to Holiday (0) for all holidays
+    if holidays is not None:
+        if isinstance(holidays, dict):
+            holidays = list(holidays.keys())
+        time_df["weekday"] = time_df["weekday"].mask(
+            cond=pd.to_datetime(time_df.index.date).isin(
+                pd.to_datetime(holidays)
+            ),
+            other=0,
+        )
+
+    return None

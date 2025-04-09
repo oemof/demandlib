@@ -46,9 +46,9 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Utilities",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
-    "numpy >= 1.17.0",
+    "numpy >= 2.0",
     "pandas >= 2.0",
 ]
 license = {text = "MIT"}
@@ -78,9 +78,18 @@ test = [
     "coverage",
     "matplotlib",
     "pytest",
+    "geopandas",
 ]
 tox = [
     "tox",
+]
+examples = [
+    "matplotlib",
+    "workalendar",
+]
+geometry = [
+    "shapely >= 2.0.0",
+    "geopandas"
 ]
 
 [tool.black]
@@ -111,6 +120,9 @@ norecursedirs = [
     "dist",
     "docs/_build",
     "examples",
+]
+filterwarnings = [
+    "ignore::UserWarning",
 ]
 python_files = [
     "test_*.py",

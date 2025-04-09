@@ -1,6 +1,20 @@
 Changelog
 =========
 
+v0.2.2 (YYYY-MM-DD)
++++++++++++++++++++++++++
+
+New features
+############
+*   Added Electricity standard load profiles as released by the BDEW in 2025.
+
+Bug fixes
+#########
+
+Other changes
+#############
+
+
 v0.2.1 (2024-08-06)
 +++++++++++++++++++++++++
 

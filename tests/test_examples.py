@@ -9,16 +9,19 @@ SPDX-License-Identifier: MIT
 """
 
 import os
+from unittest.mock import patch
 
-import matplotlib
+from matplotlib import use
 
 
-def test_examples():
+@patch("matplotlib.pyplot.show")
+def test_examples(capsys):
     """Test the results of the heat example."""
-    matplotlib.use("Agg")
+    use("agg")
     path = os.path.join(os.path.dirname(__file__), os.pardir, "examples")
     os.chdir(path)
     for filename in os.listdir(path):
         if filename.endswith("_example.py"):
             fn = os.path.join(path, filename)
-            exec(open(fn).read())
+            with open(fn, "r") as f:
+                exec(f.read())

@@ -28,7 +28,7 @@ from matplotlib import pyplot as plt
 import demandlib.bdew as bdew
 import demandlib.particular_profiles as profiles
 
-# The following dictionary is create by "workalendar"
+# The following dictionary has been created by "workalendar"
 # pip3 install workalendar
 # >>> from workalendar.europe import Germany
 # >>> cal = Germany()
@@ -62,7 +62,7 @@ year = 2010
 e_slp = bdew.ElecSlp(year, holidays=holidays)
 
 # multiply given annual demand with timeseries
-elec_demand = e_slp.get_profile(ann_el_demand_per_sector)
+elec_demand = e_slp.get_scaled_power_profiles(ann_el_demand_per_sector)
 
 # Add the slp for the industrial group
 ilp = profiles.IndustrialLoadProfile(e_slp.date_time_index, holidays=holidays)

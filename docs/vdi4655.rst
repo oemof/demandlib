@@ -1,0 +1,93 @@
+=====================
+VDI4655 Load Profiles
+=====================
+
+Overview
+--------
+
+The VDI 4655 module implements load profile generation for residential buildings
+according to the German engineering standard VDI 4655. Heat and power demand
+profiles are generated based on typical days and building characteristics.
+
+Key Features:
+
+* Generates heating, hot water and power demand profiles for residential buildings
+* Supports both single-family (EFH) and multi-family houses (MFH)
+* Considers weather data, based on the building location in Germany
+* Accounts for seasonal variations and holidays
+* Customizable temperature limits for season definitions
+* Adjustable temporal resolution (e.g., hourly, 15-minute intervals)
+
+
+Example Usage
+-------------
+
+Here's a basic example of how to use the VDI 4655 module::
+
+    from demandlib import vdi
+
+    # Define houses
+    houses = [
+        {
+            "name": "EFH_1",
+            "house_type": "EFH",
+            "N_Pers": 3,
+            "N_WE": 1,
+            "Q_Heiz_a": 6000,
+            "Q_TWW_a": 1500,
+            "W_a": 5250,
+        }
+    ]
+
+    # Create region
+    region = vdi.Region(
+        2017,
+        try_region=4,
+        houses=houses,
+        resample_rule="1h"
+    )
+
+    # Generate load curves
+    load_curves = region.get_load_curve_houses()
+
+House Parameters
+----------------
+
+Required parameters for each house:
+
+* ``name``: Unique identifier for the house
+* ``house_type``: Either "EFH" (single-family) or "MFH" (multi-family)
+* ``N_Pers``: Number of persons, up to 12 (relevant for EFH)
+* ``N_WE``: Number of apartments, up to 40 (relevant for MFH)
+* ``Q_Heiz_a``: Annual heating demand in kWh
+* ``Q_TWW_a``: Annual hot water demand in kWh
+* ``W_a``: Annual electricity demand in kWh
+
+Optional parameters:
+
+* ``summer_temperature_limit``: Temperature threshold for summer season (default: 15°C)
+* ``winter_temperature_limit``: Temperature threshold for winter season (default: 5°C)
+
+Weather Data
+------------
+
+The module uses German test reference year (TRY) weather data by 'Deutscher Wetterdienst' (DWD)
+for determining the daily temperature and cloud coverage. You can:
+
+* Use the weather data from one of the 15 TRY regions by DWD from 2010
+
+  * Specify a TRY region number (``try_region`` parameter), or
+
+  * Use geographical coordinates to determine the TRY region (requires geopandas)
+
+* Provide your own weather file (``file_weather`` parameter), adhering to the standard
+  of the TRY weather data published in 2016 by DWD (available at https://kunden.dwd.de/obt/)
+
+Further Reading
+---------------
+
+For more details about the VDI 4655 standard, refer to:
+
+* VDI 4655: Reference load profiles of single-family and multi-family houses for the use of CHP systems
+* May 2008 (ICS 91.140.01)
+* Verein Deutscher Ingenieure e.V.
