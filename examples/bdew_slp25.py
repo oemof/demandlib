@@ -1,4 +1,12 @@
 """
+Installation requirements
+-------------------------
+This example requires at least version v0.2.2 of the oemof demandlib. Install
+by:
+    pip install 'demandlib>=0.2.2'
+It further requires matplotlib for plotting:
+    pip install matplotlib
+
 SPDX-FileCopyrightText: Deutsches Zentrum für Luft- und Raumfahrt
 SPDX-FileCopyrightText: Patrik Schönfeldt
 

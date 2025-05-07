@@ -7,7 +7,7 @@ Installation requirements
 -------------------------
 This example requires at least version v0.1.4 of the oemof demandlib. Install
 by:
-    pip install 'demandlib>=0.1.4,<0.2'
+    pip install 'demandlib>=0.1.4'
 It further requires matplotlib for plotting:
     pip install matplotlib
 
