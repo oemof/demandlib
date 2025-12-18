@@ -9,6 +9,7 @@ New features
 
 Bug fixes
 #########
+*   Fix leap year handling in VDI 4655 profiles
 
 Other changes
 #############
