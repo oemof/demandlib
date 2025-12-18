@@ -105,15 +105,25 @@ class TestVDI4655Profiles:
         # Quarter-hourly data should have 4 times as many entries
         assert len(load_curves_quarter) == len(load_curves_hourly) * 4
 
-    def test_leap_year(self):
-        """Test handling of leap years."""
-        # region_leap = Region(2020, try_region=4)  # Leap year
-        region_normal = Region(
-            2017, Climate().from_try_data(4)
-        )  # Non-leap year
+    def test_leap_year(self, example_houses, example_holidays):
+        """Test generation of load curves for leap year."""
+        climate = Climate().from_try_data(4)
+        climate.temperature = pd.concat(
+            [climate.temperature, climate.temperature.iloc[[-1]]]
+        )
+        climate.cloud_coverage = pd.concat(
+            [climate.cloud_coverage, climate.cloud_coverage.iloc[[-1]]]
+        )
 
-        # assert region_leap.hoy == 8784  # Hours in leap year
-        assert region_normal.hoy == 8760  # Hours in normal year
+        region = Region(
+            2024,
+            climate=climate,
+            houses=example_houses,
+            holidays=example_holidays,
+            resample_rule="1h",
+        )
+        load_curves = region.get_load_curve_houses()
+        assert len(load_curves) == 8784  # 366 days * 24 hours
 
     def test_temperature_limits(self, example_houses):
         """Test custom temperature limits."""

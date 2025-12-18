@@ -343,7 +343,7 @@ class Region:
         # Create a table for every minute of the year
         minute_table = pd.DataFrame(
             index=pd.date_range(
-                f"1/1/{self._year}", periods=525600, freq="Min"
+                f"1/1/{self._year}", periods=self.hoy * 60, freq="Min"
             )
         )
 
