@@ -9,6 +9,8 @@ New features
 
 Bug fixes
 #########
+*   Implement default temperature limits for VDI 4655 calculation to make
+    ``summer_temperature_limit`` and ``winter_temperature_limit`` optional
 
 Other changes
 #############
