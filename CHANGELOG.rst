@@ -23,6 +23,7 @@ v0.2.2 (2025-04-09)
 +++++++++++++++++++++++++
 
 *   Added Electricity standard load profiles as released by the BDEW in 2025.
+*   Added VDI profile based on LPagg
 
 
 v0.2.1 (2024-08-06)
