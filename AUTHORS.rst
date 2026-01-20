@@ -5,6 +5,7 @@ Authors
 (alphabetic order)
 
 * Amedeo Ceruti
+* Benjamin Singh
 * Birgit Schachler
 * Caroline Möller
 * Florian Maurer

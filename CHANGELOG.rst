@@ -16,6 +16,8 @@ Bug fixes
 Other changes
 #############
 
+* Documentation improvements.
+
 
 v0.2.2 (2025-04-09)
 +++++++++++++++++++++++++
@@ -42,7 +44,7 @@ v0.2.0 (2024-06-27)
 
 Bug fixes
 #########
-*   Raise error for non supported shlp_type 
+*   Raise error for non supported shlp_type
 	in non-commercial buildings
 
 Other changes

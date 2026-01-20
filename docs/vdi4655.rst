@@ -36,13 +36,15 @@ Here's a basic example of how to use the VDI 4655 module::
             "Q_Heiz_a": 6000,
             "Q_TWW_a": 1500,
             "W_a": 5250,
+            "summer_temperature_limit": 15,
+            "winter_temperature_limit": 5,
         }
     ]
 
     # Create region
     region = vdi.Region(
         2017,
-        try_region=4,
+        climate=vdi.Climate().from_try_data(try_region=4),
         houses=houses,
         resample_rule="1h"
     )
