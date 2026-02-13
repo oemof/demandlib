@@ -17,7 +17,7 @@ import warnings
 
 import pandas as pd
 
-from demandlib.tools import add_weekdays2df
+from oemof.demand.tools import add_weekdays2df
 
 from ._profiles25 import _bdew_datapath
 
@@ -243,7 +243,7 @@ class ElecSlp:
 
         Examples
         --------
-        >>> from demandlib import bdew
+        >>> from oemof.demand import bdew
         >>> e_slp = bdew.ElecSlp(year=2020)
         >>> ", ".join(sorted(e_slp.get_profiles().columns))
         'g0, g1, g2, g3, g4, g5, g6, h0, h0_dyn, l0, l1, l2'
@@ -279,7 +279,7 @@ class ElecSlp:
 
         Examples
         --------
-        >>> from demandlib import bdew
+        >>> from oemof.demand import bdew
         >>> e_slp = bdew.ElecSlp(year=2020)
         >>> e_slp.get_scaled_profiles({"h0": 3000, "g0": 5000}).head()
                                    g0        h0
@@ -325,7 +325,7 @@ class ElecSlp:
 
         Examples
         --------
-        >>> from demandlib import bdew
+        >>> from oemof.demand import bdew
         >>> e_slp = bdew.ElecSlp(year=2020)
         >>> e_slp.get_scaled_power_profiles({"h0": 3000, "g0": 5000}).head()
                                    g0        h0

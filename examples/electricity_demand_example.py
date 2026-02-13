@@ -25,8 +25,7 @@ from datetime import time as settime
 import numpy as np
 from matplotlib import pyplot as plt
 
-import demandlib.bdew as bdew
-import demandlib.particular_profiles as profiles
+from oemof import demand as bdew, demand as profiles
 
 # The following dictionary has been created by "workalendar"
 # pip3 install workalendar

@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 import pytest
 
-from demandlib import bdew
+from oemof.demand import bdew
 
 
 class TestElecSLP:
@@ -176,10 +176,10 @@ def test_slp25():
     )
 
     with pytest.raises(NotImplementedError):
-        _ = bdew._profiles25.BDEW25Profile(index15m)
+        _ = oemof.demandlib.bdew._profiles25.BDEW25Profile(index15m)
 
     with pytest.raises(NotImplementedError):
-        _ = bdew._profiles25.DynamicBDEW25Profile(index15m)
+        _ = oemof.demandlib.bdew._profiles25.DynamicBDEW25Profile(index15m)
 
     for slp_type in [bdew.G25, bdew.H25, bdew.L25, bdew.P25, bdew.S25]:
         # We allow 1.0 % tollerenace (with holidays)

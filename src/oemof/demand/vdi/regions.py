@@ -48,8 +48,8 @@ from collections import namedtuple
 
 import pandas as pd
 
-from demandlib.tools import add_weekdays2df
-from demandlib.vdi import dwd_try
+from oemof.demand.tools import add_weekdays2df
+from oemof.demand.vdi import dwd_try
 
 
 class Climate:

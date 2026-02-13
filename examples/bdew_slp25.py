@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-from demandlib import bdew
+from oemof.demand import bdew
 
 index15m = pd.date_range(
     start="2020-01-01 00:00",

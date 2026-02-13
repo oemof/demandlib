@@ -20,7 +20,7 @@ import datetime
 
 from matplotlib import pyplot as plt
 
-from demandlib import vdi
+from oemof.demand import vdi
 
 # The following dictionary has been created by "workalendar"
 # pip3 install workalendar

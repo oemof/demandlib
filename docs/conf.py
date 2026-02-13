@@ -4,7 +4,7 @@ import os
 
 from sphinx.ext.autodoc import between
 
-from demandlib import __version__
+from oemof.demand import __version__
 
 
 def setup(app):

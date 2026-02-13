@@ -18,7 +18,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from demandlib.tools import set_holidays_in_df
+from oemof.demand.tools import set_holidays_in_df
 
 _bdew_datapath = os.path.join(os.path.dirname(__file__), "bdew_data")
 

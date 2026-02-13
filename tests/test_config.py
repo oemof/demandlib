@@ -17,7 +17,7 @@ from configparser import NoSectionError
 
 import pytest
 
-from demandlib import config
+from oemof.demand import config
 
 
 def test_ini_filenames_basic():

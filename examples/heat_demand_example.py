@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-import demandlib.bdew as bdew
+from oemof import demand as bdew
 
 # read example temperature series
 filename = "example_data.csv"

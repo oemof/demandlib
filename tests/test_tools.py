@@ -2,7 +2,7 @@ import datetime
 
 import pandas as pd
 
-from demandlib import tools
+from oemof.demand import tools
 
 
 class TestWeekdays:
