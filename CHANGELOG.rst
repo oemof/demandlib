@@ -82,7 +82,7 @@ New features
 Bug fixes
 #########
 *   Fix improper use of pandas.dataframe.merge
-    (demandlib will now work with pandas>=1.2)
+    (oemof-demand will now work with pandas>=1.2)
 
 Other changes
 #############

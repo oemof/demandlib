@@ -4,9 +4,9 @@ Creating heat demand profiles using the bdew method.
 
 Installation requirements
 -------------------------
-This example requires at least version v0.1.4 of the oemof demandlib. Install
+This example requires at least version v0.1.4 of the oemof oemof-demand. Install
 by:
-    pip install 'demandlib>=0.1.4'
+    pip install 'oemof-demand>=0.1.4'
 Optional:
     pip install matplotlib
 
@@ -39,7 +39,7 @@ if not os.path.isfile(datapath):
         "* you forgot to download the example data from the repository\n"
         "* the filename is wrong\n"
         "* the file is not located in {1}\n"
-        "Download the file from the demandlib repository and copy it to the "
+        "Download the file from the oemof-demand repository and copy it to the "
         "right directory.\nAlternatively you can adapt the name of the file "
         "or the name of the directory in the example script."
     )

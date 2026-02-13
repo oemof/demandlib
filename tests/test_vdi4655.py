@@ -264,12 +264,12 @@ class TestVDI4655Profiles:
         # Force reload of module to trigger ModuleNotFoundError during imports
         import importlib
 
-        # import demandlib.vdi.dwd_try
-        importlib.reload(oemof.demandlib.vdi.dwd_try)
+        # import oemof-demand.vdi.dwd_try
+        importlib.reload(oemof.oemof-demand.vdi.dwd_try)
 
         # Should raise a helpful error when trying to use find_try_region
         with pytest.raises(ImportError, match="geopandas.* required.*"):
-            oemof.demandlib.vdi.dwd_try.find_try_region(13.42, 52.82)
+            oemof.oemof-demand.vdi.dwd_try.find_try_region(13.42, 52.82)
 
     def test_custom_weather_data(self, example_houses):
         test_path = Path(Path(__file__).parent, "test_data")

@@ -22,7 +22,7 @@ located in the examples directory of the repository.
 .. code-block:: python
 
     import datetime
-    import demandlib.particular_profiles as profiles
+    import oemof-demand.particular_profiles as profiles
     import pandas as pd
 
     holidays = {

@@ -1,27 +1,27 @@
 Reference
 =========
 
-.. automodule:: demandlib.bdew.elec_slp
+.. automodule:: oemof-demand.bdew.elec_slp
     :members:
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: demandlib.bdew.heat_building
+.. automodule:: oemof-demand.bdew.heat_building
     :members:
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: demandlib.particular_profiles
+.. automodule:: oemof-demand.particular_profiles
     :members:
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: demandlib.vdi.regions
+.. automodule:: oemof-demand.vdi.regions
     :members:
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: demandlib.vdi.dwd_try
+.. automodule:: oemof-demand.vdi.dwd_try
     :members:
     :undoc-members:
     :show-inheritance:

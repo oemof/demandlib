@@ -21,7 +21,7 @@ include = [
 exclude = ["docs/_build", "**/*.egg-info"]
 
 [project]
-name = "demandlib"
+name = "oemof-demand"
 dynamic = ["version"]
 description = "Creating heat and power demand profiles from annual values"
 readme = "README.rst"
@@ -54,10 +54,10 @@ dependencies = [
 license = {text = "MIT"}
 
 [project.urls]
-Homepage = "https://github.com/oemof/demandlib"
-Documentation = "https://demandlib.readthedocs.io/"
-Changelog = "https://demandlib.readthedocs.io/en/latest/changelog.html"
-"Issue Tracker" = "https://github.com/oemof/demandlib/issues/"
+Homepage = "https://github.com/oemof/oemof-demand"
+Documentation = "https://oemof-demand.readthedocs.io/"
+Changelog = "https://oemof-demand.readthedocs.io/en/latest/changelog.html"
+"Issue Tracker" = "https://github.com/oemof/oemof-demand/issues/"
 
 [project.optional-dependencies]
 build = [
@@ -149,7 +149,7 @@ testpaths = [
 [tool.isort]
 force_single_line = true
 line_length = 79
-known_first_party = "demandlib"
+known_first_party = "oemof-demand"
 default_section = "THIRDPARTY"
 forced_separate = "test_demandlib"
 skip = "migrations"

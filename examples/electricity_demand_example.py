@@ -5,9 +5,9 @@ and agricultural loads, as well as step load profiles for industrial loads.
 
 Installation requirements
 -------------------------
-This example requires at least version v0.1.4 of the oemof demandlib. Install
+This example requires at least version v0.1.4 of the oemof oemof-demand. Install
 by:
-    pip install 'demandlib>=0.1.4'
+    pip install 'oemof-demand>=0.1.4'
 It further requires matplotlib for plotting:
     pip install matplotlib
 

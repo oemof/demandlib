@@ -4,4 +4,4 @@ Installation
 
 At the command line::
 
-    pip install demandlib
+    pip install oemof-demand

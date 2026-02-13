@@ -176,10 +176,10 @@ def test_slp25():
     )
 
     with pytest.raises(NotImplementedError):
-        _ = oemof.demandlib.bdew._profiles25.BDEW25Profile(index15m)
+        _ = oemof.oemof-demand.bdew._profiles25.BDEW25Profile(index15m)
 
     with pytest.raises(NotImplementedError):
-        _ = oemof.demandlib.bdew._profiles25.DynamicBDEW25Profile(index15m)
+        _ = oemof.oemof-demand.bdew._profiles25.DynamicBDEW25Profile(index15m)
 
     for slp_type in [bdew.G25, bdew.H25, bdew.L25, bdew.P25, bdew.S25]:
         # We allow 1.0 % tollerenace (with holidays)

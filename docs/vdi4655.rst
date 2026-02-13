@@ -24,7 +24,7 @@ Example Usage
 
 Here's a basic example of how to use the VDI 4655 module::
 
-    from demandlib import vdi
+    from oemof-demand import vdi
 
     # Define houses
     houses = [
