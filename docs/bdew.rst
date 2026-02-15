@@ -67,7 +67,7 @@ Usage
 
 .. code-block:: python
 
-    from oemof-demand import bdew
+    from oemof.demand import bdew
 
     ...
 
@@ -135,7 +135,7 @@ Usage
 
 .. code-block:: python
 
-    from oemof-demand import bdew
+    from oemof.demand import bdew
     e_slp = bdew.ElecSlp(year=2020)
 
     # get all available types
