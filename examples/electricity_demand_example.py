@@ -5,9 +5,10 @@ and agricultural loads, as well as step load profiles for industrial loads.
 
 Installation requirements
 -------------------------
-This example requires at least version v0.1.4 of the oemof oemof-demand. Install
-by:
+This example requires at least version v0.1.4 of the oemof oemof-demand.
+Install by:
     pip install 'oemof-demand>=0.1.4'
+
 It further requires matplotlib for plotting:
     pip install matplotlib
 
@@ -25,7 +26,9 @@ from datetime import time as settime
 import numpy as np
 from matplotlib import pyplot as plt
 
-from oemof import demand as bdew, demand as profiles
+from oemof.demand import bdew
+from oemof.demand import particular_profiles as profiles
+
 
 # The following dictionary has been created by "workalendar"
 # pip3 install workalendar

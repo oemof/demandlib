@@ -353,7 +353,9 @@ class Region:
 
         # Fill data into the large table with minute index
         self.type_days[tl] = pd.concat(
-            [self.type_days[tl], minute_table], axis=1
+            [self.type_days[tl], minute_table],
+            axis=1,
+            sort=True,
         ).ffill()
 
         # Add columns to merge with (house types, minute of day and day_types)

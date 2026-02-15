@@ -265,11 +265,11 @@ class TestVDI4655Profiles:
         import importlib
 
         # import oemof-demand.vdi.dwd_try
-        importlib.reload(oemof.oemof-demand.vdi.dwd_try)
+        importlib.reload(demand.vdi.dwd_try)
 
         # Should raise a helpful error when trying to use find_try_region
         with pytest.raises(ImportError, match="geopandas.* required.*"):
-            oemof.oemof-demand.vdi.dwd_try.find_try_region(13.42, 52.82)
+            demand.vdi.dwd_try.find_try_region(13.42, 52.82)
 
     def test_custom_weather_data(self, example_houses):
         test_path = Path(Path(__file__).parent, "test_data")

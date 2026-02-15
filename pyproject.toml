@@ -1,57 +1,59 @@
+[tool.ruff]
+extend-exclude = ["static", "ci/templates"]
+line-length = 79
+src = ["src", "tests"]
+target-version = "py313"
+
 [build-system]
 requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
 
 [tool.flit.sdist]
 include = [
-    ".coveragerc",
-    ".editorconfig",
-    ".readthedocs.yml",
-    "tox.ini",
-    "AUTHORS.rst",
-    "CHANGELOG.rst",
-    "CONTRIBUTING.rst",
-    "LICENSE",
-    "README.rst",
-    "examples/",
-    "docs/",
-    "src/",
-    "tests/",
+  ".coveragerc",
+  ".editorconfig",
+  ".readthedocs.yml",
+  ".pre-commit-config.yaml",
+  "tox.ini",
+  "AUTHORS.rst",
+  "CHANGELOG.rst",
+  "CONTRIBUTING.rst",
+  "LICENSE",
+  "README.rst",
+  "examples/",
+  "docs/",
+  "src/",
+  "tests/",
 ]
 exclude = ["docs/_build", "**/*.egg-info"]
 
 [project]
-name = "oemof-demand"
+name = "oemof.demand"
 dynamic = ["version"]
 description = "Creating heat and power demand profiles from annual values"
 readme = "README.rst"
-authors = [
-    {name = "oemof developer group", email = "contact@oemof.org"},
-]
+authors = [{ name = "oemof developer group", email = "contact@oemof.org" }]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: Unix",
-    "Operating System :: POSIX",
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: MacOS",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Topic :: Utilities",
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: Unix",
+  "Operating System :: POSIX",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: MacOS",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Topic :: Utilities",
 ]
 requires-python = ">=3.10"
-dependencies = [
-    "numpy >= 2.0",
-    "pandas >= 2.0",
-]
-license = {text = "MIT"}
+dependencies = ["numpy >= 2.0", "pandas >= 2.0"]
+license = { text = "MIT" }
 
 [project.urls]
 Homepage = "https://github.com/oemof/oemof-demand"
@@ -61,36 +63,20 @@ Changelog = "https://oemof-demand.readthedocs.io/en/latest/changelog.html"
 
 [project.optional-dependencies]
 build = [
-    "build",
-    "check-manifest",
-    "flake8",
-    "flit",
-    "isort",
-    "pygments",
-    "readme-renderer",
-    "twine",
+  "build",
+  "check-manifest",
+  "flake8",
+  "flit",
+  "isort",
+  "pygments",
+  "readme-renderer",
+  "twine",
 ]
-docs = [
-    "sphinx",
-    "sphinx_rtd_theme",
-]
-test = [
-    "coverage",
-    "matplotlib",
-    "pytest",
-    "geopandas",
-]
-tox = [
-    "tox",
-]
-examples = [
-    "matplotlib",
-    "workalendar",
-]
-geometry = [
-    "shapely >= 2.0.0",
-    "geopandas"
-]
+docs = ["sphinx", "sphinx_rtd_theme"]
+test = ["coverage", "matplotlib", "pytest", "geopandas"]
+tox = ["tox"]
+examples = ["matplotlib", "workalendar"]
+geometry = ["shapely >= 2.0.0", "geopandas"]
 
 [tool.black]
 line-length = 79
@@ -113,23 +99,9 @@ exclude = '''
 '''
 
 [tool.pytest.ini_options]
-norecursedirs = [
-    ".git",
-    ".tox",
-    ".env",
-    "dist",
-    "docs/_build",
-    "examples",
-]
-filterwarnings = [
-    "ignore::UserWarning",
-]
-python_files = [
-    "test_*.py",
-    "*_test.py",
-    "*_tests.py",
-    "tests.py",
-]
+norecursedirs = [".git", ".tox", ".env", "dist", "docs/_build", "examples"]
+filterwarnings = ["ignore::UserWarning"]
+python_files = ["test_*.py", "*_test.py", "*_tests.py", "tests.py"]
 addopts = """
     -ra
     --strict-markers
@@ -140,11 +112,7 @@ addopts = """
     --tb=short
     --pyargs
 """
-testpaths = [
-    "src/",
-    "tests/",
-    "docs/",
-]
+testpaths = ["src/", "tests/", "docs/"]
 
 [tool.isort]
 force_single_line = true

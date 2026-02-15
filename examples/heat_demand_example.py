@@ -18,6 +18,7 @@ SPDX-FileCopyrightText: Stephen Bosch
 SPDX-License-Identifier: MIT
 
 """
+
 import datetime
 import os
 
@@ -25,7 +26,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from oemof import demand as bdew
+from oemof.demand import bdew
 
 # read example temperature series
 filename = "example_data.csv"

@@ -163,7 +163,6 @@ class DynamicBDEW25Profile(BDEW25Profile):
 
     @staticmethod
     def dynamisation_function(timeindex: pd.DatetimeIndex) -> pd.Series:
-
         # cast to float hear because of miscalculations when using integers
         day_of_year = np.array(timeindex.day_of_year, dtype=float)
 

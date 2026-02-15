@@ -7,6 +7,7 @@ SPDX-FileCopyrightText: 2016-2021 Uwe Krien <uwe.krien@ifam.fraunhofer.de>
 
 SPDX-License-Identifier: MIT
 """
+
 __copyright__ = "Uwe Krien <uwe.krien@ifam.fraunhofer.de>"
 __license__ = "MIT"
 
@@ -24,7 +25,7 @@ def test_ini_filenames_basic():
     files = config.get_ini_filenames()
     local_path = os.path.join(os.path.expanduser("~"), ".oemof-demand")
     fn = sorted([f.split(os.sep)[-1] for f in files if local_path not in f])
-    assert fn == ["oemof-demand.ini"]
+    assert fn == ["demand.ini"]
 
 
 def test_ini_filenames_local_path():
@@ -46,7 +47,7 @@ def test_init_basic():
     fn = sorted(
         [f.split(os.sep)[-1] for f in config.FILES if local_path not in f]
     )
-    assert fn == ["oemof-demand.ini"]
+    assert fn == ["demand.ini"]
 
 
 def test_init_own_file_list():
