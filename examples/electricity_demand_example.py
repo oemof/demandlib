@@ -29,7 +29,6 @@ from matplotlib import pyplot as plt
 from oemof.demand import bdew
 from oemof.demand import particular_profiles as profiles
 
-
 # The following dictionary has been created by "workalendar"
 # pip3 install workalendar
 # >>> from workalendar.europe import Germany
