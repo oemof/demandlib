@@ -12,9 +12,9 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-import demandlib.vdi
-from demandlib.vdi import Climate
-from demandlib.vdi.regions import Region
+from oemof import demand
+from oemof.demand.vdi import Climate
+from oemof.demand.vdi.regions import Region
 
 
 @pytest.fixture
@@ -184,7 +184,7 @@ class TestVDI4655Profiles:
         assert (load_curves.loc[:, ("EFH_1", "EFH", "Q_Heiz_TT")] == 0).all()
 
     def test_find_try_region(self):
-        try_region = demandlib.vdi.find_try_region(13.42, 52.82)
+        try_region = demand.vdi.find_try_region(13.42, 52.82)
         assert try_region == 4
 
     def test_negative_factors_warning(self, example_houses):
@@ -209,7 +209,7 @@ class TestVDI4655Profiles:
 
         try:
             with pytest.raises(TypeError, match="Header row not found"):
-                from demandlib.vdi.dwd_try import read_dwd_weather_file
+                from oemof.demand.vdi.dwd_try import read_dwd_weather_file
 
                 read_dwd_weather_file(weather_file_path=temp_filepath)
         finally:
@@ -264,12 +264,12 @@ class TestVDI4655Profiles:
         # Force reload of module to trigger ModuleNotFoundError during imports
         import importlib
 
-        # import demandlib.vdi.dwd_try
-        importlib.reload(demandlib.vdi.dwd_try)
+        # import oemof-demand.vdi.dwd_try
+        importlib.reload(demand.vdi.dwd_try)
 
         # Should raise a helpful error when trying to use find_try_region
         with pytest.raises(ImportError, match="geopandas.* required.*"):
-            demandlib.vdi.dwd_try.find_try_region(13.42, 52.82)
+            demand.vdi.dwd_try.find_try_region(13.42, 52.82)
 
     def test_custom_weather_data(self, example_houses):
         test_path = Path(Path(__file__).parent, "test_data")

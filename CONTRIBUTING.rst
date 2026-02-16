@@ -8,7 +8,7 @@ little bit helps, and credit will always be given.
 Bug reports
 ===========
 
-When `reporting a bug <https://github.com/oemof/demandlib/issues>`_ please include:
+When `reporting a bug <https://github.com/oemof/oemof-demand/issues>`_ please include:
 
     * Your operating system name and version.
     * Any details about your local setup that might be helpful in troubleshooting.
@@ -24,7 +24,7 @@ articles, and such.
 Feature requests and feedback
 =============================
 
-The best way to send feedback is to file an issue at https://github.com/oemof/demandlib/issues.
+The best way to send feedback is to file an issue at https://github.com/oemof/oemof-demand/issues.
 
 If you are proposing a feature:
 
@@ -35,13 +35,13 @@ If you are proposing a feature:
 Development
 ===========
 
-To set up `demandlib` for local development:
+To set up `oemof-demand` for local development:
 
-1. Fork `demandlib <https://github.com/oemof/demandlib>`_
+1. Fork `oemof-demand <https://github.com/oemof/oemof-demand>`_
    (look for the "Fork" button).
 2. Clone your fork locally::
 
-    git clone git@github.com:YOURGITHUBNAME/demandlib.git
+    git clone git@github.com:YOURGITHUBNAME/oemof-demand.git
 
 3. Create a branch for local development::
 

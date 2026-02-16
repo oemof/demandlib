@@ -15,42 +15,42 @@ Overview
       - | |version| |wheel| |supported-versions| |supported-implementations| |commits-since| |packaging|
 
 
-.. |tox-pytest| image:: https://github.com/oemof/demandlib/workflows/tox%20pytests/badge.svg
-     :target: https://github.com/oemof/demandlib/actions?query=workflow%3A%22tox+checks%22
+.. |tox-pytest| image:: https://github.com/oemof/oemof-demand/workflows/tox%20pytests/badge.svg
+     :target: https://github.com/oemof/oemof-demand/actions?query=workflow%3A%22tox+checks%22
 
-.. |tox-checks| image:: https://github.com/oemof/demandlib/workflows/tox%20checks/badge.svg?branch=dev
-     :target: https://github.com/oemof/demandlib/actions?query=workflow%3A%22tox+checks%22
+.. |tox-checks| image:: https://github.com/oemof/oemof-demand/workflows/tox%20checks/badge.svg?branch=dev
+     :target: https://github.com/oemof/oemof-demand/actions?query=workflow%3A%22tox+checks%22
 
-.. |packaging| image:: https://github.com/oemof/demandlib/workflows/packaging/badge.svg?branch=dev
-     :target: https://github.com/oemof/demandlib/actions?query=workflow%3Apackaging
+.. |packaging| image:: https://github.com/oemof/oemof-demand/workflows/packaging/badge.svg?branch=dev
+     :target: https://github.com/oemof/oemof-demand/actions?query=workflow%3Apackaging
 
-.. |docs| image:: https://readthedocs.org/projects/demandlib/badge/?style=flat
-    :target: https://demandlib.readthedocs.io/
+.. |docs| image:: https://readthedocs.org/projects/oemof-demand/badge/?style=flat
+    :target: https://oemof-demand.readthedocs.io/
     :alt: Documentation Status
 
-.. |coveralls| image:: https://coveralls.io/repos/oemof/demandlib/badge.svg?branch=dev&service=github
+.. |coveralls| image:: https://coveralls.io/repos/oemof/oemof-demand/badge.svg?branch=dev&service=github
     :alt: Coverage Status
-    :target: https://coveralls.io/github/oemof/demandlib?branch=dev
+    :target: https://coveralls.io/github/oemof/oemof-demand?branch=dev
 
-.. |version| image:: https://img.shields.io/pypi/v/demandlib.svg
+.. |version| image:: https://img.shields.io/pypi/v/oemof-demand.svg
     :alt: PyPI Package latest release
-    :target: https://pypi.org/project/demandlib
+    :target: https://pypi.org/project/oemof-demand
 
-.. |wheel| image:: https://img.shields.io/pypi/wheel/demandlib.svg
+.. |wheel| image:: https://img.shields.io/pypi/wheel/oemof-demand.svg
     :alt: PyPI Wheel
-    :target: https://pypi.org/project/demandlib
+    :target: https://pypi.org/project/oemof-demand
 
-.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/demandlib.svg
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/oemof-demand.svg
     :alt: Supported versions
-    :target: https://pypi.org/project/demandlib
+    :target: https://pypi.org/project/oemof-demand
 
-.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/demandlib.svg
+.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/oemof-demand.svg
     :alt: Supported implementations
-    :target: https://pypi.org/project/demandlib
+    :target: https://pypi.org/project/oemof-demand
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/oemof/demandlib/latest/dev
+.. |commits-since| image:: https://img.shields.io/github/commits-since/oemof/oemof-demand/latest/dev
     :alt: Commits since latest release
-    :target: https://github.com/oemof/demandlib/compare/master...dev
+    :target: https://github.com/oemof/oemof-demand/compare/master...dev
 
 
 
@@ -65,18 +65,18 @@ Installation
 
 ::
 
-    pip install demandlib
+    pip install oemof-demand
 
 You can also install the in-development version with::
 
-    pip install https://github.com/oemof/demandlib/archive/master.zip
+    pip install https://github.com/oemof/oemof-demand/archive/master.zip
 
 
 Documentation
 =============
 
 
-https://demandlib.readthedocs.io/
+https://oemof-demand.readthedocs.io/
 
 
 Development

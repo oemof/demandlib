@@ -2,7 +2,7 @@
 BDEW Load Profiles
 ==================
 
-Using the demandlib you can create heat and electrical profiles by scaling the BDEW profiles to your desired annual demand.
+Using the oemof-demand you can create heat and electrical profiles by scaling the BDEW profiles to your desired annual demand.
 The BDEW profiles are the standard load profiles from BDEW.
 
 Heat Profiles
@@ -67,7 +67,7 @@ Usage
 
 .. code-block:: python
 
-    from demandlib import bdew
+    from oemof.demand import bdew
 
     ...
 
@@ -135,7 +135,7 @@ Usage
 
 .. code-block:: python
 
-    from demandlib import bdew
+    from oemof.demand import bdew
     e_slp = bdew.ElecSlp(year=2020)
 
     # get all available types

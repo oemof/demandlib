@@ -1,9 +1,9 @@
 """
 Installation requirements
 -------------------------
-This example requires at least version v0.2.2 of the oemof demandlib. Install
+This example requires at least version v0.2.2 of the oemof oemof-demand. Install
 by:
-    pip install 'demandlib>=0.2.2'
+    pip install 'oemof-demand>=0.2.2'
 It further requires matplotlib for plotting:
     pip install matplotlib
 
@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-from demandlib import bdew
+from oemof.demand import bdew
 
 index15m = pd.date_range(
     start="2020-01-01 00:00",
