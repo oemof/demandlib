@@ -10,6 +10,7 @@ SPDX-FileCopyrightText: Patrik Schönfeldt
 
 SPDX-License-Identifier: MIT
 """
+
 import calendar
 import datetime
 import os

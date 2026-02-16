@@ -3,13 +3,10 @@
 """
 Tests for the config module.
 
-SPDX-FileCopyrightText: 2016-2021 Uwe Krien <uwe.krien@ifam.fraunhofer.de>
+SPDX-FileCopyrightText: Uwe Krien <uwe.krien@ifam.fraunhofer.de>
 
 SPDX-License-Identifier: MIT
 """
-__copyright__ = "Uwe Krien <uwe.krien@ifam.fraunhofer.de>"
-__license__ = "MIT"
-
 
 import os
 from configparser import NoOptionError

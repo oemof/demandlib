@@ -2,8 +2,8 @@
 """
 Implementation of industrial step load profiles.
 
-
 """
+
 from datetime import time as settime
 
 import pandas as pd
