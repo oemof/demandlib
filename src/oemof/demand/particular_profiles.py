@@ -2,7 +2,6 @@
 """
 Implementation of industrial step load profiles.
 
-
 """
 
 from datetime import time as settime
