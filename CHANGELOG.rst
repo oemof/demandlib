@@ -17,6 +17,7 @@ Other changes
 #############
 
 * Documentation improvements.
+* First version to be named oemof.demand.
 
 
 v0.2.2 (2025-04-09)
