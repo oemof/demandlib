@@ -28,7 +28,7 @@ include = [
 exclude = ["docs/_build", "**/*.egg-info"]
 
 [project]
-name = "oemof.demand"
+name = "demandlib"
 dynamic = ["version"]
 description = "Creating heat and power demand profiles from annual values"
 readme = "README.rst"
@@ -52,7 +52,7 @@ classifiers = [
   "Topic :: Utilities",
 ]
 requires-python = ">=3.10"
-dependencies = ["numpy >= 2.0", "pandas >= 2.1"]
+dependencies = ["oemof.demand"]
 license = { text = "MIT" }
 
 [project.urls]
@@ -61,63 +61,3 @@ Documentation = "https://oemof-demand.readthedocs.io/"
 Changelog = "https://oemof-demand.readthedocs.io/en/latest/changelog.html"
 "Issue Tracker" = "https://github.com/oemof/oemof-demand/issues/"
 
-[project.optional-dependencies]
-build = [
-  "build",
-  "check-manifest",
-  "flake8",
-  "flit",
-  "isort",
-  "pygments",
-  "readme-renderer",
-  "twine",
-]
-docs = ["sphinx", "sphinx_rtd_theme"]
-test = ["coverage", "matplotlib", "pytest", "geopandas"]
-tox = ["tox"]
-examples = ["matplotlib", "workalendar"]
-geometry = ["shapely >= 2.0.0", "geopandas"]
-
-[tool.black]
-line-length = 79
-target-version = ['py310', 'py311', 'py312']
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-  | ci
-)/
-'''
-
-[tool.pytest.ini_options]
-norecursedirs = [".git", ".tox", ".env", "dist", "docs/_build", "examples"]
-filterwarnings = ["ignore::UserWarning"]
-python_files = ["test_*.py", "*_test.py", "*_tests.py", "tests.py"]
-addopts = """
-    -ra
-    --strict-markers
-    --ignore=docs/conf.py
-    --ignore=.eggs
-    --doctest-modules
-    --doctest-glob=\\*.rst
-    --tb=short
-    --pyargs
-"""
-testpaths = ["src/", "tests/", "docs/"]
-
-[tool.isort]
-force_single_line = true
-line_length = 79
-known_first_party = "oemof-demand"
-default_section = "THIRDPARTY"
-forced_separate = "test_demandlib"
-skip = "migrations"
