@@ -10,7 +10,7 @@ Overview
     * - docs
       - |docs|
     * - tests
-      - | |tox-pytest| |tox-checks| |coveralls|
+      - | |tox-pytest| |tox-checks|
     * - package
       - | |version| |wheel| |supported-versions| |supported-implementations| |commits-since| |packaging|
 
@@ -27,10 +27,6 @@ Overview
 .. |docs| image:: https://readthedocs.org/projects/oemof-demand/badge/?style=flat
     :target: https://oemof-demand.readthedocs.io/
     :alt: Documentation Status
-
-.. |coveralls| image:: https://coveralls.io/repos/oemof/oemof-demand/badge.svg?branch=dev&service=github
-    :alt: Coverage Status
-    :target: https://coveralls.io/github/oemof/oemof-demand?branch=dev
 
 .. |version| image:: https://img.shields.io/pypi/v/oemof-demand.svg
     :alt: PyPI Package latest release
