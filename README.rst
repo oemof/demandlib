@@ -10,19 +10,19 @@ Overview
     * - docs
       - |docs|
     * - tests
-      - | |tox-pytest| |tox-checks|
+      - | |tox-pytest| |tox-checks| |coverage|
     * - package
-      - | |version| |wheel| |supported-versions| |supported-implementations| |commits-since| |packaging|
+      - | |version| |wheel| |supported-versions| |commits-since|
 
 
 .. |tox-pytest| image:: https://github.com/oemof/oemof-demand/workflows/tox%20pytests/badge.svg
-     :target: https://github.com/oemof/oemof-demand/actions?query=workflow%3A%22tox+checks%22
+    :target: https://github.com/oemof/oemof-demand/actions?query=workflow%3A%22tox+checks%22
 
 .. |tox-checks| image:: https://github.com/oemof/oemof-demand/workflows/tox%20checks/badge.svg?branch=dev
-     :target: https://github.com/oemof/oemof-demand/actions?query=workflow%3A%22tox+checks%22
+    :target: https://github.com/oemof/oemof-demand/actions?query=workflow%3A%22tox+checks%22
 
-.. |packaging| image:: https://github.com/oemof/oemof-demand/workflows/packaging/badge.svg?branch=dev
-     :target: https://github.com/oemof/oemof-demand/actions?query=workflow%3Apackaging
+.. |coverage| image:: https://raw.githubusercontent.com/oemof/oemof-demand/python-coverage-comment-action-data/badge.svg
+    :target: https://htmlpreview.github.io/?https://github.com/oemof/oemof-demand/blob/python-coverage-comment-action-data/htmlcov/index.html
 
 .. |docs| image:: https://readthedocs.org/projects/oemof-demand/badge/?style=flat
     :target: https://oemof-demand.readthedocs.io/
@@ -32,16 +32,8 @@ Overview
     :alt: PyPI Package latest release
     :target: https://pypi.org/project/oemof-demand
 
-.. |wheel| image:: https://img.shields.io/pypi/wheel/oemof-demand.svg
-    :alt: PyPI Wheel
-    :target: https://pypi.org/project/oemof-demand
-
 .. |supported-versions| image:: https://img.shields.io/pypi/pyversions/oemof-demand.svg
     :alt: Supported versions
-    :target: https://pypi.org/project/oemof-demand
-
-.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/oemof-demand.svg
-    :alt: Supported implementations
     :target: https://pypi.org/project/oemof-demand
 
 .. |commits-since| image:: https://img.shields.io/github/commits-since/oemof/oemof-demand/latest/dev
@@ -61,11 +53,11 @@ Installation
 
 ::
 
-    pip install oemof-demand
+    pip install oemof.demand
 
 You can also install the in-development version with::
 
-    pip install https://github.com/oemof/oemof-demand/archive/master.zip
+    pip install https://github.com/oemof/oemof-demand/archive/dev.zip
 
 
 Documentation
