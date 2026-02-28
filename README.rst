@@ -12,7 +12,7 @@ Overview
     * - tests
       - | |tox-pytest| |tox-checks| |coverage|
     * - package
-      - | |version| |wheel| |supported-versions| |commits-since|
+      - | |version| |supported-versions| |commits-since|
 
 
 .. |tox-pytest| image:: https://github.com/oemof/oemof-demand/workflows/tox%20pytests/badge.svg
