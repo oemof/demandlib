@@ -16,15 +16,15 @@ Overview
 
 
 .. |tox-pytest| image:: https://github.com/oemof/oemof-demand/workflows/tox%20pytests/badge.svg
-    :target: https://github.com/oemof/oemof-demand/actions?query=workflow%3A%22tox+checks%22
+    :target: https://github.com/oemof/oemof-demand/actions/workflows/tox_pytests.yml
 
-.. |tox-checks| image:: https://github.com/oemof/oemof-demand/workflows/tox%20checks/badge.svg?branch=dev
-    :target: https://github.com/oemof/oemof-demand/actions?query=workflow%3A%22tox+checks%22
+.. |tox-checks| image:: https://github.com/oemof/oemof-demand/workflows/tox%20checks/badge.svg
+    :target: https://github.com/oemof/oemof-demand/actions/workflows/tox_checks.yml
 
 .. |coverage| image:: https://raw.githubusercontent.com/oemof/oemof-demand/python-coverage-comment-action-data/badge.svg
     :target: https://htmlpreview.github.io/?https://github.com/oemof/oemof-demand/blob/python-coverage-comment-action-data/htmlcov/index.html
 
-.. |docs| image:: https://readthedocs.org/projects/oemof-demand/badge/?style=flat
+.. |docs| image:: https://readthedocs.org/projects/oemof-demand/badge/
     :target: https://oemof-demand.readthedocs.io/
     :alt: Documentation Status
 
