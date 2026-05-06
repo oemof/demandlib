@@ -12,9 +12,9 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-import demandlib.vdi
-from demandlib.vdi import Climate
-from demandlib.vdi.regions import Region
+from oemof import demand
+from oemof.demand.vdi import Climate
+from oemof.demand.vdi.regions import Region
 
 
 @pytest.fixture
@@ -105,15 +105,25 @@ class TestVDI4655Profiles:
         # Quarter-hourly data should have 4 times as many entries
         assert len(load_curves_quarter) == len(load_curves_hourly) * 4
 
-    def test_leap_year(self):
-        """Test handling of leap years."""
-        # region_leap = Region(2020, try_region=4)  # Leap year
-        region_normal = Region(
-            2017, Climate().from_try_data(4)
-        )  # Non-leap year
+    def test_leap_year(self, example_houses, example_holidays):
+        """Test generation of load curves for leap year."""
+        climate = Climate().from_try_data(4)
+        climate.temperature = pd.concat(
+            [climate.temperature, climate.temperature.iloc[[-1]]]
+        )
+        climate.cloud_coverage = pd.concat(
+            [climate.cloud_coverage, climate.cloud_coverage.iloc[[-1]]]
+        )
 
-        # assert region_leap.hoy == 8784  # Hours in leap year
-        assert region_normal.hoy == 8760  # Hours in normal year
+        region = Region(
+            2024,
+            climate=climate,
+            houses=example_houses,
+            holidays=example_holidays,
+            resample_rule="1h",
+        )
+        load_curves = region.get_load_curve_houses()
+        assert len(load_curves) == 8784  # 366 days * 24 hours
 
     def test_temperature_limits(self, example_houses):
         """Test custom temperature limits."""
@@ -174,7 +184,7 @@ class TestVDI4655Profiles:
         assert (load_curves.loc[:, ("EFH_1", "EFH", "Q_Heiz_TT")] == 0).all()
 
     def test_find_try_region(self):
-        try_region = demandlib.vdi.find_try_region(13.42, 52.82)
+        try_region = demand.vdi.find_try_region(13.42, 52.82)
         assert try_region == 4
 
     def test_negative_factors_warning(self, example_houses):
@@ -199,7 +209,7 @@ class TestVDI4655Profiles:
 
         try:
             with pytest.raises(TypeError, match="Header row not found"):
-                from demandlib.vdi.dwd_try import read_dwd_weather_file
+                from oemof.demand.vdi.dwd_try import read_dwd_weather_file
 
                 read_dwd_weather_file(weather_file_path=temp_filepath)
         finally:
@@ -254,12 +264,12 @@ class TestVDI4655Profiles:
         # Force reload of module to trigger ModuleNotFoundError during imports
         import importlib
 
-        # import demandlib.vdi.dwd_try
-        importlib.reload(demandlib.vdi.dwd_try)
+        # import oemof-demand.vdi.dwd_try
+        importlib.reload(demand.vdi.dwd_try)
 
         # Should raise a helpful error when trying to use find_try_region
         with pytest.raises(ImportError, match="geopandas.* required.*"):
-            demandlib.vdi.dwd_try.find_try_region(13.42, 52.82)
+            demand.vdi.dwd_try.find_try_region(13.42, 52.82)
 
     def test_custom_weather_data(self, example_houses):
         test_path = Path(Path(__file__).parent, "test_data")

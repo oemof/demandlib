@@ -11,13 +11,14 @@ SPDX-FileCopyrightText: Patrik Schönfeldt
 
 SPDX-License-Identifier: MIT
 """
+
 import os
 from math import ceil
 
 import numpy as np
 import pandas as pd
 
-from demandlib.tools import add_weekdays2df
+from oemof.demand.tools import add_weekdays2df
 
 
 class HeatBuilding:

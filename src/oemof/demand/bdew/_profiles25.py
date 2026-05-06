@@ -18,7 +18,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from demandlib.tools import set_holidays_in_df
+from oemof.demand.tools import set_holidays_in_df
 
 _bdew_datapath = os.path.join(os.path.dirname(__file__), "bdew_data")
 
@@ -163,7 +163,6 @@ class DynamicBDEW25Profile(BDEW25Profile):
 
     @staticmethod
     def dynamisation_function(timeindex: pd.DatetimeIndex) -> pd.Series:
-
         # cast to float hear because of miscalculations when using integers
         day_of_year = np.array(timeindex.day_of_year, dtype=float)
 

@@ -5,7 +5,7 @@ source = src
 branch = true
 source =
     src
-    tests
+relative_files = true
 parallel = true
 
 [report]

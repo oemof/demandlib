@@ -9,15 +9,22 @@ New features
 
 Bug fixes
 #########
+*   Implement default temperature limits for VDI 4655 calculation to make
+    ``summer_temperature_limit`` and ``winter_temperature_limit`` optional
+*   Fix leap year handling in VDI 4655 profiles
 
 Other changes
 #############
+
+* Documentation improvements.
+* First version to be named oemof.demand.
 
 
 v0.2.2 (2025-04-09)
 +++++++++++++++++++++++++
 
 *   Added Electricity standard load profiles as released by the BDEW in 2025.
+*   Added VDI profile based on LPagg
 
 
 v0.2.1 (2024-08-06)
@@ -39,7 +46,7 @@ v0.2.0 (2024-06-27)
 
 Bug fixes
 #########
-*   Raise error for non supported shlp_type 
+*   Raise error for non supported shlp_type
 	in non-commercial buildings
 
 Other changes
@@ -76,7 +83,7 @@ New features
 Bug fixes
 #########
 *   Fix improper use of pandas.dataframe.merge
-    (demandlib will now work with pandas>=1.2)
+    (oemof-demand will now work with pandas>=1.2)
 
 Other changes
 #############

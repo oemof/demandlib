@@ -48,8 +48,8 @@ from collections import namedtuple
 
 import pandas as pd
 
-from demandlib.tools import add_weekdays2df
-from demandlib.vdi import dwd_try
+from oemof.demand.tools import add_weekdays2df
+from oemof.demand.vdi import dwd_try
 
 
 class Climate:
@@ -343,7 +343,7 @@ class Region:
         # Create a table for every minute of the year
         minute_table = pd.DataFrame(
             index=pd.date_range(
-                f"1/1/{self._year}", periods=525600, freq="Min"
+                f"1/1/{self._year}", periods=self.hoy * 60, freq="Min"
             )
         )
 
@@ -353,7 +353,9 @@ class Region:
 
         # Fill data into the large table with minute index
         self.type_days[tl] = pd.concat(
-            [self.type_days[tl], minute_table], axis=1
+            [self.type_days[tl], minute_table],
+            axis=1,
+            sort=True,
         ).ffill()
 
         # Add columns to merge with (house types, minute of day and day_types)
@@ -603,8 +605,8 @@ class Region:
         for house in self.houses:
             t_limit = namedtuple("temperature_limit", "summer winter")
             tl = t_limit(
-                summer=house["summer_temperature_limit"],
-                winter=house["winter_temperature_limit"],
+                summer=house.get("summer_temperature_limit", 15),
+                winter=house.get("winter_temperature_limit", 5),
             )
             df_typ = (
                 self.type_days[tl]

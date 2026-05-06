@@ -39,7 +39,7 @@ def get_ini_filenames():
     files = []
     paths.append(os.path.dirname(os.path.abspath(__file__)))
 
-    local_path = os.path.join(os.path.expanduser("~"), ".demandlib")
+    local_path = os.path.join(os.path.expanduser("~"), ".oemof-demand")
     if os.path.isdir(local_path):
         paths.append(local_path)
     logging.debug("Searching for .ini-files in the following paths %s" % paths)

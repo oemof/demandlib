@@ -3,13 +3,10 @@
 """
 Tests for the config module.
 
-SPDX-FileCopyrightText: 2016-2021 Uwe Krien <uwe.krien@ifam.fraunhofer.de>
+SPDX-FileCopyrightText: Uwe Krien <uwe.krien@ifam.fraunhofer.de>
 
 SPDX-License-Identifier: MIT
 """
-__copyright__ = "Uwe Krien <uwe.krien@ifam.fraunhofer.de>"
-__license__ = "MIT"
-
 
 import os
 from configparser import NoOptionError
@@ -17,18 +14,18 @@ from configparser import NoSectionError
 
 import pytest
 
-from demandlib import config
+from oemof.demand import config
 
 
 def test_ini_filenames_basic():
     files = config.get_ini_filenames()
-    local_path = os.path.join(os.path.expanduser("~"), ".demandlib")
+    local_path = os.path.join(os.path.expanduser("~"), ".oemof-demand")
     fn = sorted([f.split(os.sep)[-1] for f in files if local_path not in f])
-    assert fn == ["demandlib.ini"]
+    assert fn == ["demand.ini"]
 
 
 def test_ini_filenames_local_path():
-    local_path = os.path.join(os.path.expanduser("~"), ".demandlib")
+    local_path = os.path.join(os.path.expanduser("~"), ".oemof-demand")
     os.makedirs(local_path, exist_ok=True)
     new_file = os.path.join(local_path, "test_ini_file_34RTXX.ini")
     f = open(new_file, "w+")
@@ -42,11 +39,11 @@ def test_ini_filenames_local_path():
 def test_init_basic():
     assert config.get("tester", "test_entry") == 5
     config.init()
-    local_path = os.path.join(os.path.expanduser("~"), ".demandlib")
+    local_path = os.path.join(os.path.expanduser("~"), ".oemof-demand")
     fn = sorted(
         [f.split(os.sep)[-1] for f in config.FILES if local_path not in f]
     )
-    assert fn == ["demandlib.ini"]
+    assert fn == ["demand.ini"]
 
 
 def test_init_own_file_list():

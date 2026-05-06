@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from demandlib.bdew.heat_building import HeatBuilding
-from demandlib.particular_profiles import IndustrialLoadProfile
+from oemof.demand.bdew.heat_building import HeatBuilding
+from oemof.demand.particular_profiles import IndustrialLoadProfile
 
 
 class TestIndustrialLoadProfile:

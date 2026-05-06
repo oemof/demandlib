@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 import pytest
 
-from demandlib import bdew
+from oemof.demand import bdew
 
 
 class TestElecSLP:

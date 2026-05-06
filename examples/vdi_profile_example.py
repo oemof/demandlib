@@ -4,9 +4,9 @@ Creating heat and power demand profiles using VDI4655 profiles.
 
 Installation requirements
 -------------------------
-This example requires at least version v0.1.4 of the oemof demandlib. Install
+This example requires at least version v0.1.4 of the oemof oemof-demand. Install
 by:
-    pip install 'demandlib>=0.1.4'
+    pip install 'oemof-demand>=0.1.4'
 Optional:
     pip install matplotlib
 
@@ -20,7 +20,7 @@ import datetime
 
 from matplotlib import pyplot as plt
 
-from demandlib import vdi
+from oemof.demand import vdi
 
 # The following dictionary has been created by "workalendar"
 # pip3 install workalendar

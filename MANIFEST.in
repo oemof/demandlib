@@ -1,7 +1,7 @@
 include setup.py
 
 include *.txt
-include *.yml
+
 recursive-include executable *.ico
 recursive-include executable *.py
 requirements.txt
@@ -12,12 +12,6 @@ global-exclude *.xml
 
 global-exclude *.py[cod] __pycache__/* *.so *.dylib
 
-# added by check-manifest
-include *.py
-
 exclude setup.py
-
-# added by check-manifest
-include *.in
 
 exclude MANIFEST.in
