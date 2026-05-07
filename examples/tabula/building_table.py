@@ -14,7 +14,6 @@ from matplotlib import pyplot as plt
 
 from oemof.demand.tabula import single_zone_building as szb
 
-
 # Read example data. This data can be used as a starting point for typical
 # houses in Germany. See https://webtool.building-typology.eu for more details.
 building_geometry = pd.read_csv(
@@ -46,9 +45,7 @@ bt = szb.BuildingTable(
 results = {}
 for state in [1, 2, 3]:
     building_state = buildings.loc[state]
-    u_values = szb.Envelope.from_dataframe(
-        buildings["u_values"].loc[state]
-    )
+    u_values = szb.Envelope.from_dataframe(buildings["u_values"].loc[state])
     results[state] = bt.specific_annual_heating_demand(
         u_value=u_values,
         thermal_bridges_factor=building_state[

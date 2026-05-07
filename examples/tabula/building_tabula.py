@@ -16,7 +16,6 @@ import pandas as pd
 
 from oemof.demand.tabula import single_zone_building as szb
 
-
 url = "https://www.episcope.eu/downloads/public/calc/tabula-calculator.xlsx"
 
 # Adapt the following path accordingly to the

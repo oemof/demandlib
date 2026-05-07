@@ -76,9 +76,7 @@ class Envelope:
         return self._flat_df
 
     def add_correction_factors(self, factors, add_missing=False):
-        """
-
-        """
+        """ """
 
         columns_flat = list(self.flat_df.columns)
         for factor in factors.keys():
